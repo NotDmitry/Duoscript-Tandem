@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Allura&display=swap');
+
 $color-primary: rgba(255, 70, 70, 1);
 $color-primary-10: rgba(255, 70, 70, 0.1);
 $dark: rgba(24, 28, 41, 1);
@@ -10,8 +13,8 @@ $tag-green: rgba(6, 164, 79, 1);
 $link-color: rgba(67, 97, 255, 1);
 $overlay-color: rgba(24, 28, 41, 0.80);
 
-$primary-font: "Montserrat";
-$secondary-font: "Allura";
+$primary-font: "Montserrat", sans-serif;
+$secondary-font: "Allura", sans-serif;
 
 $space-0: 0;
 $space-8: 0.5rem; /* 8px */
