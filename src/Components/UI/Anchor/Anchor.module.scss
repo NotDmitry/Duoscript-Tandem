@@ -1,0 +1,5 @@
+@use '@/Styles/_mixins.scss' as *;
+
+.anchor {
+  @include link-text;
+}
