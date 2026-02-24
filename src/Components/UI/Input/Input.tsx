@@ -1,18 +1,10 @@
 import styles from './Input.module.scss';
 import * as React from 'react';
-interface InputProps {
+interface InputProps extends React.ComponentPropsWithoutRef<'input'> {
   className?: string;
   labelText: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  children?: React.ReactNode;
-  type?: 'text' | 'email' | 'password' | 'date' | 'checkbox' | 'radio';
   placeholder: string;
   name: string;
-  value?: string;
-  required: boolean;
-  disabled: boolean;
-  minLength?: number;
-  autoComplete?: 'off' | 'on';
 }
 const Input = ({
   name,
@@ -23,10 +15,6 @@ const Input = ({
   type = 'text',
   placeholder,
   value,
-  required,
-  disabled,
-  minLength,
-  autoComplete,
 }: InputProps) => {
   return (
     <div className="form-group">
@@ -40,10 +28,6 @@ const Input = ({
           type={type}
           placeholder={placeholder}
           value={value}
-          required={required}
-          disabled={disabled}
-          minLength={minLength}
-          autoComplete={autoComplete}
         >
           {children}
         </input>
