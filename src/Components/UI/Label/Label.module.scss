@@ -1,0 +1,6 @@
+@use '@/Styles/_mixins.scss' as *;
+
+.label {
+  @include paragraph-text;
+  user-select: none;
+}
