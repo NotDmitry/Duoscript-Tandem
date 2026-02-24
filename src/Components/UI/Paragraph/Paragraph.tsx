@@ -1,7 +1,7 @@
 import styles from './Paragraph.module.scss';
 import * as React from 'react';
 
-interface ParagraphProps extends React.HTMLAttributes<HTMLParagraphElement> {
+interface ParagraphProps extends React.ComponentPropsWithoutRef<'p'> {
   children: React.ReactNode;
 }
 

@@ -1,7 +1,7 @@
 import styles from './Anchor.module.scss';
 import * as React from 'react';
 
-interface AnchorProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+interface AnchorProps extends React.ComponentPropsWithoutRef<'a'> {
   children: string | React.ReactNode;
   href: string;
 }

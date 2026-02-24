@@ -1,7 +1,7 @@
 import styles from './Label.module.scss';
 import * as React from 'react';
 
-interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
+interface LabelProps extends React.ComponentPropsWithoutRef<'label'> {
   children: React.ReactNode;
 }
 

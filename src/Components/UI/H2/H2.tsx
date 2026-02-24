@@ -1,7 +1,7 @@
 import styles from './H2.module.scss';
 import * as React from 'react';
 
-interface H2Props extends React.HTMLAttributes<HTMLHeadingElement> {
+interface H2Props extends React.ComponentPropsWithoutRef<'h2'> {
   children: React.ReactNode;
 }
 

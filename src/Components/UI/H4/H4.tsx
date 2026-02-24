@@ -1,7 +1,7 @@
 import styles from './H4.module.scss';
 import * as React from 'react';
 
-interface H4Props extends React.HTMLAttributes<HTMLHeadingElement> {
+interface H4Props extends React.ComponentPropsWithoutRef<'h4'> {
   children: React.ReactNode;
 }
 

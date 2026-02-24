@@ -1,7 +1,7 @@
 import styles from './H3.module.scss';
 import * as React from 'react';
 
-interface H3Props extends React.HTMLAttributes<HTMLHeadingElement> {
+interface H3Props extends React.ComponentPropsWithoutRef<'h3'> {
   children: React.ReactNode;
 }
 
