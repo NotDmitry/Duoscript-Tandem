@@ -1,38 +1,25 @@
 import styles from './Input.module.scss';
-import * as React from 'react';
-interface InputProps extends React.ComponentPropsWithoutRef<'input'> {
-  className?: string;
-  labelText: string;
-  placeholder: string;
-  name: string;
+import type { ComponentPropsWithoutRef } from 'react';
+interface InputProps extends ComponentPropsWithoutRef<'input'> {
+  labelText?: string;
+  isBlock?: boolean;
 }
-const Input = ({
-  name,
-  labelText,
-  className,
-  onChange,
-  children,
-  type = 'text',
-  placeholder,
-  value,
-}: InputProps) => {
+const Input = ({ className, labelText, isBlock, ...props }: InputProps) => {
   return (
-    <>
-      <label htmlFor={name} className={styles.label}>
-        <p>{labelText}</p>
-        <input
-          className={`${className ?? ''} ${styles.input}`}
-          id={name}
-          name={name}
-          onChange={onChange}
-          type={type}
-          placeholder={placeholder}
-          value={value}
-        >
-          {children}
-        </input>
-      </label>
-    </>
+    <div
+      className={`${styles.input_wrapper}${isBlock ? ` ${styles.column}` : ''}`}
+    >
+      {labelText && (
+        <label htmlFor={props.name} className={styles.label}>
+          {labelText}
+        </label>
+      )}
+
+      <input
+        className={`${className ?? ''} ${styles.input}`}
+        {...props}
+      ></input>
+    </div>
   );
 };
 export default Input;
