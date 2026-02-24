@@ -7,7 +7,7 @@ interface InputProps extends ComponentPropsWithoutRef<'input'> {
 const Input = ({ className, labelText, isBlock, ...props }: InputProps) => {
   return (
     <div
-      className={styles.input_wrapper + ' ' + (isBlock ? styles.column : '')}
+      className={`${styles.input_wrapper}${isBlock ? ` ${styles.column}` : ''}`}
     >
       {labelText && (
         <label htmlFor={props.name} className={styles.label}>
