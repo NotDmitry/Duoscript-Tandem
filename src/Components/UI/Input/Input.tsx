@@ -17,7 +17,7 @@ const Input = ({
   value,
 }: InputProps) => {
   return (
-    <div className="form-group">
+    <>
       <label htmlFor={name} className={styles.label}>
         <p>{labelText}</p>
         <input
@@ -32,7 +32,7 @@ const Input = ({
           {children}
         </input>
       </label>
-    </div>
+    </>
   );
 };
 export default Input;
