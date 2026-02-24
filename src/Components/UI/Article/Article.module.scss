@@ -1,0 +1,6 @@
+@use '@/Styles/_mixins.scss' as *;
+
+.article {
+  @include paragraph-text;
+  user-select: none;
+}
