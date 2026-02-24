@@ -1,6 +1,13 @@
 @use 'sass:color';
 @use '@/Styles/_variables.scss' as *;
 @use '@/Styles/_mixins.scss' as *;
+.input_wrapper {
+  display: flex;
+  gap: 10px;
+}
+.column {
+  flex-direction: column;
+}
 .label {
   @include action-sm-text;
   text-transform: uppercase;
