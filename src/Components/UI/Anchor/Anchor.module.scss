@@ -1,0 +1,18 @@
+@use 'sass:color';
+@use '@/Styles/_variables.scss' as *;
+@use '@/Styles/_mixins.scss' as *;
+
+.anchor {
+  @include link-text;
+  user-select: none;
+}
+
+.anchor:hover {
+  color: color.mix($link-color, rgba(255, 255, 255, 0.5));
+  cursor: pointer;
+}
+
+.anchor:active {
+  color: $link-color;
+  cursor: pointer;
+}
