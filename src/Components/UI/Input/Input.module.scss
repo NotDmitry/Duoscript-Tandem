@@ -1,6 +1,10 @@
 @use 'sass:color';
 @use '@/Styles/_variables.scss' as *;
 @use '@/Styles/_mixins.scss' as *;
+.label {
+  @include action-sm-text;
+  text-transform: uppercase;
+}
 .input {
   @include action-sm-text;
   cursor: pointer;
