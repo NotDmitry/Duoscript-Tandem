@@ -1,6 +1,0 @@
-@use '@/Styles/_mixins.scss' as *;
-
-.paragraph {
-  @include paragraph-text;
-  user-select: none;
-}
