@@ -7,20 +7,19 @@ import type {
 import getQuizData from '@/api/widgetQuiz.api.ts';
 
 export function useWidgetQuiz(quizType: QuizType) {
-  console.log(quizType);
   const savedQuizType = useRef(quizType);
   const [isLoading, setIsLoading] = useState(true);
   const [quizName, setQuizName] = useState<string>('');
   const [quizTask, setQuizTask] = useState<QuizQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswerIndex, setSelectedAnswer] = useState<UserAnswer>(null);
+  const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
 
   const questionsCount = quizTask.length;
   const currentQuestion = quizTask[currentQuestionIndex];
 
   useEffect(() => {
     const loadQuizData = async () => {
-      setIsLoading(true);
       try {
         const quizData = await getQuizData(savedQuizType.current);
         setQuizName(quizData.quizName);
@@ -41,10 +40,24 @@ export function useWidgetQuiz(quizType: QuizType) {
 
   function handleNext() {
     console.log('Next question');
+    setSelectedAnswer(selectedAnswerIndex);
+    manageAnswer();
   }
 
   function handleSkip() {
     console.log('Answer skipped');
+    setSelectedAnswer(null);
+    manageAnswer();
+  }
+
+  function manageAnswer() {
+    if (currentQuestionIndex < questionsCount - 1) {
+      const newAnswers = [...userAnswers];
+      newAnswers[currentQuestionIndex] = selectedAnswerIndex;
+      setUserAnswers(newAnswers);
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedAnswer(null);
+    }
   }
 
   return {
@@ -52,7 +65,6 @@ export function useWidgetQuiz(quizType: QuizType) {
     quizTask,
     quizName,
     currentQuestionIndex,
-    setCurrentQuestionIndex,
     selectedAnswerIndex,
     questionsCount,
     currentQuestion,

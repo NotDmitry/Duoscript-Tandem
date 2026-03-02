@@ -19,6 +19,7 @@ function WidgetQuiz(quizType: QuizType) {
     currentQuestionIndex,
     questionsCount,
     currentQuestion,
+    selectedAnswerIndex,
     handleAnswerSelect,
     handleNext,
     handleSkip,
@@ -92,6 +93,9 @@ function WidgetQuiz(quizType: QuizType) {
           <RadioGroup
             aria-labelledby="radio-buttons-answers-group-label"
             name="radio-buttons-answers"
+            value={
+              selectedAnswerIndex !== null ? String(selectedAnswerIndex) : ''
+            }
             onChange={(event) => {
               handleAnswerSelect(Number(event.target.value));
             }}
@@ -103,6 +107,7 @@ function WidgetQuiz(quizType: QuizType) {
               <FormControlLabel
                 key={index}
                 value={String(index)}
+                sx={{ width: 'fit-content' }}
                 control={<Radio size="small" sx={{ padding: '6px' }} />}
                 label={answerText}
               />
@@ -121,7 +126,12 @@ function WidgetQuiz(quizType: QuizType) {
         <Button variant="contained" color="error" onClick={handleSkip}>
           Skip
         </Button>
-        <Button variant="contained" color="success" onClick={handleNext}>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleNext}
+          disabled={selectedAnswerIndex === null}
+        >
           Next
         </Button>
       </Box>
