@@ -13,8 +13,17 @@ import type { QuizType } from './WidgetQuiz.types.ts';
 import { useWidgetQuiz } from '@/shared/hooks/useWidgetQuiz.ts';
 
 function WidgetQuiz(quizType: QuizType) {
-  const { handleNext, handleSkip } = useWidgetQuiz(quizType);
-  if (quizType.type !== 'css') {
+  const {
+    isLoading,
+    quizName,
+    currentQuestionIndex,
+    questionsCount,
+    currentQuestion,
+    handleAnswerSelect,
+    handleNext,
+    handleSkip,
+  } = useWidgetQuiz(quizType);
+  if (isLoading) {
     return (
       <Container
         sx={{
@@ -48,8 +57,10 @@ function WidgetQuiz(quizType: QuizType) {
           paddingBottom: 1,
         }}
       >
-        <FormLabel sx={{ typography: 'h4' }}>CSS Quiz</FormLabel>
-        <FormLabel sx={{ typography: 'subtitle1' }}>Question 1 of 45</FormLabel>
+        <FormLabel sx={{ typography: 'h4' }}>{quizName}</FormLabel>
+        <FormLabel sx={{ typography: 'subtitle1' }}>
+          Question {currentQuestionIndex + 1} of {questionsCount}
+        </FormLabel>
       </Box>
       <Box
         sx={{
@@ -60,41 +71,40 @@ function WidgetQuiz(quizType: QuizType) {
         }}
       >
         <Box>
-          <FormLabel>What will be if...</FormLabel>
-          <Box
-            component="pre"
-            sx={{
-              bgcolor: blue['50'],
-              padding: 2,
-              borderRadius: '16px',
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              borderColor: grey['500'],
-            }}
-          >
-            <code
-              style={{ textWrap: 'wrap' }}
-            >{`.class {blah-blah-blah}`}</code>
-          </Box>
+          <FormLabel>{currentQuestion.question}</FormLabel>
+          {!currentQuestion.isText && (
+            <Box
+              component="pre"
+              sx={{
+                bgcolor: blue['50'],
+                padding: 2,
+                borderRadius: '16px',
+                borderWidth: '1px',
+                borderStyle: 'solid',
+                borderColor: grey['500'],
+              }}
+            >
+              <code style={{ textWrap: 'wrap' }}>{currentQuestion.code}</code>
+            </Box>
+          )}
         </Box>
         <Box>
           <RadioGroup
             aria-labelledby="radio-buttons-answers-group-label"
             name="radio-buttons-answers"
-            value={'1'}
+            onChange={(event) => {
+              handleAnswerSelect(Number(event.target.value));
+            }}
             sx={{
               marginLeft: 2,
             }}
           >
-            {[
-              [1, 'one'],
-              [2, 'two'],
-            ].map(([index, label]) => (
+            {currentQuestion.answers.map(([index, answerText]) => (
               <FormControlLabel
                 key={index}
                 value={String(index)}
                 control={<Radio size="small" sx={{ padding: '6px' }} />}
-                label={label}
+                label={answerText}
               />
             ))}
           </RadioGroup>
