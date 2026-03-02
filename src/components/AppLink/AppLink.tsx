@@ -9,6 +9,7 @@ export function AppLink({ linkLabel, linkHref }: AppLinkProps) {
       href={linkHref}
       underline="none"
       rel="noopener noreferrer"
+      target="_blank"
       sx={{
         color: 'black',
         textTransform: 'uppercase',
