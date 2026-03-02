@@ -1,5 +1,7 @@
+import AppRouter from '@/App/router/AppRouter.tsx';
+
 function App() {
-  return <div></div>;
+  return <AppRouter />;
 }
 
 export default App;
