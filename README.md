@@ -12,3 +12,9 @@ and enhancement of your hard-skills. The app contains multiple widgets and a das
 - Aleksei Nikolaev ([GitHub: ngInit](https://github.com/nginit));
 - Alena Danilchenko ([GitHub: Alena Danilchenko](https://github.com/anelka777));
 - Svetlana Angeliuk ([GitHub: SwetlanaAng](https://github.com/swetlanaang)).
+
+### Deploy
+
+Available at:
+
+- [Netlify](https://duoscript-tandem.netlify.app/)
