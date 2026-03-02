@@ -4,7 +4,15 @@ import { FooterLink } from './FooterLink';
 export function Footer() {
   return (
     <Box component="footer" sx={{ p: 2 }}>
-      <Container sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+      <Container
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 2,
+          flexDirection: { sm: 'row', xs: 'column' },
+        }}
+      >
         <FooterLink
           linkName="RS SCHOOL"
           linkHref="https://rs.school/"
