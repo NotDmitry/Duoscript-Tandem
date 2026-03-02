@@ -1,5 +1,5 @@
 import { FormLabel, Container, CircularProgress } from '@mui/material';
-import type { QuizType } from '@/features/WidgetQuiz/widgetQuizTypes.ts';
+import type { QuizType } from '@/features/WidgetQuiz/WidgetQuiz.types.ts';
 
 function WidgetQuiz(quizType: QuizType) {
   if (quizType.type !== 'css') {
