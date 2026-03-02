@@ -10,9 +10,10 @@ import {
 } from '@mui/material';
 import { blue, grey } from '@mui/material/colors';
 import type { QuizType } from './WidgetQuiz.types.ts';
+import { useWidgetQuiz } from '@/shared/hooks/useWidgetQuiz.ts';
 
 function WidgetQuiz(quizType: QuizType) {
-  console.log(quizType);
+  const { handleNext, handleSkip } = useWidgetQuiz(quizType);
   if (quizType.type !== 'css') {
     return (
       <Container
@@ -107,10 +108,10 @@ function WidgetQuiz(quizType: QuizType) {
           columnGap: 10,
         }}
       >
-        <Button variant="contained" color="error">
+        <Button variant="contained" color="error" onClick={handleSkip}>
           Skip
         </Button>
-        <Button variant="contained" color="success">
+        <Button variant="contained" color="success" onClick={handleNext}>
           Next
         </Button>
       </Box>
