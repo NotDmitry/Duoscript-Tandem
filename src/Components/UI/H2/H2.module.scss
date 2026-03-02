@@ -1,6 +1,0 @@
-@use '@/Styles/_mixins.scss' as *;
-
-.header_h2 {
-  @include header-2;
-  user-select: none;
-}
