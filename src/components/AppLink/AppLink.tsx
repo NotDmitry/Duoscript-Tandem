@@ -1,9 +1,9 @@
 import { Link } from '@mui/material';
-interface FooterLinkProps {
-  linkName: string;
+interface AppLinkProps {
+  linkLabel: string;
   linkHref: string;
 }
-export function FooterLink({ linkName, linkHref }: FooterLinkProps) {
+export function AppLink({ linkLabel, linkHref }: AppLinkProps) {
   return (
     <Link
       href={linkHref}
@@ -19,7 +19,7 @@ export function FooterLink({ linkName, linkHref }: FooterLinkProps) {
         fontSize: 12,
       }}
     >
-      {linkName}
+      {linkLabel}
     </Link>
   );
 }

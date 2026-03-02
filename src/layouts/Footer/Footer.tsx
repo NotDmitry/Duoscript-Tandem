@@ -1,5 +1,5 @@
 import { Box, Container } from '@mui/material';
-import { FooterLink } from './FooterLink';
+import { AppLink } from '@/components/AppLink/AppLink';
 
 export function Footer() {
   return (
@@ -13,26 +13,23 @@ export function Footer() {
           flexDirection: { sm: 'row', xs: 'column' },
         }}
       >
-        <FooterLink
-          linkName="RS SCHOOL"
-          linkHref="https://rs.school/"
-        ></FooterLink>
-        <FooterLink
-          linkName="Dima"
+        <AppLink linkLabel="RS SCHOOL" linkHref="https://rs.school/"></AppLink>
+        <AppLink
+          linkLabel="Dima"
           linkHref="https://github.com/NotDmitry"
-        ></FooterLink>
-        <FooterLink
-          linkName="Sveta"
+        ></AppLink>
+        <AppLink
+          linkLabel="Sveta"
           linkHref="https://github.com/SwetlanaAng"
-        ></FooterLink>
-        <FooterLink
-          linkName="Alena"
+        ></AppLink>
+        <AppLink
+          linkLabel="Alena"
           linkHref="https://github.com/anelka777"
-        ></FooterLink>
-        <FooterLink
-          linkName="Aleksei"
+        ></AppLink>
+        <AppLink
+          linkLabel="Aleksei"
           linkHref="https://github.com/ngInit"
-        ></FooterLink>
+        ></AppLink>
       </Container>
     </Box>
   );
