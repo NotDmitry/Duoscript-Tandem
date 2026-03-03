@@ -29,19 +29,9 @@ export function Header({ isAuthorized }: NavProps) {
       {isMobile ? (
         <>
           {mobileMenuOpen ? (
-            <CloseTwoToneIcon
-              sx={{ p: 1 }}
-              onClick={() => {
-                toggleMobileMenu();
-              }}
-            />
+            <CloseTwoToneIcon sx={{ p: 1 }} onClick={toggleMobileMenu} />
           ) : (
-            <DragHandleTwoToneIcon
-              sx={{ p: 1 }}
-              onClick={() => {
-                toggleMobileMenu();
-              }}
-            />
+            <DragHandleTwoToneIcon sx={{ p: 1 }} onClick={toggleMobileMenu} />
           )}
           <Box
             sx={{

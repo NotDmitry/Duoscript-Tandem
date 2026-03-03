@@ -5,7 +5,7 @@ import { Header } from './Header/Header';
 function Layout() {
   return (
     <>
-      <Header isAuthorized={false} />
+      <Header isAuthorized={true} />
       <main>
         <Outlet />
       </main>
