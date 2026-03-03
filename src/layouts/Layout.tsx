@@ -1,10 +1,11 @@
 import { Outlet } from 'react-router';
 import { Footer } from '@/layouts/Footer/Footer.tsx';
+import { Header } from './Header/Header';
 
 function Layout() {
   return (
     <>
-      <header>Insert Header here</header>
+      <Header isAuthorized={false} />
       <main>
         <Outlet />
       </main>
