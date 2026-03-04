@@ -1,16 +1,23 @@
 import { Outlet } from 'react-router';
 import { Footer } from '@/layouts/Footer/Footer.tsx';
 import { Header } from './Header/Header';
+import { Box } from '@mui/material';
 
 function Layout() {
   return (
-    <>
-      <Header isAuthorized={true} />
-      <main>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Header isAuthorized={false} />
+      <Box component="main" sx={{ flexGrow: 1 }}>
         <Outlet />
-      </main>
+      </Box>
       <Footer />
-    </>
+    </Box>
   );
 }
 
