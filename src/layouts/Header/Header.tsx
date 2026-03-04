@@ -1,19 +1,63 @@
 import { Logo } from '@/components/Logo/Logo';
 import { Nav } from '@/components/Nav/Nav';
-import { Box } from '@mui/material';
+import { useState } from 'react';
+import { Box, useMediaQuery } from '@mui/material';
+import DragHandleTwoToneIcon from '@mui/icons-material/DragHandleTwoTone';
+import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 
 interface NavProps {
   isAuthorized: boolean;
 }
 
 export function Header({ isAuthorized }: NavProps) {
+  const isMobile = useMediaQuery('(max-width:768px)');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+  };
+
   return (
     <Box
       component="header"
       sx={{ display: 'flex', p: 2, justifyContent: 'space-between' }}
     >
       <Logo />
-      <Nav isAuthorized={isAuthorized}></Nav>
+      {isMobile ? (
+        <>
+          {mobileMenuOpen ? (
+            <CloseTwoToneIcon sx={{ p: 1 }} onClick={toggleMobileMenu} />
+          ) : (
+            <DragHandleTwoToneIcon sx={{ p: 1 }} onClick={toggleMobileMenu} />
+          )}
+          <Box
+            sx={{
+              position: 'fixed',
+              right: 0,
+              top: '60px',
+              height: 'calc(100vh - 60px)',
+              width: '100vw',
+              backgroundColor: 'white',
+              transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+              transition: 'transform 300ms ease-in-out',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1000,
+            }}
+          >
+            <Nav
+              isAuthorized={isAuthorized}
+              closeMobileMenu={closeMobileMenu}
+            />
+          </Box>
+        </>
+      ) : (
+        <Nav isAuthorized={isAuthorized} />
+      )}
     </Box>
   );
 }

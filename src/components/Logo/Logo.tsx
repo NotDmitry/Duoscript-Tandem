@@ -9,7 +9,7 @@ export function Logo() {
       to="/"
       direction="row"
       spacing={1}
-      sx={{ px: 1, textDecoration: 'none' }}
+      sx={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}
     >
       <LogoIcon />
       <Typography
