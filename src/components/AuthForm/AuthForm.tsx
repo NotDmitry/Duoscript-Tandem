@@ -6,6 +6,7 @@ import {
   Button,
   Link,
 } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router';
 import type { Resolver } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
@@ -48,15 +49,30 @@ const getAuthSchema = (mode: AuthMode) => {
 function AuthForm({ mode, profileTitle }: FormInterface) {
   const schema = getAuthSchema(mode);
   type AuthFormData = LogInProfileFields | SingUpFields;
+  const [formKey, setFormKey] = useState(0);
   const resolver: Resolver<AuthFormData> = zodResolver(schema);
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<AuthFormData>({ resolver });
+    reset,
+    formState: { errors, isSubmitSuccessful },
+  } = useForm<AuthFormData>({
+    resolver,
+    mode: 'onChange',
+    defaultValues: { nickname: '', password: '', repeatPassword: '' },
+  });
   const onSubmit = (data: AuthFormData) => {
     console.log(data);
   };
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+      setTimeout(() => {
+        setFormKey((prev) => prev + 1);
+      }, 0);
+    }
+  }, [isSubmitSuccessful, reset]);
 
   return (
     <Container maxWidth="sm">
@@ -79,6 +95,7 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
         </FormLabel>
         <TextField
           label={mode === 'PROFILE' ? 'New nickname' : 'Nickname'}
+          placeholder={mode === 'PROFILE' ? 'New nickname' : 'Nickname'}
           type="text"
           required
           fullWidth
@@ -90,7 +107,9 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
         />
 
         <TextField
+          key={`password-${String(formKey)}`}
           label={mode === 'PROFILE' ? 'New password' : 'Password'}
+          placeholder={mode === 'PROFILE' ? 'New password' : 'Password'}
           type="password"
           required
           fullWidth
@@ -102,7 +121,9 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
         />
         {mode === 'SIGN UP' && (
           <TextField
+            key={`repeatPassword-${String(formKey)}`}
             label="Repeat Password"
+            placeholder="Repeat Password"
             type="password"
             required
             fullWidth
