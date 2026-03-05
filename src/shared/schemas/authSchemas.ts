@@ -35,18 +35,18 @@ const baseAuthSchema = z.object({
   nickname: nicknameSchema,
   password: passwordSchema,
 });
-export const ProfileSchema = baseAuthSchema;
+export const profileSchema = baseAuthSchema;
 export const logInSchema = baseAuthSchema;
-export const SingUpSchema = baseAuthSchema
+export const signUpSchema = baseAuthSchema
   .extend({
     repeatPassword: passwordSchema,
   })
   .refine(
     (data) => {
-      return data.nickname === data.repeatPassword;
+      return data.password === data.repeatPassword;
     },
     { message: 'Passwords must match', path: ['repeatPassword'] }
   );
 
 export type LogInProfileFields = z.infer<typeof baseAuthSchema>;
-export type SingUpFields = z.infer<typeof SingUpSchema>;
+export type SingUpFields = z.infer<typeof signUpSchema>;
