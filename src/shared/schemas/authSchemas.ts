@@ -4,16 +4,10 @@ export const nicknameSchema = z
   .string()
   .trim()
   .min(3, 'Name must contain at least 3 characters')
-  .refine(
-    (value) =>
-      /[a-zA-Z]/.test(value) &&
-      !/\d/.test(value) &&
-      !/[@!#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(value),
-    {
-      message:
-        'Name must contain only Latin characters and no special characters or numbers',
-    }
-  );
+  .regex(/^[a-zA-Z]+$/, {
+    message:
+      'Name must contain only Latin characters and no special characters or numbers',
+  });
 export const passwordSchema = z
   .string()
   .nonempty({ message: 'Password is required' })
