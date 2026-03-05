@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { NavLink } from 'react-router';
 type AuthMode = 'LOGIN' | 'SIGN UP' | 'PROFILE';
+
 interface FormInterface {
   mode: AuthMode;
   profileTitle?: string;
