@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import type {
+  QuizProps,
   QuizType,
   QuizQuestion,
   UserAnswer,
@@ -13,7 +14,10 @@ export function useWidgetQuiz(quizType: QuizType) {
   const [quizTask, setQuizTask] = useState<QuizQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswerIndex, setSelectedAnswer] = useState<UserAnswer>(null);
+  const [quizAnswers, setQuizAnswers] = useState<UserAnswer[]>([]);
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
+  const [failedQuiz, setFailedQuiz] = useState<QuizQuestion[]>([]);
+  const [isFinish, setFinish] = useState<boolean>(false);
 
   const questionsCount = quizTask.length;
   const currentQuestion = quizTask[currentQuestionIndex];
@@ -21,9 +25,10 @@ export function useWidgetQuiz(quizType: QuizType) {
   useEffect(() => {
     const loadQuizData = async () => {
       try {
-        const quizData = await getQuizData(savedQuizType.current);
+        const quizData: QuizProps = await getQuizData(savedQuizType.current);
         setQuizName(quizData.quizName);
         setQuizTask(quizData.questions);
+        setQuizAnswers(quizData.rightAnswers);
       } catch {
         console.error('Failed to load data');
       } finally {
@@ -35,39 +40,45 @@ export function useWidgetQuiz(quizType: QuizType) {
 
   function handleAnswerSelect(answerIndex: UserAnswer) {
     setSelectedAnswer(answerIndex);
-    console.log(selectedAnswerIndex);
   }
 
   function handleNext() {
-    console.log('Next question');
-    setSelectedAnswer(selectedAnswerIndex);
-    manageAnswer();
+    manageAnswer(selectedAnswerIndex);
   }
 
   function handleSkip() {
-    console.log('Answer skipped');
-    setSelectedAnswer(null);
-    manageAnswer();
+    manageAnswer(null);
   }
 
-  function manageAnswer() {
+  function manageAnswer(answer: UserAnswer) {
+    let updatedAnswers = userAnswers;
+
+    if (answer !== quizAnswers[currentQuestionIndex]) {
+      setFailedQuiz((prevFails) => [...prevFails, currentQuestion]);
+    } else {
+      updatedAnswers = [...userAnswers, currentQuestionIndex];
+      setUserAnswers((prevAnswers) => [...prevAnswers, currentQuestionIndex]);
+    }
+
+    setSelectedAnswer(null);
     if (currentQuestionIndex < questionsCount - 1) {
-      const newAnswers = [...userAnswers];
-      newAnswers[currentQuestionIndex] = selectedAnswerIndex;
-      setUserAnswers(newAnswers);
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer(null);
+    } else {
+      setFinish(true);
+      console.log(updatedAnswers);
     }
   }
 
   return {
     isLoading,
+    isFinish,
     quizTask,
     quizName,
     currentQuestionIndex,
     selectedAnswerIndex,
     questionsCount,
     currentQuestion,
+    failedQuiz,
     handleAnswerSelect,
     handleNext,
     handleSkip,

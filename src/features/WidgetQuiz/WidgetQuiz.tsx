@@ -15,11 +15,13 @@ import { useWidgetQuiz } from '@/shared/hooks/useWidgetQuiz.ts';
 function WidgetQuiz(quizType: QuizType) {
   const {
     isLoading,
+    isFinish,
     quizName,
     currentQuestionIndex,
     questionsCount,
     currentQuestion,
     selectedAnswerIndex,
+    failedQuiz,
     handleAnswerSelect,
     handleNext,
     handleSkip,
@@ -37,6 +39,59 @@ function WidgetQuiz(quizType: QuizType) {
       >
         <CircularProgress size={40} color="primary" />
         <FormLabel>Loading quiz...</FormLabel>
+      </Container>
+    );
+  }
+
+  if (isFinish) {
+    return (
+      <Container
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          rowGap: 4,
+          height: '-webkit-fill-available',
+        }}
+      >
+        <FormLabel
+          sx={{
+            typography: 'h4',
+          }}
+        >
+          Failed quiz
+        </FormLabel>
+        {failedQuiz.map((quiz, index) => (
+          <Box
+            key={index}
+            sx={{
+              width: '50vw',
+              borderBottomWidth: '1px',
+              borderBottomStyle: 'solid',
+              borderBottomColor: grey['500'],
+            }}
+          >
+            <FormLabel>
+              {index + 1} {quiz.question}
+            </FormLabel>
+            {!quiz.isText && (
+              <Box
+                component="pre"
+                sx={{
+                  bgcolor: blue['50'],
+                  padding: 2,
+                  borderRadius: '16px',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  borderColor: grey['500'],
+                }}
+              >
+                <code style={{ textWrap: 'wrap' }}>{quiz.code}</code>
+              </Box>
+            )}
+          </Box>
+        ))}
       </Container>
     );
   }
