@@ -18,6 +18,7 @@ import {
   type LogInProfileFields,
   type SingUpFields,
 } from '@/shared/schemas/authSchemas';
+import { useRegisterSubmit } from '@/shared/hooks/useRegisterSubmit';
 type AuthMode = 'LOGIN' | 'SIGN UP' | 'PROFILE';
 
 interface FormInterface {
@@ -61,8 +62,11 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
     mode: 'onChange',
     defaultValues: { nickname: '', password: '', repeatPassword: '' },
   });
-  const onSubmit = (data: AuthFormData) => {
-    console.log(data);
+  const handleRegisterSubmit = useRegisterSubmit();
+  const onSubmit = async (data: AuthFormData) => {
+    if (mode === 'SIGN UP' && 'repeatPassword' in data) {
+      await handleRegisterSubmit(data);
+    }
   };
 
   useEffect(() => {

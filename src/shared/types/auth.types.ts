@@ -1,0 +1,22 @@
+export interface User {
+  id: string;
+  nickname: string;
+  password: string;
+}
+export interface loginData {
+  nickname: string;
+  password: string;
+}
+export interface registerData {
+  nickname: string;
+  password: string;
+  repeatPassword: string;
+}
+export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    id: string;
+    nickname: string;
+  };
+}
