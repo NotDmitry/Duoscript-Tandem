@@ -12,6 +12,9 @@ const mockUsers: User[] = [
     password: 'User1234!',
   },
 ];
+function findUserByNickname(nickname: string): User | undefined {
+  return mockUsers.find((user) => user.nickname === nickname);
+}
 
 export function addUser(user: Omit<User, 'id'>): User {
   const newUser = {
@@ -19,27 +22,19 @@ export function addUser(user: Omit<User, 'id'>): User {
     id: String(mockUsers.length + 1),
   };
   mockUsers.push(newUser);
-  console.log('add');
   return newUser;
 }
 export function userExist(nickname: string): boolean {
-  console.log('exist');
   return mockUsers.some((user) => nickname === user.nickname);
 }
 export function isPasswordCorrect(password: string, nickname: string): boolean {
-  const existedUser: User[] = mockUsers.filter((user) => {
-    return user.nickname === nickname;
-  });
-  if (existedUser.length > 1) throw Error(`${nickname} is already exist`); // другое сообщение
-  if (existedUser.length === 0) return false;
-  return password === existedUser[0].password;
+  const existedUser: User | undefined = findUserByNickname(nickname);
+  if (!existedUser) return false;
+  return password === existedUser.password;
 }
 export function getUserId(nickname: string): string {
-  const existedUser: User[] = mockUsers.filter((user) => {
-    return user.nickname === nickname;
-  });
-  if (existedUser.length > 1)
-    throw Error(`${nickname}  exists more then 1 time`); // другое сообщение
-  if (existedUser.length === 0) throw Error(`${nickname} isn't registered`);
-  return existedUser[0].id;
+  const existedUser: User | undefined = findUserByNickname(nickname);
+
+  if (!existedUser) throw Error(`${nickname} isn't registered`);
+  return existedUser.id;
 }
