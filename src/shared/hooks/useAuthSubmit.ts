@@ -4,6 +4,7 @@ import { login, register } from '@/api/auth.api';
 
 export const useAuthSubmit = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState('');
   const handleAuthSubmit = useCallback(
     async (formData: loginData | registerData) => {
       setIsLoading(true);
@@ -13,9 +14,14 @@ export const useAuthSubmit = () => {
             ? await register(formData)
             : await login(formData);
         console.log(userData);
-        // сообщение об успехе и редирект
-      } catch {
-        console.error('Incorrect nickname or password');
+        setIsSuccess('true');
+        //  редирект
+      } catch (err) {
+        setIsSuccess(
+          err instanceof Error
+            ? err.message
+            : 'Nickname or password is incorrect'
+        );
       } finally {
         setIsLoading(false);
       }
@@ -26,5 +32,7 @@ export const useAuthSubmit = () => {
   return {
     handleAuthSubmit,
     isLoading,
+    isSuccess,
+    setIsSuccess,
   };
 };

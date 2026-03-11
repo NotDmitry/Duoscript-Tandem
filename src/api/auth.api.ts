@@ -16,7 +16,7 @@ function setUserDataToLS(
 export async function register(registerData: registerData) {
   await delay(1000);
   if (userExist(registerData.nickname)) {
-    throw Error('User with this nickname already exists');
+    throw Error('User with this nickname has already registered');
   }
   const newUser = {
     nickname: registerData.nickname,
@@ -37,11 +37,11 @@ export async function register(registerData: registerData) {
 }
 export async function login(loginData: loginData) {
   await delay(1000);
-  if (
-    !userExist(loginData.nickname) ||
-    !isPasswordCorrect(loginData.password, loginData.nickname)
-  ) {
-    throw Error('LogIn failed');
+  if (!userExist(loginData.nickname)) {
+    throw Error(`User with nickname ${loginData.nickname} isn't registered`);
+  }
+  if (!isPasswordCorrect(loginData.password, loginData.nickname)) {
+    throw Error('Password is incorrect');
   }
 
   const accessToken = 'access';

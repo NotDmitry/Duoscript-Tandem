@@ -5,6 +5,8 @@ import {
   FormLabel,
   Button,
   Link,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { useEffect, useState } from 'react';
@@ -63,7 +65,8 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
     mode: 'onChange',
     defaultValues: { nickname: '', password: '', repeatPassword: '' },
   });
-  const { handleAuthSubmit, isLoading } = useAuthSubmit();
+  const { handleAuthSubmit, isLoading, isSuccess, setIsSuccess } =
+    useAuthSubmit();
   const onSubmit = async (data: AuthFormData) => {
     await handleAuthSubmit(data);
   };
@@ -176,6 +179,46 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
           </Button>
         )}
       </Box>
+      {isSuccess !== '' &&
+        (isSuccess === 'true' ? (
+          <Snackbar
+            open={true}
+            autoHideDuration={3000}
+            onClose={() => {
+              setIsSuccess('');
+            }}
+          >
+            <Alert
+              onClose={() => {
+                setIsSuccess('');
+              }}
+              severity="success"
+              variant="filled"
+              sx={{ width: '100%' }}
+            >
+              {`You have successfully ${mode === 'LOGIN' ? 'loggedIn' : 'registered'}.`}
+            </Alert>
+          </Snackbar>
+        ) : (
+          <Snackbar
+            open={isSuccess !== 'true'}
+            autoHideDuration={3000}
+            onClose={() => {
+              setIsSuccess('');
+            }}
+          >
+            <Alert
+              onClose={() => {
+                setIsSuccess('');
+              }}
+              severity="error"
+              variant="filled"
+              sx={{ width: '100%' }}
+            >
+              {isSuccess}
+            </Alert>
+          </Snackbar>
+        ))}
     </Container>
   );
 }
