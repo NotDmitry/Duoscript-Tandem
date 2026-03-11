@@ -72,13 +72,13 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
   };
 
   useEffect(() => {
-    if (isSubmitSuccessful) {
+    if (isSubmitSuccessful && isSuccess === 'true') {
       reset();
       setTimeout(() => {
         setFormKey((prev) => prev + 1);
       }, 0);
     }
-  }, [isSubmitSuccessful, reset]);
+  }, [isSubmitSuccessful, isSuccess, reset]);
 
   return (
     <Container maxWidth="sm">
