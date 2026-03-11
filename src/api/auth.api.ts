@@ -3,12 +3,21 @@ import { addUser, getUserId, isPasswordCorrect, userExist } from './auth.mock';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+function setUserDataToLS(
+  accessToken: string,
+  refreshToken: string,
+  nickname: string
+) {
+  localStorage.setItem(
+    'user',
+    JSON.stringify({ accessToken, refreshToken, nickname })
+  );
+}
 export async function register(registerData: registerData) {
   await delay(1000);
   if (userExist(registerData.nickname)) {
     throw Error('User with this nickname already exists');
   }
-  localStorage.setItem('user', registerData.nickname);
   const newUser = {
     nickname: registerData.nickname,
     password: registerData.password,
@@ -16,7 +25,7 @@ export async function register(registerData: registerData) {
   const newUserData = addUser(newUser);
   const accessToken = 'access';
   const refreshToken = 'refresh';
-
+  setUserDataToLS(accessToken, refreshToken, registerData.nickname);
   return {
     accessToken,
     refreshToken,
@@ -35,10 +44,9 @@ export async function login(loginData: loginData) {
     throw Error('LogIn failed');
   }
 
-  localStorage.setItem('user', loginData.nickname);
   const accessToken = 'access';
   const refreshToken = 'refresh';
-
+  setUserDataToLS(accessToken, refreshToken, loginData.nickname);
   return {
     accessToken,
     refreshToken,
