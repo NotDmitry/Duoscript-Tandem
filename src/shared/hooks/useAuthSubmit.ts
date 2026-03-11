@@ -1,21 +1,21 @@
 import { useCallback, useState } from 'react';
 import type { loginData, registerData } from '../types/auth.types';
-import { login, register } from '@/api/auth.api';
+import { useAuth } from './useAuth';
 
 export const useAuthSubmit = () => {
+  const { registerFunc, loginFunc } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState('');
   const handleAuthSubmit = useCallback(
     async (formData: loginData | registerData) => {
       setIsLoading(true);
       try {
-        const userData =
-          'repeatPassword' in formData
-            ? await register(formData)
-            : await login(formData);
-        console.log(userData);
+        if ('repeatPassword' in formData) {
+          await registerFunc(formData);
+        } else {
+          await loginFunc(formData);
+        }
         setIsSuccess('true');
-        //  редирект
       } catch (err) {
         setIsSuccess(
           err instanceof Error
@@ -26,7 +26,7 @@ export const useAuthSubmit = () => {
         setIsLoading(false);
       }
     },
-    []
+    [registerFunc, loginFunc]
   );
 
   return {

@@ -1,4 +1,8 @@
-import type { loginData, registerData } from '@/shared/types/auth.types';
+import type {
+  LoginResponse,
+  loginData,
+  registerData,
+} from '@/shared/types/auth.types';
 import { addUser, getUserId, isPasswordCorrect, userExist } from './auth.mock';
 import {
   createAccessToken,
@@ -17,7 +21,9 @@ function setUserDataToLS(
     JSON.stringify({ accessToken, refreshToken, nickname })
   );
 }
-export async function register(registerData: registerData) {
+export async function register(
+  registerData: registerData
+): Promise<LoginResponse> {
   await delay(1000);
   if (userExist(registerData.nickname)) {
     throw Error('User with this nickname has already registered');
@@ -42,7 +48,7 @@ export async function register(registerData: registerData) {
     },
   };
 }
-export async function login(loginData: loginData) {
+export async function login(loginData: loginData): Promise<LoginResponse> {
   await delay(1000);
   if (!userExist(loginData.nickname)) {
     throw Error(`User with nickname ${loginData.nickname} isn't registered`);
