@@ -1,19 +1,17 @@
-import { dashboardMock } from '../Dashboard.mock.ts';
+import type { DashboardData } from '@/features/Dashboard/Dashboard.types.ts';
+import StatCard from '@/components/StatCard/StatCard.tsx';
 
-function StatsGrid() {
+export interface Props {
+  data: DashboardData;
+}
+
+export default function StatsGrid({ data }: Props) {
   return (
     <div className="stats-grid">
-      <div>
-        <div>Progress: {dashboardMock.progress}%</div>
-      </div>
-      <div>
-        <h2>Learning Today:</h2>
-        <div>Minutes: {dashboardMock.learningToday.minutes}</div>
-        <div>Activities: {dashboardMock.learningToday.activities}</div>
-        <div>Streak: {dashboardMock.learningToday.streak}</div>
-      </div>
+      <h3>Learning Today:</h3>
+      <StatCard title="Minutes" value={data.learningToday.minutes} />
+      <StatCard title="Activities" value={data.learningToday.activities} />
+      <StatCard title="Streak" value={data.learningToday.streak} />
     </div>
   );
 }
-
-export default StatsGrid;
