@@ -1,5 +1,9 @@
 import type { loginData, registerData } from '@/shared/types/auth.types';
 import { addUser, getUserId, isPasswordCorrect, userExist } from './auth.mock';
+import {
+  createAccessToken,
+  createRefreshToken,
+} from '@/shared/utils/jwt.utils';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -23,8 +27,11 @@ export async function register(registerData: registerData) {
     password: registerData.password,
   };
   const newUserData = addUser(newUser);
-  const accessToken = 'access';
-  const refreshToken = 'refresh';
+  const accessToken = createAccessToken(newUserData.id, registerData.nickname);
+  const refreshToken = createRefreshToken(
+    newUserData.id,
+    registerData.nickname
+  );
   setUserDataToLS(accessToken, refreshToken, registerData.nickname);
   return {
     accessToken,
@@ -43,15 +50,15 @@ export async function login(loginData: loginData) {
   if (!isPasswordCorrect(loginData.password, loginData.nickname)) {
     throw Error('Password is incorrect');
   }
-
-  const accessToken = 'access';
-  const refreshToken = 'refresh';
+  const id = getUserId(loginData.nickname);
+  const accessToken = createAccessToken(id, loginData.nickname);
+  const refreshToken = createRefreshToken(id, loginData.nickname);
   setUserDataToLS(accessToken, refreshToken, loginData.nickname);
   return {
     accessToken,
     refreshToken,
     user: {
-      id: getUserId(loginData.nickname),
+      id,
       nickname: loginData.nickname,
     },
   };

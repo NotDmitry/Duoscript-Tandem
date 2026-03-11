@@ -196,7 +196,7 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
               variant="filled"
               sx={{ width: '100%' }}
             >
-              {`You have successfully ${mode === 'LOGIN' ? 'loggedIn' : 'registered'}.`}
+              {`You have successfully ${mode === 'LOGIN' ? 'logged in' : 'registered'}.`}
             </Alert>
           </Snackbar>
         ) : (
