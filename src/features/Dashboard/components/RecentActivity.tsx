@@ -1,4 +1,5 @@
-import type { ActivityItem } from '../Dashboard.types.ts';
+import { Box, Typography, List, ListItem, ListItemText } from '@mui/material';
+import type { ActivityItem } from '../Dashboard.types';
 
 export interface Props {
   activities: ActivityItem[];
@@ -6,20 +7,30 @@ export interface Props {
 
 export default function RecentActivity({ activities }: Props) {
   return (
-    <div>
-      <h3>Recent Activity</h3>
+    <Box>
+      <Typography variant="h6" gutterBottom>
+        Recent Activity
+      </Typography>
+
       {activities.length === 0 ? (
-        <p>No recent activity</p>
+        <Typography variant="body2">No recent activity</Typography>
       ) : (
-        <ul>
+        <List dense>
           {activities.map((item) => (
-            <li key={item.id}>
-              <strong>{item.course}</strong> - {item.widget} ({item.type}) :{' '}
-              {item.score}/{item.maxScore} [{item.status}] - {item.createdAt}
-            </li>
+            <ListItem key={item.id}>
+              <ListItemText
+                primary={`${item.course} - ${item.widget} (${item.type})`}
+                secondary={
+                  <span>
+                    {item.score}/{item.maxScore} [{item.status}] -{' '}
+                    {new Date(item.createdAt).toLocaleString()}
+                  </span>
+                }
+              />
+            </ListItem>
           ))}
-        </ul>
+        </List>
       )}
-    </div>
+    </Box>
   );
 }

@@ -1,5 +1,6 @@
-import type { DashboardData } from '@/features/Dashboard/Dashboard.types.ts';
-import StatCard from '@/components/StatCard/StatCard.tsx';
+import { Box, Typography, Grid } from '@mui/material';
+import type { DashboardData } from '@/features/Dashboard/Dashboard.types';
+import StatCard from '@/components/StatCard/StatCard';
 
 export interface Props {
   data: DashboardData;
@@ -7,11 +8,21 @@ export interface Props {
 
 export default function StatsGrid({ data }: Props) {
   return (
-    <div className="stats-grid">
-      <h3>Learning Today:</h3>
-      <StatCard title="Minutes" value={data.learningToday.minutes} />
-      <StatCard title="Activities" value={data.learningToday.activities} />
-      <StatCard title="Streak" value={data.learningToday.streak} />
-    </div>
+    <Box>
+      <Typography variant="h6" gutterBottom>
+        Learning Today
+      </Typography>
+      <Grid container spacing={2}>
+        <Grid size={{ xs: 4 }}>
+          <StatCard title="Minutes" value={data.learningToday.minutes} />
+        </Grid>
+        <Grid size={{ xs: 4 }}>
+          <StatCard title="Activities" value={data.learningToday.activities} />
+        </Grid>
+        <Grid size={{ xs: 4 }}>
+          <StatCard title="Streak" value={data.learningToday.streak} />
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
