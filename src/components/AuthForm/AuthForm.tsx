@@ -179,46 +179,26 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
           </Button>
         )}
       </Box>
-      {isSuccess !== '' &&
-        (isSuccess === 'true' ? (
-          <Snackbar
-            open={true}
-            autoHideDuration={3000}
+      {isSuccess !== 'true' && isSuccess !== '' && (
+        <Snackbar
+          open={isSuccess !== 'true'}
+          autoHideDuration={3000}
+          onClose={() => {
+            setIsSuccess('');
+          }}
+        >
+          <Alert
             onClose={() => {
               setIsSuccess('');
             }}
+            severity="error"
+            variant="filled"
+            sx={{ width: '100%' }}
           >
-            <Alert
-              onClose={() => {
-                setIsSuccess('');
-              }}
-              severity="success"
-              variant="filled"
-              sx={{ width: '100%' }}
-            >
-              {`You have successfully ${mode === 'LOGIN' ? 'logged in' : 'registered'}.`}
-            </Alert>
-          </Snackbar>
-        ) : (
-          <Snackbar
-            open={isSuccess !== 'true'}
-            autoHideDuration={3000}
-            onClose={() => {
-              setIsSuccess('');
-            }}
-          >
-            <Alert
-              onClose={() => {
-                setIsSuccess('');
-              }}
-              severity="error"
-              variant="filled"
-              sx={{ width: '100%' }}
-            >
-              {isSuccess}
-            </Alert>
-          </Snackbar>
-        ))}
+            {isSuccess}
+          </Alert>
+        </Snackbar>
+      )}
     </Container>
   );
 }

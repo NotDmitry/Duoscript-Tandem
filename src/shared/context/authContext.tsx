@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type {
   AuthContextType,
@@ -14,25 +14,34 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState<Omit<User, 'password'> | null>(null);
+  const [isRegistration, setIsRegistration] = useState(false);
+
+  useEffect(() => {
+    const message = isRegistration ? 'registered' : 'logged in';
+    if (user) {
+      navigate('/profile', {
+        state: {
+          successMessage: `You have successfully ${message}!`,
+        },
+      });
+    } else navigate('/login');
+  }, [user, navigate, isRegistration]);
 
   const loginFunc = async (loginData: loginData) => {
     const response = await login(loginData);
-
+    setIsRegistration(false);
     setUser(response.user);
-    await navigate('/dashboard');
   };
 
   const registerFunc = async (registerData: registerData) => {
     const response = await register(registerData);
+    setIsRegistration(true);
     setUser(response.user);
-    await navigate('/dashboard');
   };
 
-  const logout = async () => {
+  const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
-
-    await navigate('/login');
   };
 
   return (

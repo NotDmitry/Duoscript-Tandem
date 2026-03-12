@@ -1,7 +1,6 @@
-import { Box, Button, useMediaQuery } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { AppLink } from '../AppLink/AppLink';
 import { useAuth } from '@/shared/hooks/useAuth';
-import { useState } from 'react';
 interface NavItem {
   label: string;
   href: string;
@@ -27,18 +26,7 @@ export function Nav({ isAuthorized, closeMobileMenu }: NavProps) {
   ];
 
   const currentLinks: NavItem[] = isAuthorized ? privateLinks : publicLinks;
-  const [loading, setLoading] = useState(false);
 
-  const handleClick = async () => {
-    setLoading(true);
-    try {
-      await logout();
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
   return (
     <Box
       component="nav"
@@ -57,15 +45,14 @@ export function Nav({ isAuthorized, closeMobileMenu }: NavProps) {
         ></AppLink>
       ))}
       {isAuthorized && (
-        <Button
-          variant="text"
+        <AppLink
           onClick={() => {
-            void handleClick();
+            if (closeMobileMenu) closeMobileMenu();
+            logout();
           }}
-          disabled={loading}
-        >
-          logOut
-        </Button>
+          linkLabel="logOut"
+          linkHref="/login"
+        ></AppLink>
       )}
     </Box>
   );
