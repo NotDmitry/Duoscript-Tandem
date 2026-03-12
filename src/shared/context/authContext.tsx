@@ -8,34 +8,51 @@ import type {
 } from '../types/auth.types';
 import { login, register } from '@/api/auth.api';
 import { useNavigate } from 'react-router';
+import { getUserId } from '@/api/auth.mock';
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState<Omit<User, 'password'> | null>(null);
-  const [isRegistration, setIsRegistration] = useState(false);
 
   useEffect(() => {
-    const message = isRegistration ? 'registered' : 'logged in';
     if (user) {
-      navigate('/profile', {
-        state: {
-          successMessage: `You have successfully ${message}!`,
-        },
-      });
+      navigate('/profile');
     } else navigate('/login');
-  }, [user, navigate, isRegistration]);
+  }, [user, navigate]);
+  useEffect(() => {
+    const savedUser: string | null = localStorage.getItem('user');
+    if (savedUser) {
+      const parsedUser = JSON.parse(savedUser) as {
+        accessToken?: string;
+        refreshToken?: string;
+        nickname?: string;
+        id?: string;
+      };
+
+      const nickname = parsedUser.nickname;
+      if (nickname) {
+        const user = {
+          nickname,
+          id: getUserId(nickname),
+        };
+        setTimeout(() => {
+          setUser(user);
+        }, 0);
+      }
+    }
+  }, []);
 
   const loginFunc = async (loginData: loginData) => {
     const response = await login(loginData);
-    setIsRegistration(false);
+    sessionStorage.setItem('showSuccess', 'logged in');
     setUser(response.user);
   };
 
   const registerFunc = async (registerData: registerData) => {
     const response = await register(registerData);
-    setIsRegistration(true);
+    sessionStorage.setItem('showSuccess', 'registered');
     setUser(response.user);
   };
 

@@ -1,23 +1,22 @@
 import AuthForm from '@/components/AuthForm/AuthForm';
-import { useLocation } from 'react-router';
 import { Snackbar, Alert } from '@mui/material';
 import { useState, useEffect } from 'react';
-interface LocationState {
-  successMessage?: string;
-}
 
 function Profile() {
   const [message, setMessage] = useState<string | undefined>('');
-  const location = useLocation();
-  const state = location.state as LocationState | null;
+
   useEffect(() => {
-    if (state && 'successMessage' in state) {
+    const successMessage = sessionStorage.getItem('showSuccess');
+    if (successMessage) {
+      const text = `You have been successfully ${successMessage}`;
+
       setTimeout(() => {
-        setMessage(state.successMessage);
+        setMessage(text);
         window.history.replaceState({}, '');
       }, 0);
+      sessionStorage.removeItem('showSuccess');
     }
-  }, [state]);
+  }, []);
 
   return (
     <>
