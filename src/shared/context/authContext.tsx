@@ -7,20 +7,23 @@ import type {
   registerData,
 } from '../types/auth.types';
 import { login, register } from '@/api/auth.api';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { getUserId } from '@/api/auth.mock';
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState<Omit<User, 'password'> | null>(null);
 
   useEffect(() => {
     if (user) {
-      navigate('/profile');
-    } else navigate('/login');
-  }, [user, navigate]);
+      if (location.pathname === '/register' || location.pathname === '/login') {
+        navigate('/profile');
+      } else navigate(location.pathname);
+    } else if (location.pathname != '/register') navigate('/login');
+  }, [user, navigate, location.pathname]);
   useEffect(() => {
     const savedUser: string | null = localStorage.getItem('user');
     if (savedUser) {
