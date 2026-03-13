@@ -9,15 +9,23 @@ import { dashboardMock } from '../features/Dashboard/Dashboard.mock';
 function Dashboard() {
   return (
     <Box p={3}>
-      <Typography
-        variant="h5"
-        sx={{
-          mb: 4,
-          fontWeight: 500,
-        }}
-      >
-        Hello, username.
-      </Typography>
+      <Box display="flex" justifyContent="flex-end" mb={4}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 500,
+          }}
+        >
+          Hello,{' '}
+          <Typography
+            variant="h5"
+            component="span"
+            sx={{ color: '#e94f4e', fontWeight: 600 }}
+          >
+            {dashboardMock.user.username}.
+          </Typography>
+        </Typography>
+      </Box>
 
       <Grid container spacing={5}>
         {/* Left column */}
@@ -38,7 +46,19 @@ function Dashboard() {
       </Grid>
 
       <Box mt={4} display="flex" justifyContent="flex-end">
-        <Button variant="contained">Start Practice</Button>
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: '#377732',
+            color: '#ffffff',
+            borderRadius: '10px',
+            '&:hover': {
+              backgroundColor: '#2e642a',
+            },
+          }}
+        >
+          Start Practice
+        </Button>
       </Box>
     </Box>
   );

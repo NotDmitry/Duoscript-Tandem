@@ -40,6 +40,7 @@ export interface ActivityItem {
 }
 
 export interface DashboardData {
+  user: User;
   progress: number;
   learningToday: {
     minutes: number;

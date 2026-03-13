@@ -14,13 +14,16 @@ export default function StatsGrid({ data }: Props) {
       </Typography>
       <Grid container spacing={2}>
         <Grid size={{ xs: 4 }}>
-          <StatCard title="Minutes" value={data.learningToday.minutes} />
+          <StatCard title=" ⏱ Minutes" value={data.learningToday.minutes} />
         </Grid>
         <Grid size={{ xs: 4 }}>
-          <StatCard title="Activities" value={data.learningToday.activities} />
+          <StatCard
+            title="✔ Activities"
+            value={data.learningToday.activities}
+          />
         </Grid>
         <Grid size={{ xs: 4 }}>
-          <StatCard title="Streak" value={data.learningToday.streak} />
+          <StatCard title="🔥 Streak" value={data.learningToday.streak} />
         </Grid>
       </Grid>
     </Box>

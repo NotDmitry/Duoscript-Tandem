@@ -62,6 +62,7 @@ export const mockActivityLog: ActivityItem[] = [
 ];
 
 export const dashboardMock: DashboardData = {
+  user: mockUser,
   progress: mockUserProgress.progressPercent,
 
   learningToday: {
