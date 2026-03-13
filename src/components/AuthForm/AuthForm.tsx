@@ -78,6 +78,7 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
     <Container maxWidth="sm">
       <Box
         component="form"
+        role="form"
         noValidate
         sx={{
           p: '0 40px',

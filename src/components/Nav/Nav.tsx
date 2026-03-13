@@ -26,6 +26,7 @@ export function Nav({ isAuthorized, closeMobileMenu }: NavProps) {
   const currentLinks: NavItem[] = isAuthorized ? privateLinks : publicLinks;
   return (
     <Box
+      role="navigation"
       component="nav"
       sx={{
         display: 'flex',
