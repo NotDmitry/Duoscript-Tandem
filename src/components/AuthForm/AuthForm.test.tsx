@@ -1,4 +1,4 @@
-import { render, screen, within, cleanup } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { BrowserRouter } from 'react-router';
 import type { ReactElement } from 'react';
 import AuthForm from './AuthForm';
@@ -6,9 +6,7 @@ import AuthForm from './AuthForm';
 const renderWithRouter = (component: ReactElement) => {
   return render(<BrowserRouter>{component}</BrowserRouter>);
 };
-afterEach(() => {
-  cleanup();
-});
+
 describe('AuthForm', () => {
   it('renders title', () => {
     renderWithRouter(<AuthForm mode="LOGIN" />);
