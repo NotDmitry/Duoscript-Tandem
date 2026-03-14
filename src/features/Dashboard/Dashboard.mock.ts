@@ -59,6 +59,54 @@ export const mockActivityLog: ActivityItem[] = [
     status: 'completed',
     createdAt: '2026-03-05',
   },
+
+  {
+    id: 'activity_3',
+    userId: 'user_1',
+    course: 'Algorithms',
+    widget: 'Two Sum Challenge',
+    type: 'exercise',
+    score: 100,
+    maxScore: 100,
+    status: 'completed',
+    createdAt: '2026-03-04',
+  },
+
+  {
+    id: 'activity_4',
+    userId: 'user_1',
+    course: 'Core JS',
+    widget: 'Async Event Loop',
+    type: 'widget',
+    score: 70,
+    maxScore: 100,
+    status: 'completed',
+    createdAt: '2026-03-03',
+  },
+
+  {
+    id: 'activity_5',
+    userId: 'user_1',
+    course: 'TypeScript',
+    widget: 'Generics Quiz',
+    type: 'quiz',
+    score: 95,
+    maxScore: 100,
+    status: 'completed',
+    createdAt: '2026-03-02',
+  },
+
+  {
+    id: 'activity_6',
+    userId: 'user_1',
+    course: 'Core JS',
+    widget: 'Memory GC Game',
+    type: 'widget',
+    score: 80,
+    maxScore: 100,
+    status: 'completed',
+    createdAt: '2026-03-01',
+  },
 ];
 
 export const dashboardMock: DashboardData = {

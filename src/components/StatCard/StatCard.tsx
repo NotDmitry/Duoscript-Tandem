@@ -16,7 +16,7 @@ export default function StatCard({ title, value }: StatCardProps) {
         backgroundColor: '#fafafa',
       }}
     >
-      <CardContent>
+      <CardContent sx={{ textAlign: 'center' }}>
         <Typography variant="subtitle2" color="text.secondary">
           {title}
         </Typography>

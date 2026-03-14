@@ -32,7 +32,7 @@ export interface ActivityItem {
   userId: string;
   course: string;
   widget: string;
-  type: 'quiz' | 'exercise';
+  type: 'quiz' | 'exercise' | 'widget';
   score: number;
   maxScore: number;
   status: 'completed' | 'in_progress';
