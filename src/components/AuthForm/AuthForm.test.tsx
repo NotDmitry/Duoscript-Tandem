@@ -1,4 +1,3 @@
-import { describe, it, expect, afterEach } from 'vitest';
 import { render, screen, within, cleanup } from '@testing-library/react';
 import { BrowserRouter } from 'react-router';
 import type { ReactElement } from 'react';
