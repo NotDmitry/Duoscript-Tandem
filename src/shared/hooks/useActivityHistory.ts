@@ -2,18 +2,7 @@ import { useState, useEffect } from 'react';
 import { getHistory } from '@/api/dashboard.api';
 import type { ActivityItem } from '@/features/Dashboard/Dashboard.types';
 
-interface UseActivityHistoryResult {
-  activities: ActivityItem[];
-  page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  totalPages: number;
-  loading: boolean;
-  error: string | null;
-}
-
-export function useActivityHistory(
-  itemsPerPage: number
-): UseActivityHistoryResult {
+export function useActivityHistory(itemsPerPage: number) {
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -43,3 +32,5 @@ export function useActivityHistory(
 
   return { activities, page, setPage, totalPages, loading, error };
 }
+
+export type UseActivityHistoryResult = ReturnType<typeof useActivityHistory>;
