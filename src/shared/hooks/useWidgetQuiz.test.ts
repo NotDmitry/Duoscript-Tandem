@@ -62,7 +62,7 @@ describe('Hook useWidgetQuiz', () => {
     expect(result.current.currentQuestion).toEqual(mockQuizData.questions[0]);
   });
 
-  it('Updates selected answer throw handleAnswerSelect', async () => {
+  it('Updates selected answer through handleAnswerSelect', async () => {
     const { result } = renderHook(() => useWidgetQuiz(quizType));
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
