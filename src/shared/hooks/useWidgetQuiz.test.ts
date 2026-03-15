@@ -1,6 +1,6 @@
 /* @vitest-environment jsdom */
 import { renderHook, act, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, beforeEach, it, expect, vi } from 'vitest';
 import { useWidgetQuiz } from './useWidgetQuiz.ts';
 import type {
   QuizProps,
@@ -46,6 +46,9 @@ vi.mock('@/api/widgetQuiz.api.ts', () => ({
 const quizType: QuizType = { type: 'html' };
 
 describe('Hook useWidgetQuiz', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
   it('Loads some quiz data and sets loading to false', async () => {
     const { result } = renderHook(() => useWidgetQuiz(quizType));
     expect(result.current.isLoading).toBe(true);
