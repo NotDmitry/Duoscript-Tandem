@@ -1,26 +1,16 @@
 import { Box, Button, Grid, Typography, Pagination } from '@mui/material';
 import { Link } from 'react-router';
-import { useState } from 'react';
+import { useActivityHistory } from '@/shared/hooks/useActivityHistory';
 
 import ProgressCard from '@/components/ProgressCard/ProgressCard';
 import StatsGrid from '../features/Dashboard/components/StatsGrid';
 import RecentActivity from '../features/Dashboard/components/RecentActivity';
 import { dashboardMock } from '../features/Dashboard/Dashboard.mock';
-import type { ActivityItem } from '@/features/Dashboard/Dashboard.types.ts';
 
 function Dashboard() {
-  const [page, setPage] = useState(1);
   const itemsPerPage = 3;
-
-  const startIndex: number = (page - 1) * itemsPerPage;
-  const endIndex: number = startIndex + itemsPerPage;
-
-  const paginatedActivities: ActivityItem[] =
-    dashboardMock.recentActivity.slice(startIndex, endIndex);
-
-  const pageCount: number = Math.ceil(
-    dashboardMock.recentActivity.length / itemsPerPage
-  );
+  const { activities, page, setPage, totalPages, loading, error } =
+    useActivityHistory(itemsPerPage);
 
   const handlePageChange = (
     _: React.ChangeEvent<unknown>,
@@ -67,16 +57,30 @@ function Dashboard() {
 
         {/* Right column */}
         <Grid size={{ xs: 12, md: 6 }}>
-          <Grid container direction="column" spacing={5}>
-            <RecentActivity activities={paginatedActivities} />
-            <Box display="flex" justifyContent="center">
-              <Pagination
-                count={pageCount}
-                page={page}
-                onChange={handlePageChange}
-                shape="rounded"
-              />
-            </Box>
+          <Grid
+            container
+            direction="column"
+            spacing={5}
+            sx={{ minHeight: '52vh' }}
+          >
+            {loading ? (
+              <Typography>Loading activities...</Typography>
+            ) : error ? (
+              <Typography color="error">{error}</Typography>
+            ) : (
+              <>
+                <RecentActivity activities={activities} />
+                <Box display="flex" justifyContent="center">
+                  <Pagination
+                    count={totalPages}
+                    page={page}
+                    onChange={handlePageChange}
+                    shape="rounded"
+                    disabled={loading}
+                  />
+                </Box>
+              </>
+            )}
           </Grid>
         </Grid>
       </Grid>
