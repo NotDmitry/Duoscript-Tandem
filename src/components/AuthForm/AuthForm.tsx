@@ -5,7 +5,10 @@ import {
   FormLabel,
   Button,
   Link,
+  Snackbar,
+  Alert,
 } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router';
 import type { Resolver } from 'react-hook-form';
@@ -18,6 +21,7 @@ import {
   type LogInProfileFields,
   type SingUpFields,
 } from '@/shared/schemas/authSchemas';
+import { useAuthSubmit } from '@/shared/hooks/useAuthSubmit';
 type AuthMode = 'LOGIN' | 'SIGN UP' | 'PROFILE';
 
 interface FormInterface {
@@ -61,18 +65,20 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
     mode: 'onChange',
     defaultValues: { nickname: '', password: '', repeatPassword: '' },
   });
-  const onSubmit = (data: AuthFormData) => {
-    console.log(data);
+  const { handleAuthSubmit, isLoading, isSuccess, setIsSuccess } =
+    useAuthSubmit();
+  const onSubmit = async (data: AuthFormData) => {
+    await handleAuthSubmit(data);
   };
 
   useEffect(() => {
-    if (isSubmitSuccessful) {
+    if (isSubmitSuccessful && isSuccess === 'true') {
       reset();
       setTimeout(() => {
         setFormKey((prev) => prev + 1);
       }, 0);
     }
-  }, [isSubmitSuccessful, reset]);
+  }, [isSubmitSuccessful, isSuccess, reset]);
 
   return (
     <Container maxWidth="sm">
@@ -137,9 +143,20 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
             }
           />
         )}
-        <Button type="submit" size="large" variant="contained">
-          {mode === 'PROFILE' ? 'SAVE' : mode}
-        </Button>
+        {isLoading ? (
+          <Button
+            loading
+            loadingPosition="start"
+            startIcon={<SaveIcon />}
+            variant="outlined"
+          >
+            {mode === 'PROFILE' ? 'SAVE' : mode}
+          </Button>
+        ) : (
+          <Button type="submit" size="large" variant="contained">
+            {mode === 'PROFILE' ? 'SAVE' : mode}
+          </Button>
+        )}
         {mode === 'LOGIN' && (
           <Link
             component={NavLink}
@@ -163,6 +180,26 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
           </Button>
         )}
       </Box>
+      {isSuccess !== 'true' && isSuccess !== '' && (
+        <Snackbar
+          open={isSuccess !== 'true'}
+          autoHideDuration={3000}
+          onClose={() => {
+            setIsSuccess('');
+          }}
+        >
+          <Alert
+            onClose={() => {
+              setIsSuccess('');
+            }}
+            severity="error"
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+            {isSuccess}
+          </Alert>
+        </Snackbar>
+      )}
     </Container>
   );
 }

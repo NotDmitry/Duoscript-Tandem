@@ -1,5 +1,6 @@
 import { Box, useMediaQuery } from '@mui/material';
 import { AppLink } from '../AppLink/AppLink';
+import { useAuth } from '@/shared/hooks/useAuth';
 interface NavItem {
   label: string;
   href: string;
@@ -10,6 +11,7 @@ interface NavProps {
 }
 
 export function Nav({ isAuthorized, closeMobileMenu }: NavProps) {
+  const { logout } = useAuth();
   const isMobile = useMediaQuery('(max-width:768px)');
   const publicLinks: NavItem[] = [
     { label: 'About', href: '/about' },
@@ -24,6 +26,7 @@ export function Nav({ isAuthorized, closeMobileMenu }: NavProps) {
   ];
 
   const currentLinks: NavItem[] = isAuthorized ? privateLinks : publicLinks;
+
   return (
     <Box
       role="navigation"
@@ -42,6 +45,16 @@ export function Nav({ isAuthorized, closeMobileMenu }: NavProps) {
           key={link.href}
         ></AppLink>
       ))}
+      {isAuthorized && (
+        <AppLink
+          onClick={() => {
+            if (closeMobileMenu) closeMobileMenu();
+            logout();
+          }}
+          linkLabel="logOut"
+          linkHref="/login"
+        ></AppLink>
+      )}
     </Box>
   );
 }

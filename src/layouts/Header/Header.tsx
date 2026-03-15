@@ -4,12 +4,11 @@ import { useState } from 'react';
 import { Box, useMediaQuery } from '@mui/material';
 import DragHandleTwoToneIcon from '@mui/icons-material/DragHandleTwoTone';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
+import { useAuth } from '@/shared/hooks/useAuth';
 
-interface NavProps {
-  isAuthorized: boolean;
-}
-
-export function Header({ isAuthorized }: NavProps) {
+export function Header() {
+  const { user } = useAuth();
+  console.log(user);
   const isMobile = useMediaQuery('(max-width:768px)');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -50,13 +49,13 @@ export function Header({ isAuthorized }: NavProps) {
             }}
           >
             <Nav
-              isAuthorized={isAuthorized}
+              isAuthorized={user ? true : false}
               closeMobileMenu={closeMobileMenu}
             />
           </Box>
         </>
       ) : (
-        <Nav isAuthorized={isAuthorized} />
+        <Nav isAuthorized={user ? true : false} />
       )}
     </Box>
   );
