@@ -22,7 +22,7 @@ import {
   type SingUpFields,
 } from '@/shared/schemas/authSchemas';
 import { useAuthSubmit } from '@/shared/hooks/useAuthSubmit';
-type AuthMode = 'LOGIN' | 'SIGN UP' | 'PROFILE';
+import type { AuthMode } from '@/shared/types/auth.types';
 
 interface FormInterface {
   mode: AuthMode;
@@ -66,7 +66,7 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
     defaultValues: { nickname: '', password: '', repeatPassword: '' },
   });
   const { handleAuthSubmit, isLoading, isSuccess, setIsSuccess } =
-    useAuthSubmit();
+    useAuthSubmit(mode);
   const onSubmit = async (data: AuthFormData) => {
     await handleAuthSubmit(data);
   };

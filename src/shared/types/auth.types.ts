@@ -25,6 +25,7 @@ export interface AuthContextType {
   loginFunc: (loginData: loginData) => Promise<void>;
   registerFunc: (registerData: registerData) => Promise<void>;
   logout: () => void;
+  updateProfileFunc: (loginData: loginData) => Promise<void>;
 }
 export interface LoginResponse {
   accessToken: string;
@@ -34,3 +35,4 @@ export interface LoginResponse {
     nickname: string;
   };
 }
+export type AuthMode = 'LOGIN' | 'SIGN UP' | 'PROFILE';

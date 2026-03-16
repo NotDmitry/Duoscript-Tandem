@@ -3,7 +3,13 @@ import type {
   loginData,
   registerData,
 } from '@/shared/types/auth.types';
-import { addUser, getUserId, isPasswordCorrect, userExist } from './auth.mock';
+import {
+  addUser,
+  getUserId,
+  isPasswordCorrect,
+  userExist,
+  updateUser,
+} from './auth.mock';
 import {
   createAccessToken,
   createRefreshToken,
@@ -66,6 +72,45 @@ export async function login(loginData: loginData): Promise<LoginResponse> {
     user: {
       id,
       nickname: loginData.nickname,
+    },
+  };
+}
+export async function updateProfile(
+  profileData: loginData
+): Promise<LoginResponse> {
+  await delay(1000);
+  if (userExist(profileData.nickname)) {
+    throw Error(`User with nickname ${profileData.nickname} is already exist`);
+  }
+  const savedUser: string | null = localStorage.getItem('user');
+  if (!savedUser) {
+    throw Error(`You are not logged in`);
+  }
+  const parsedUser = JSON.parse(savedUser) as {
+    accessToken: string;
+    refreshToken: string;
+    nickname: string;
+    id?: string;
+  };
+  const savedNickname = parsedUser.nickname;
+  const id = getUserId(savedNickname);
+  updateUser({
+    nickname: profileData.nickname,
+    password: profileData.password,
+    id,
+  });
+  setUserDataToLS(
+    parsedUser.accessToken,
+    parsedUser.refreshToken,
+    profileData.nickname
+  );
+
+  return {
+    accessToken: parsedUser.accessToken,
+    refreshToken: parsedUser.refreshToken,
+    user: {
+      id,
+      nickname: profileData.nickname,
     },
   };
 }

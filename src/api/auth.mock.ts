@@ -15,6 +15,9 @@ const mockUsers: User[] = [
 function findUserByNickname(nickname: string): User | undefined {
   return mockUsers.find((user) => user.nickname === nickname);
 }
+function findUserById(id: string): User | undefined {
+  return mockUsers.find((user) => user.id === id);
+}
 
 export function addUser(user: Omit<User, 'id'>): User {
   const newUser = {
@@ -23,6 +26,17 @@ export function addUser(user: Omit<User, 'id'>): User {
   };
   mockUsers.push(newUser);
   return newUser;
+}
+export function updateUser(user: User): User {
+  const updatingUser = findUserById(user.id);
+  if (!updatingUser) {
+    throw Error("User doesn't exist");
+  }
+  updatingUser.nickname = user.nickname;
+  updatingUser.password = user.password;
+
+  console.log(updatingUser);
+  return updatingUser;
 }
 export function userExist(nickname: string): boolean {
   return mockUsers.some((user) => nickname === user.nickname);
