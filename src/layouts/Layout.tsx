@@ -12,7 +12,7 @@ function Layout() {
         flexDirection: 'column',
       }}
     >
-      <Header isAuthorized={false} />
+      <Header />
       <Box component="main" sx={{ flexGrow: 1 }}>
         <Outlet />
       </Box>
