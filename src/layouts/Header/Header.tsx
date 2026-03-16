@@ -8,7 +8,6 @@ import { useAuth } from '@/shared/hooks/useAuth';
 
 export function Header() {
   const { user } = useAuth();
-  console.log(user);
   const isMobile = useMediaQuery('(max-width:768px)');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
