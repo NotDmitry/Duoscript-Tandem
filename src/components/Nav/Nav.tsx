@@ -23,6 +23,7 @@ export function Nav({ isAuthorized, closeMobileMenu }: NavProps) {
     { label: 'About', href: '/about' },
     { label: 'Library', href: '/library' },
     { label: 'Profile', href: '/profile' },
+    { label: 'logOut', href: '/login' },
   ];
 
   const currentLinks: NavItem[] = isAuthorized ? privateLinks : publicLinks;
@@ -39,22 +40,19 @@ export function Nav({ isAuthorized, closeMobileMenu }: NavProps) {
     >
       {currentLinks.map((link) => (
         <AppLink
-          onClick={closeMobileMenu}
+          onClick={
+            link.label === 'logOut'
+              ? () => {
+                  if (closeMobileMenu) closeMobileMenu();
+                  logout();
+                }
+              : closeMobileMenu
+          }
           linkLabel={link.label}
           linkHref={link.href}
           key={link.href}
         ></AppLink>
       ))}
-      {isAuthorized && (
-        <AppLink
-          onClick={() => {
-            if (closeMobileMenu) closeMobileMenu();
-            logout();
-          }}
-          linkLabel="logOut"
-          linkHref="/login"
-        ></AppLink>
-      )}
     </Box>
   );
 }
