@@ -28,10 +28,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const savedUser: string | null = localStorage.getItem('user');
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser) as {
-        accessToken?: string;
-        refreshToken?: string;
-        nickname?: string;
-        id?: string;
+        accessToken: string;
+        refreshToken: string;
+        nickname: string;
       };
 
       const nickname = parsedUser.nickname;

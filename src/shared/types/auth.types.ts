@@ -3,6 +3,11 @@ export interface User {
   nickname: string;
   password: string;
 }
+export interface UserLS {
+  accessToken: string;
+  refreshToken: string;
+  nickname: string;
+}
 export interface loginData {
   nickname: string;
   password: string;

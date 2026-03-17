@@ -27,10 +27,10 @@ function setUserDataToLS(
     JSON.stringify({ accessToken, refreshToken, nickname })
   );
 }
-export function getUserNameFromLS(): string | undefined {
+export function getUserNameFromLS(): string {
   const user = localStorage.getItem('user');
   if (!user) {
-    return;
+    throw Error('User is not logged in');
   }
   const parsedUser: unknown = JSON.parse(user);
   if (
@@ -40,7 +40,7 @@ export function getUserNameFromLS(): string | undefined {
     typeof parsedUser.nickname === 'string'
   ) {
     return parsedUser.nickname;
-  }
+  } else throw Error('User is not logged in');
 }
 export async function register(
   registerData: registerData
@@ -105,7 +105,6 @@ export async function updateProfile(
     accessToken: string;
     refreshToken: string;
     nickname: string;
-    id?: string;
   };
   const savedNickname = parsedUser.nickname;
   const id = getUserId(savedNickname);
