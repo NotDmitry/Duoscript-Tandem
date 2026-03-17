@@ -14,6 +14,10 @@ import {
   createAccessToken,
   createRefreshToken,
 } from '@/shared/utils/jwt.utils';
+import {
+  userStorageSchema,
+  type UserStorage,
+} from '@/shared/schemas/authSchemas';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -32,15 +36,8 @@ export function getUserNameFromLS(): string {
   if (!user) {
     throw Error('User is not logged in');
   }
-  const parsedUser: unknown = JSON.parse(user);
-  if (
-    parsedUser &&
-    typeof parsedUser === 'object' &&
-    'nickname' in parsedUser &&
-    typeof parsedUser.nickname === 'string'
-  ) {
-    return parsedUser.nickname;
-  } else throw Error('User is not logged in');
+  const parsedUser: UserStorage = userStorageSchema.parse(JSON.parse(user));
+  return parsedUser.nickname;
 }
 export async function register(
   registerData: registerData
@@ -101,11 +98,9 @@ export async function updateProfile(
   if (!savedUser) {
     throw Error(`You are not logged in`);
   }
-  const parsedUser = JSON.parse(savedUser) as {
-    accessToken: string;
-    refreshToken: string;
-    nickname: string;
-  };
+  const parsedUser: UserStorage = userStorageSchema.parse(
+    JSON.parse(savedUser)
+  );
   const savedNickname = parsedUser.nickname;
   const id = getUserId(savedNickname);
   updateUser({

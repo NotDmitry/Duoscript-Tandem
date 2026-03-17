@@ -42,5 +42,12 @@ export const signUpSchema = baseAuthSchema
     { message: 'Passwords must match', path: ['repeatPassword'] }
   );
 
+export const userStorageSchema = z.object({
+  nickname: nicknameSchema,
+  accessToken: z.string(),
+  refreshToken: z.string(),
+});
+export type UserStorage = z.infer<typeof userStorageSchema>;
+
 export type LogInProfileFields = z.infer<typeof baseAuthSchema>;
 export type SingUpFields = z.infer<typeof signUpSchema>;
