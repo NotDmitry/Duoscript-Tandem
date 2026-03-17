@@ -5,8 +5,6 @@ import {
   FormLabel,
   Button,
   Link,
-  Snackbar,
-  Alert,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { useEffect, useState } from 'react';
@@ -27,6 +25,7 @@ import type { AuthMode } from '@/shared/types/auth.types';
 interface FormInterface {
   mode: AuthMode;
   profileTitle?: string;
+  onProfileUpdate?: (newName: string) => void;
 }
 
 const getTitle = ({ mode, profileTitle }: FormInterface) => {
@@ -50,7 +49,7 @@ const getAuthSchema = (mode: AuthMode) => {
   }
 };
 
-function AuthForm({ mode, profileTitle }: FormInterface) {
+function AuthForm({ mode, profileTitle, onProfileUpdate }: FormInterface) {
   const schema = getAuthSchema(mode);
   type AuthFormData = LogInProfileFields | SingUpFields;
   const [formKey, setFormKey] = useState(0);
@@ -65,14 +64,16 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
     mode: 'onChange',
     defaultValues: { nickname: '', password: '', repeatPassword: '' },
   });
-  const { handleAuthSubmit, isLoading, isSuccess, setIsSuccess } =
-    useAuthSubmit(mode);
+  const { handleAuthSubmit, isLoading, isSuccess } = useAuthSubmit(mode);
   const onSubmit = async (data: AuthFormData) => {
     await handleAuthSubmit(data);
+    if (onProfileUpdate) {
+      onProfileUpdate(data.nickname);
+    }
   };
 
   useEffect(() => {
-    if (isSubmitSuccessful && isSuccess === 'true') {
+    if (isSubmitSuccessful && isSuccess) {
       reset();
       setTimeout(() => {
         setFormKey((prev) => prev + 1);
@@ -180,26 +181,6 @@ function AuthForm({ mode, profileTitle }: FormInterface) {
           </Button>
         )}
       </Box>
-      {isSuccess !== 'true' && isSuccess !== '' && (
-        <Snackbar
-          open={isSuccess !== 'true'}
-          autoHideDuration={3000}
-          onClose={() => {
-            setIsSuccess('');
-          }}
-        >
-          <Alert
-            onClose={() => {
-              setIsSuccess('');
-            }}
-            severity="error"
-            variant="filled"
-            sx={{ width: '100%' }}
-          >
-            {isSuccess}
-          </Alert>
-        </Snackbar>
-      )}
     </Container>
   );
 }

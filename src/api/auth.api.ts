@@ -27,6 +27,21 @@ function setUserDataToLS(
     JSON.stringify({ accessToken, refreshToken, nickname })
   );
 }
+export function getUserNameFromLS(): string | undefined {
+  const user = localStorage.getItem('user');
+  if (!user) {
+    return;
+  }
+  const parsedUser: unknown = JSON.parse(user);
+  if (
+    parsedUser &&
+    typeof parsedUser === 'object' &&
+    'nickname' in parsedUser &&
+    typeof parsedUser.nickname === 'string'
+  ) {
+    return parsedUser.nickname;
+  }
+}
 export async function register(
   registerData: registerData
 ): Promise<LoginResponse> {

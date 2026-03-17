@@ -41,7 +41,7 @@ describe('AuthForm', () => {
     vi.spyOn(Hook, 'useAuthSubmit').mockReturnValue({
       handleAuthSubmit: mockHandleSubmit,
       isLoading: false,
-      isSuccess: '',
+      isSuccess: false,
       setIsSuccess: vi.fn(),
     });
     renderWithProviders(<AuthForm mode="LOGIN" />);

@@ -35,7 +35,6 @@ export function updateUser(user: User): User {
   updatingUser.nickname = user.nickname;
   updatingUser.password = user.password;
 
-  console.log(updatingUser);
   return updatingUser;
 }
 export function userExist(nickname: string): boolean {

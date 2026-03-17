@@ -1,47 +1,18 @@
+import { getUserNameFromLS } from '@/api/auth.api';
 import AuthForm from '@/components/AuthForm/AuthForm';
-import { Snackbar, Alert } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 function Profile() {
-  const [message, setMessage] = useState<string | undefined>('');
-
-  useEffect(() => {
-    const successMessage = sessionStorage.getItem('showSuccess');
-    if (successMessage) {
-      const text = `You have been successfully ${successMessage}`;
-
-      setTimeout(() => {
-        setMessage(text);
-        window.history.replaceState({}, '');
-      }, 0);
-      sessionStorage.removeItem('showSuccess');
-    }
-  }, []);
+  const [name, setName] = useState(getUserNameFromLS());
 
   return (
-    <>
-      <AuthForm mode="PROFILE" profileTitle="John Dou" />
-      {message && message !== '' && (
-        <Snackbar
-          open={true}
-          autoHideDuration={3000}
-          onClose={() => {
-            setMessage('');
-          }}
-        >
-          <Alert
-            onClose={() => {
-              setMessage('');
-            }}
-            severity="success"
-            variant="filled"
-            sx={{ width: '100%' }}
-          >
-            {message}
-          </Alert>
-        </Snackbar>
-      )}
-    </>
+    <AuthForm
+      mode="PROFILE"
+      profileTitle={name}
+      onProfileUpdate={(newName: string) => {
+        setName(newName);
+      }}
+    />
   );
 }
 
