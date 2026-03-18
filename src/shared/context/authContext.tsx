@@ -6,7 +6,7 @@ import type {
   loginData,
   registerData,
 } from '../types/auth.types';
-import { login, register } from '@/api/auth.api';
+import { login, register, updateProfile } from '@/api/auth.api';
 import { useNavigate, useLocation } from 'react-router';
 import { getUserId } from '@/api/auth.mock';
 
@@ -28,10 +28,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const savedUser: string | null = localStorage.getItem('user');
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser) as {
-        accessToken?: string;
-        refreshToken?: string;
-        nickname?: string;
-        id?: string;
+        accessToken: string;
+        refreshToken: string;
+        nickname: string;
       };
 
       const nickname = parsedUser.nickname;
@@ -64,8 +63,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem('user');
   };
 
+  const updateProfileFunc = async (loginData: loginData) => {
+    const response = await updateProfile(loginData);
+    sessionStorage.setItem('showSuccess', 'update profile data');
+    setUser(response.user);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loginFunc, registerFunc, logout }}>
+    <AuthContext.Provider
+      value={{ user, loginFunc, registerFunc, logout, updateProfileFunc }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -6,11 +6,14 @@ import { AuthProvider } from '@/shared/context/authContext';
 import { vi } from 'vitest';
 import * as Hook from '@/shared/hooks/useAuthSubmit';
 import userEvent from '@testing-library/user-event';
+import { UIProvider } from '@/shared/context/UIContext';
 
 const renderWithProviders = (component: ReactElement) => {
   return render(
     <BrowserRouter>
-      <AuthProvider>{component}</AuthProvider>
+      <UIProvider>
+        <AuthProvider>{component}</AuthProvider>
+      </UIProvider>
     </BrowserRouter>
   );
 };
@@ -41,7 +44,7 @@ describe('AuthForm', () => {
     vi.spyOn(Hook, 'useAuthSubmit').mockReturnValue({
       handleAuthSubmit: mockHandleSubmit,
       isLoading: false,
-      isSuccess: '',
+      isSuccess: false,
       setIsSuccess: vi.fn(),
     });
     renderWithProviders(<AuthForm mode="LOGIN" />);

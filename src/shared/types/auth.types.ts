@@ -3,6 +3,11 @@ export interface User {
   nickname: string;
   password: string;
 }
+export interface UserLS {
+  accessToken: string;
+  refreshToken: string;
+  nickname: string;
+}
 export interface loginData {
   nickname: string;
   password: string;
@@ -25,6 +30,7 @@ export interface AuthContextType {
   loginFunc: (loginData: loginData) => Promise<void>;
   registerFunc: (registerData: registerData) => Promise<void>;
   logout: () => void;
+  updateProfileFunc: (loginData: loginData) => Promise<void>;
 }
 export interface LoginResponse {
   accessToken: string;
@@ -34,3 +40,4 @@ export interface LoginResponse {
     nickname: string;
   };
 }
+export type AuthMode = 'LOGIN' | 'SIGN UP' | 'PROFILE';
