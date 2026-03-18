@@ -1,5 +1,7 @@
+import AsyncSorter from '@/features/Async-sorter/AsyncSorter';
+
 function About() {
-  return <div>About Page</div>;
+  return <AsyncSorter />;
 }
 
 export default About;
