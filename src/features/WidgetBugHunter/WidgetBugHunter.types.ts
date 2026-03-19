@@ -4,7 +4,7 @@ interface QuizType {
 
 interface QuizTask {
   code: string;
-  answers: [];
+  answers: string[] | string[][];
 }
 
 interface BugHunterQuiz {

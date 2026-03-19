@@ -3,15 +3,22 @@ import type {
   QuizTask,
 } from '@/features/WidgetBugHunter/WidgetBugHunter.types.ts';
 
-const htmlMockQuestions: QuizTask[] = [
+const jsMockQuestions: QuizTask[] = [
   {
-    code: '',
-    answers: [],
+    code: 'XDX(value){\n' + '    return value * value\n' + '}',
+    answers: ['fun', 'bun', 'def', 'function', 'const'],
+  },
+  {
+    code: 'XDX(value){\n' + '    XDX value * 10\n' + '}',
+    answers: [
+      ['fun', 'bun', 'def', 'function', 'const'],
+      ['give', 'return', 'send'],
+    ],
   },
 ];
 
-export const HTMLQuizParams: BugHunterQuiz = {
-  quizName: 'HTML quiz',
-  tasks: htmlMockQuestions,
+export const jsQuizParams: BugHunterQuiz = {
+  quizName: 'JavaScript Bug Hunter',
+  tasks: jsMockQuestions,
   rightAnswers: [12, 12, 22, 21, 32],
 };
