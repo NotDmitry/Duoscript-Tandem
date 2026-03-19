@@ -1,4 +1,3 @@
-import { getAsyncSortTask } from '@/api/asyncSort.api';
 import {
   Box,
   Typography,
@@ -7,18 +6,21 @@ import {
   Container,
   Paper,
   Button,
+  CircularProgress,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import type { AsyncSorterTask } from './types';
+import { useAsyncSorter } from '@/shared/hooks/useAsyncSorter';
 
 export default function AsyncSorter() {
   const [taskIndex, setTaskIndex] = useState(0);
   const [task, setTask] = useState<null | AsyncSorterTask>(null);
+  const { getAsyncSortTaskByIndex, isLoading } = useAsyncSorter();
   useEffect(() => {
     let cancelled = false;
     const loadTask = async () => {
       try {
-        const taskData = await getAsyncSortTask(taskIndex);
+        const taskData = await getAsyncSortTaskByIndex(taskIndex);
         if (!cancelled) {
           setTask(taskData ?? null);
         }
@@ -31,7 +33,25 @@ export default function AsyncSorter() {
     return () => {
       cancelled = true;
     };
-  }, [taskIndex]);
+  }, [getAsyncSortTaskByIndex, taskIndex]);
+  if (isLoading) {
+    return (
+      <Container
+        maxWidth="sm"
+        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      >
+        <Typography
+          variant="h4"
+          component="h4"
+          gutterBottom
+          sx={{ textAlign: 'center', m: 2 }}
+        >
+          Async Sorter
+        </Typography>
+        <CircularProgress sx={{ mt: 3 }} />
+      </Container>
+    );
+  }
   if (!task) {
     return (
       <Container maxWidth="sm">
