@@ -85,7 +85,12 @@ function NotFound() {
           The page you are looking for has drifted away into the deep ocean.
           Even SpongeBob can not find it.
         </Typography>
-        <Button variant="outlined" onClick={() => void navigate('/')}>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            navigate('/');
+          }}
+        >
           Home page
         </Button>
       </Box>
