@@ -1,3 +1,4 @@
+import { getAsyncSortTask } from '@/api/asyncSort.api';
 import {
   Box,
   Typography,
@@ -7,8 +8,48 @@ import {
   Paper,
   Button,
 } from '@mui/material';
+import { useEffect, useState } from 'react';
+import type { AsyncSorterTask } from './types';
 
 export default function AsyncSorter() {
+  const [taskIndex, setTaskIndex] = useState(0);
+  const [task, setTask] = useState<null | AsyncSorterTask>(null);
+  useEffect(() => {
+    let cancelled = false;
+    const loadTask = async () => {
+      try {
+        const taskData = await getAsyncSortTask(taskIndex);
+        if (!cancelled) {
+          setTask(taskData ?? null);
+        }
+      } catch {
+        if (!cancelled) setTask(null);
+      }
+    };
+    void loadTask();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [taskIndex]);
+  if (!task) {
+    return (
+      <Container maxWidth="sm">
+        <Typography
+          variant="h4"
+          component="h4"
+          gutterBottom
+          sx={{ textAlign: 'center', m: 2 }}
+        >
+          Async Sorter
+        </Typography>
+        <Typography gutterBottom sx={{ textAlign: 'center', m: 2 }}>
+          The task can't be shown
+        </Typography>
+      </Container>
+    );
+  }
+
   return (
     <Container maxWidth="sm">
       <Typography
@@ -25,10 +66,9 @@ export default function AsyncSorter() {
       <Container>
         <Paper square={false} sx={{ p: 3, backgroundColor: '#f0f0f0' }}>
           <Stack spacing={1}>
-            <Box>console.log('1');</Box>
-            <Box>setTimeout(() =`{'>'}` console.log('2'), 0);</Box>
-            <Box>Promise.resolve().then(() =`{'>'}` console.log('3'));</Box>
-            <Box>console.log('4');</Box>
+            {task.codeSnippet.map((item, index) => {
+              return <Box key={index}>{item}</Box>;
+            })}
           </Stack>
         </Paper>
       </Container>
@@ -38,18 +78,13 @@ export default function AsyncSorter() {
       <Container>
         <Paper square={false} sx={{ p: 3, backgroundColor: '#f0f0f0' }}>
           <Stack direction="row" spacing={2}>
-            <Paper draggable elevation={3} sx={{ p: 2 }}>
-              1
-            </Paper>
-            <Paper draggable elevation={3} sx={{ p: 2 }}>
-              2
-            </Paper>
-            <Paper draggable elevation={3} sx={{ p: 2 }}>
-              3
-            </Paper>
-            <Paper draggable elevation={3} sx={{ p: 2 }}>
-              4
-            </Paper>
+            {task.blocks.map((item, index) => {
+              return (
+                <Paper draggable elevation={3} sx={{ p: 2 }} key={index}>
+                  {item.label}
+                </Paper>
+              );
+            })}
           </Stack>
         </Paper>
       </Container>
@@ -84,11 +119,19 @@ export default function AsyncSorter() {
       </Box>
       <Container>
         <Typography>Final order of output:</Typography>
-        <Paper sx={{ p: 1, mb: 2, backgroundColor: '#f0f0f0' }}>1 2 3 4</Paper>
+        <Paper sx={{ p: 1, mb: 2, backgroundColor: '#f0f0f0' }}>
+          Example: 1 2 3 4
+        </Paper>
       </Container>
       <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Box>
-          <Button variant="outlined" sx={{ mr: 1 }}>
+          <Button
+            onClick={() => {
+              setTaskIndex(taskIndex + 1);
+            }}
+            variant="outlined"
+            sx={{ mr: 1 }}
+          >
             Skip
           </Button>
           <Button variant="outlined">Submit</Button>
