@@ -11,3 +11,13 @@ export interface CourseDocument {
   lessonIds: string[];
   createdAt: Timestamp;
 }
+
+export interface CourseView {
+  courseId: string;
+  title: string;
+  description?: string;
+  iconUrl?: string;
+  tag: CourseTag;
+  lessonCount: number;
+  progressPercent?: number;
+}
