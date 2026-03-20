@@ -1,4 +1,5 @@
 import type { Timestamp } from 'firebase/firestore';
+import type { CourseTag } from '@/shared/models/courseModel.ts';
 
 export type WidgetType = 'quiz';
 
@@ -7,4 +8,20 @@ export interface WidgetDocument<T> {
   type: WidgetType;
   config: T;
   createdAt: Timestamp;
+}
+
+// Concrete widgets
+
+export interface QuizQuestion {
+  isText: boolean;
+  question: string;
+  code?: string;
+  answers: [number, string][];
+}
+
+export interface QuizConfig {
+  quizName: string;
+  type: CourseTag;
+  questions: QuizQuestion[];
+  rightAnswers: (number | null)[];
 }
