@@ -10,6 +10,8 @@ export interface WidgetDocument<T> {
   createdAt: Timestamp;
 }
 
+export type WidgetView<T> = Omit<WidgetDocument<T>, 'createdAt'>;
+
 // Concrete widgets
 
 export interface QuizQuestion {
