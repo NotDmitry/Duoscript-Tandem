@@ -20,7 +20,11 @@ export default function AsyncSorter() {
     handleDragOver,
     handleDrop,
     callStackItems,
-    draggedItem /*setCallStackItems, microtasksItems, setMicrotasksItems, macrotasksItems, setMacrotasksItems */,
+    draggedItem,
+    setDraggedItem,
+    /* setCallStackItems, */ clearZones,
+    microtasksItems,
+    /* setMicrotasksItems, */ macrotasksItems /* setMacrotasksItems , */,
   } = useDragAndDrop();
   const [taskIndex, setTaskIndex] = useState(0);
   const [task, setTask] = useState<null | AsyncSorterTask>(null);
@@ -79,10 +83,17 @@ export default function AsyncSorter() {
         Drag the blocks into the correct queues:
       </Typography>
       <Container>
-        <Paper square={false} sx={{ p: 3, backgroundColor: '#f0f0f0' }}>
+        <Paper
+          square={false}
+          sx={{ p: 3, backgroundColor: '#f0f0f0', minHeight: 92 }}
+        >
           <Stack direction="row" spacing={2}>
             {task.blocks.map((item, index) => {
-              if (callStackItems.find((csItem) => csItem === item.label))
+              if (
+                callStackItems.find((csItem) => csItem === item.label) ||
+                microtasksItems.find((miItem) => miItem === item.label) ||
+                macrotasksItems.find((maItem) => maItem === item.label)
+              )
                 return null;
               const isDragging = draggedItem?.id === item.id;
               return (
@@ -92,7 +103,10 @@ export default function AsyncSorter() {
                     handleDragStart(item);
                   }}
                   elevation={3}
-                  sx={{ p: 2, background: isDragging ? '#cbcbcb' : 'white' }}
+                  sx={{
+                    p: '10px',
+                    background: isDragging ? '#cbcbcb' : 'white',
+                  }}
                   key={index}
                 >
                   {item.label}
@@ -110,12 +124,14 @@ export default function AsyncSorter() {
               <Typography sx={{ fontWeight: 800, textAlign: 'center' }}>
                 Call Stack
               </Typography>
-              <Box
+              <Stack
+                direction="row"
+                spacing={callStackItems.length < 5 ? 1 : 0}
                 onDragOver={handleDragOver}
                 onDrop={() => {
                   handleDrop('Call Stack');
                 }}
-                sx={{ p: 1, height: 80 }}
+                sx={{ p: 1, minHeight: 60 }}
               >
                 {callStackItems.map((item, index) => {
                   return (
@@ -125,14 +141,14 @@ export default function AsyncSorter() {
                         console.log('drugged');
                       }}
                       elevation={3}
-                      sx={{ p: 2 }}
+                      sx={{ p: '10px' }}
                       key={index}
                     >
                       {item}
                     </Paper>
                   );
                 })}
-              </Box>
+              </Stack>
             </Paper>
           </Grid>
           <Grid size={{ xs: 4 }}>
@@ -140,7 +156,31 @@ export default function AsyncSorter() {
               <Typography sx={{ fontWeight: 800, textAlign: 'center' }}>
                 Microtasks
               </Typography>
-              <Box sx={{ p: 1, height: 80 }}></Box>
+              <Stack
+                direction="row"
+                spacing={microtasksItems.length < 5 ? 1 : 0}
+                onDragOver={handleDragOver}
+                onDrop={() => {
+                  handleDrop('Microtasks');
+                }}
+                sx={{ p: 1, minHeight: 60 }}
+              >
+                {microtasksItems.map((item, index) => {
+                  return (
+                    <Paper
+                      draggable
+                      onDragStart={() => {
+                        console.log('drugged');
+                      }}
+                      elevation={3}
+                      sx={{ p: '10px' }}
+                      key={index}
+                    >
+                      {item}
+                    </Paper>
+                  );
+                })}
+              </Stack>
             </Paper>
           </Grid>
           <Grid size={{ xs: 4 }}>
@@ -148,7 +188,31 @@ export default function AsyncSorter() {
               <Typography sx={{ fontWeight: 800, textAlign: 'center' }}>
                 Macrotasks
               </Typography>
-              <Box sx={{ p: 1, height: 80 }}></Box>
+              <Stack
+                direction="row"
+                spacing={macrotasksItems.length < 5 ? 1 : 0}
+                onDragOver={handleDragOver}
+                onDrop={() => {
+                  handleDrop('Macrotasks');
+                }}
+                sx={{ p: 1, minHeight: 60 }}
+              >
+                {macrotasksItems.map((item, index) => {
+                  return (
+                    <Paper
+                      draggable
+                      onDragStart={() => {
+                        console.log('drugged');
+                      }}
+                      elevation={3}
+                      sx={{ p: '10px' }}
+                      key={index}
+                    >
+                      {item}
+                    </Paper>
+                  );
+                })}
+              </Stack>
             </Paper>
           </Grid>
         </Grid>
@@ -164,6 +228,8 @@ export default function AsyncSorter() {
           <Button
             onClick={() => {
               setTaskIndex(taskIndex + 1);
+              clearZones();
+              setDraggedItem(null);
             }}
             variant="outlined"
             sx={{ mr: 1 }}

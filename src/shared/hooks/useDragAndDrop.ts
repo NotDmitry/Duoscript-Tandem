@@ -21,10 +21,21 @@ export const useDragAndDrop = () => {
   };
   const handleDrop = (zone: DropZone) => {
     if (draggedItem) {
-      if (zone === 'Call Stack')
+      if (zone === 'Call Stack') {
         setCallStackItems((prev) => [...prev, draggedItem.label]);
-      console.log(callStackItems);
+      }
+      if (zone === 'Microtasks') {
+        setMicrotasksItems((prev) => [...prev, draggedItem.label]);
+      }
+      if (zone === 'Macrotasks') {
+        setMacrotasksItems((prev) => [...prev, draggedItem.label]);
+      }
     }
+  };
+  const clearZones = () => {
+    setCallStackItems([]);
+    setMicrotasksItems([]);
+    setMacrotasksItems([]);
   };
 
   return {
@@ -38,5 +49,7 @@ export const useDragAndDrop = () => {
     setMicrotasksItems,
     macrotasksItems,
     setMacrotasksItems,
+    clearZones,
+    setDraggedItem,
   };
 };
