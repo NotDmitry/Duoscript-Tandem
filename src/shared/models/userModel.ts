@@ -1,6 +1,10 @@
-interface Progress {
+import type { Timestamp } from 'firebase/firestore';
+
+export interface CourseProgressDocument {
   courseId: string;
-  completedLessons: string[];
+  completedLessonsIds: string[];
+  progressPercent: number;
+  updatedAt: Timestamp;
 }
 
 interface User {
@@ -11,8 +15,4 @@ interface User {
   createdAt: Date;
 }
 
-interface UserWithProgress extends User {
-  progress: Progress[];
-}
-
-export type { Progress, UserWithProgress, User };
+export type { User };
