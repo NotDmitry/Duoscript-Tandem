@@ -58,3 +58,25 @@ export function toUserAuthView(firebaseUser: {
     email: firebaseUser.email,
   };
 }
+
+export interface UserDashboardView {
+  uid: string;
+  displayName: string;
+  progressPercent: number;
+  progressUpdatedAt: string;
+  minutesSpent: number;
+  activitiesCompleted: number;
+  currentStreak: number;
+}
+
+export function toUserDashboardView(doc: UserDocument): UserDashboardView {
+  return {
+    uid: doc.uid,
+    displayName: doc.displayName,
+    progressPercent: doc.overallProgress.progressPercent,
+    progressUpdatedAt: doc.overallProgress.updatedAt.toDate().toISOString(),
+    minutesSpent: doc.dailyStats.minutesSpent,
+    activitiesCompleted: doc.dailyStats.activitiesCompleted,
+    currentStreak: doc.streak.currentStreak,
+  };
+}
