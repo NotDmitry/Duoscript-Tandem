@@ -24,12 +24,14 @@ export interface UserDailyStats {
   activitiesCompleted: number;
 }
 
-interface User {
-  id: string;
+export interface UserDocument {
+  uid: string;
+  displayName: string;
   email: string;
-  username: string;
   avatarUrl?: string;
-  createdAt: Date;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  overallProgress: UserOverallProgress;
+  streak: UserStreak;
+  dailyStats: UserDailyStats;
 }
-
-export type { User };
