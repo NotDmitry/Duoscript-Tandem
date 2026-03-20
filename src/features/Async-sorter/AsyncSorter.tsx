@@ -22,9 +22,12 @@ export default function AsyncSorter() {
     callStackItems,
     draggedItem,
     setDraggedItem,
+    setCurrentTask,
     /* setCallStackItems, */ clearZones,
     microtasksItems,
-    /* setMicrotasksItems, */ macrotasksItems /* setMacrotasksItems , */,
+    /* setMicrotasksItems, */ macrotasksItems,
+    output,
+    allDragged /* setMacrotasksItems , */,
   } = useDragAndDrop();
   const [taskIndex, setTaskIndex] = useState(0);
   const [task, setTask] = useState<null | AsyncSorterTask>(null);
@@ -37,6 +40,7 @@ export default function AsyncSorter() {
         const taskData = await getAsyncSortTaskByIndex(taskIndex);
         if (!cancelled) {
           setTask(taskData ?? null);
+          setCurrentTask(taskData ?? null);
         }
       } catch {
         if (!cancelled) setTask(null);
@@ -47,7 +51,7 @@ export default function AsyncSorter() {
     return () => {
       cancelled = true;
     };
-  }, [getAsyncSortTaskByIndex, taskIndex]);
+  }, [getAsyncSortTaskByIndex, taskIndex, setCurrentTask]);
   if (isLoading) {
     return (
       <AsyncSorterContainer>
@@ -220,7 +224,10 @@ export default function AsyncSorter() {
       <Container>
         <Typography>Final order of output:</Typography>
         <Paper sx={{ p: 1, mb: 2, backgroundColor: '#f0f0f0' }}>
-          Example: 1 2 3 4
+          {allDragged &&
+            output.map((item) => {
+              return <Typography>{item}</Typography>;
+            })}
         </Paper>
       </Container>
       <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
