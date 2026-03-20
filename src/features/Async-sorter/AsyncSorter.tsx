@@ -11,11 +11,21 @@ import {
 import { useEffect, useState } from 'react';
 import type { AsyncSorterTask } from './types';
 import { useAsyncSorter } from '@/shared/hooks/useAsyncSorter';
+import AsyncSorterContainer from './AsyncSorterContainer';
+import { useDragAndDrop } from '@/shared/hooks/useDragAndDrop';
 
 export default function AsyncSorter() {
+  const {
+    handleDragStart,
+    handleDragOver,
+    handleDrop,
+    callStackItems,
+    draggedItem /*setCallStackItems, microtasksItems, setMicrotasksItems, macrotasksItems, setMacrotasksItems */,
+  } = useDragAndDrop();
   const [taskIndex, setTaskIndex] = useState(0);
   const [task, setTask] = useState<null | AsyncSorterTask>(null);
   const { getAsyncSortTaskByIndex, isLoading } = useAsyncSorter();
+
   useEffect(() => {
     let cancelled = false;
     const loadTask = async () => {
@@ -36,50 +46,23 @@ export default function AsyncSorter() {
   }, [getAsyncSortTaskByIndex, taskIndex]);
   if (isLoading) {
     return (
-      <Container
-        maxWidth="sm"
-        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-      >
-        <Typography
-          variant="h4"
-          component="h4"
-          gutterBottom
-          sx={{ textAlign: 'center', m: 2 }}
-        >
-          Async Sorter
-        </Typography>
+      <AsyncSorterContainer>
         <CircularProgress sx={{ mt: 3 }} />
-      </Container>
+      </AsyncSorterContainer>
     );
   }
   if (!task) {
     return (
-      <Container maxWidth="sm">
-        <Typography
-          variant="h4"
-          component="h4"
-          gutterBottom
-          sx={{ textAlign: 'center', m: 2 }}
-        >
-          Async Sorter
-        </Typography>
+      <AsyncSorterContainer>
         <Typography gutterBottom sx={{ textAlign: 'center', m: 2 }}>
           The task can't be shown
         </Typography>
-      </Container>
+      </AsyncSorterContainer>
     );
   }
 
   return (
-    <Container maxWidth="sm">
-      <Typography
-        variant="h4"
-        component="h4"
-        gutterBottom
-        sx={{ textAlign: 'center', m: 2 }}
-      >
-        Async Sorter
-      </Typography>
+    <AsyncSorterContainer>
       <Typography gutterBottom sx={{ textAlign: 'center', m: 2 }}>
         In what order will 'console.log' be output?
       </Typography>
@@ -99,8 +82,19 @@ export default function AsyncSorter() {
         <Paper square={false} sx={{ p: 3, backgroundColor: '#f0f0f0' }}>
           <Stack direction="row" spacing={2}>
             {task.blocks.map((item, index) => {
+              if (callStackItems.find((csItem) => csItem === item.label))
+                return null;
+              const isDragging = draggedItem?.id === item.id;
               return (
-                <Paper draggable elevation={3} sx={{ p: 2 }} key={index}>
+                <Paper
+                  draggable
+                  onDragStart={() => {
+                    handleDragStart(item);
+                  }}
+                  elevation={3}
+                  sx={{ p: 2, background: isDragging ? '#cbcbcb' : 'white' }}
+                  key={index}
+                >
                   {item.label}
                 </Paper>
               );
@@ -109,14 +103,36 @@ export default function AsyncSorter() {
         </Paper>
       </Container>
 
-      <Box sx={{ m: 3 }}>
+      <Box sx={{ m: 3, width: '90%' }}>
         <Grid container spacing={2}>
           <Grid size={{ xs: 4 }}>
             <Paper sx={{ backgroundColor: '#f0f0f0' }}>
               <Typography sx={{ fontWeight: 800, textAlign: 'center' }}>
                 Call Stack
               </Typography>
-              <Box sx={{ p: 1, height: 80 }}></Box>
+              <Box
+                onDragOver={handleDragOver}
+                onDrop={() => {
+                  handleDrop('Call Stack');
+                }}
+                sx={{ p: 1, height: 80 }}
+              >
+                {callStackItems.map((item, index) => {
+                  return (
+                    <Paper
+                      draggable
+                      onDragStart={() => {
+                        console.log('drugged');
+                      }}
+                      elevation={3}
+                      sx={{ p: 2 }}
+                      key={index}
+                    >
+                      {item}
+                    </Paper>
+                  );
+                })}
+              </Box>
             </Paper>
           </Grid>
           <Grid size={{ xs: 4 }}>
@@ -160,6 +176,6 @@ export default function AsyncSorter() {
           <Button variant="contained">Run Loop</Button>
         </Box>
       </Container>
-    </Container>
+    </AsyncSorterContainer>
   );
 }
