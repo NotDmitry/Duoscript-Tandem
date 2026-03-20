@@ -22,13 +22,31 @@ export const useDragAndDrop = () => {
   const handleDrop = (zone: DropZone) => {
     if (draggedItem) {
       if (zone === 'Call Stack') {
-        setCallStackItems((prev) => [...prev, draggedItem.label]);
+        setCallStackItems((prev) => [...prev, draggedItem]);
+        setMicrotasksItems(
+          microtasksItems.filter((item) => item !== draggedItem)
+        );
+        setMacrotasksItems(
+          macrotasksItems.filter((item) => item !== draggedItem)
+        );
       }
       if (zone === 'Microtasks') {
-        setMicrotasksItems((prev) => [...prev, draggedItem.label]);
+        setMicrotasksItems((prev) => [...prev, draggedItem]);
+        setCallStackItems(
+          callStackItems.filter((item) => item !== draggedItem)
+        );
+        setMacrotasksItems(
+          macrotasksItems.filter((item) => item !== draggedItem)
+        );
       }
       if (zone === 'Macrotasks') {
-        setMacrotasksItems((prev) => [...prev, draggedItem.label]);
+        setMacrotasksItems((prev) => [...prev, draggedItem]);
+        setCallStackItems(
+          callStackItems.filter((item) => item !== draggedItem)
+        );
+        setMicrotasksItems(
+          microtasksItems.filter((item) => item !== draggedItem)
+        );
       }
     }
   };

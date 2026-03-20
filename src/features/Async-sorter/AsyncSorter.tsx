@@ -90,9 +90,9 @@ export default function AsyncSorter() {
           <Stack direction="row" spacing={2}>
             {task.blocks.map((item, index) => {
               if (
-                callStackItems.find((csItem) => csItem === item.label) ||
-                microtasksItems.find((miItem) => miItem === item.label) ||
-                macrotasksItems.find((maItem) => maItem === item.label)
+                callStackItems.find((csItem) => csItem === item) ||
+                microtasksItems.find((miItem) => miItem === item) ||
+                macrotasksItems.find((maItem) => maItem === item)
               )
                 return null;
               const isDragging = draggedItem?.id === item.id;
@@ -138,13 +138,13 @@ export default function AsyncSorter() {
                     <Paper
                       draggable
                       onDragStart={() => {
-                        console.log('drugged');
+                        handleDragStart(item);
                       }}
                       elevation={3}
                       sx={{ p: '10px' }}
                       key={index}
                     >
-                      {item}
+                      {item.label}
                     </Paper>
                   );
                 })}
@@ -170,13 +170,13 @@ export default function AsyncSorter() {
                     <Paper
                       draggable
                       onDragStart={() => {
-                        console.log('drugged');
+                        handleDragStart(item);
                       }}
                       elevation={3}
                       sx={{ p: '10px' }}
                       key={index}
                     >
-                      {item}
+                      {item.label}
                     </Paper>
                   );
                 })}
@@ -202,13 +202,13 @@ export default function AsyncSorter() {
                     <Paper
                       draggable
                       onDragStart={() => {
-                        console.log('drugged');
+                        handleDragStart(item);
                       }}
                       elevation={3}
                       sx={{ p: '10px' }}
                       key={index}
                     >
-                      {item}
+                      {item.label}
                     </Paper>
                   );
                 })}
