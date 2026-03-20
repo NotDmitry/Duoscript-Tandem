@@ -17,3 +17,17 @@ export interface LessonView {
   widgetId: string;
   isCompleted?: boolean;
 }
+
+export function toLessonView(
+  doc: LessonDocument,
+  isCompleted?: boolean
+): LessonView {
+  return {
+    lessonId: doc.lessonId,
+    courseId: doc.courseId,
+    title: doc.title,
+    description: doc.description,
+    widgetId: doc.widgetId,
+    isCompleted,
+  };
+}
