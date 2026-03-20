@@ -35,3 +35,26 @@ export interface UserDocument {
   streak: UserStreak;
   dailyStats: UserDailyStats;
 }
+
+// Map Document to Views
+
+export interface UserAuthView {
+  uid: string;
+  displayName: string;
+  email: string;
+}
+
+export function toUserAuthView(firebaseUser: {
+  uid: string;
+  displayName: string | null;
+  email: string | null;
+}): UserAuthView {
+  if (!firebaseUser.email) {
+    throw new Error("Email doesn't exist");
+  }
+  return {
+    uid: firebaseUser.uid,
+    displayName: firebaseUser.displayName ?? 'unknown',
+    email: firebaseUser.email,
+  };
+}
