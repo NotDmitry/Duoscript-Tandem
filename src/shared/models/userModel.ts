@@ -7,6 +7,23 @@ export interface CourseProgressDocument {
   updatedAt: Timestamp;
 }
 
+export interface UserOverallProgress {
+  progressPercent: number;
+  updatedAt: Timestamp;
+}
+
+export interface UserStreak {
+  currentStreak: number;
+  longestStreak: number;
+  lastActiveDate: string;
+}
+
+export interface UserDailyStats {
+  date: string;
+  minutesSpent: number;
+  activitiesCompleted: number;
+}
+
 interface User {
   id: string;
   email: string;
