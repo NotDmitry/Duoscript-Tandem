@@ -21,3 +21,18 @@ export interface CourseView {
   lessonCount: number;
   progressPercent?: number;
 }
+
+export function toCourseView(
+  doc: CourseDocument,
+  progressPercent?: number
+): CourseView {
+  return {
+    courseId: doc.courseId,
+    title: doc.title,
+    description: doc.description,
+    iconUrl: doc.iconUrl,
+    tag: doc.tag,
+    lessonCount: doc.lessonIds.length,
+    progressPercent,
+  };
+}
