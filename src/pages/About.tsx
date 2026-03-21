@@ -1,3 +1,5 @@
+import { Box, Typography } from '@mui/material';
+import SchoolIcon from '@mui/icons-material/School';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import QuizIcon from '@mui/icons-material/Quiz';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -29,7 +31,43 @@ const cards = [
 
 function About() {
   console.log(cards);
-  return <div>About Page</div>;
+  return (
+    <Box
+      sx={{
+        maxWidth: { xs: 1, md: 1300, xl: 1600 },
+        mx: 'auto',
+        px: 3,
+        py: 5,
+      }}
+    >
+      <Box textAlign="center" mb={6}>
+        <SchoolIcon
+          sx={{
+            fontSize: 56,
+            color: 'rgba(255,0,0,0.6)',
+            mb: 1,
+          }}
+        />
+        <Typography variant="h3" fontWeight={700} gutterBottom>
+          Duoscript-Tandem
+        </Typography>
+        <Typography
+          variant="h6"
+          color="text.secondary"
+          sx={{
+            maxWidth: 720,
+            mx: 'auto',
+            lineHeight: 1.6,
+          }}
+        >
+          Your companion for preparing for technical interviews in web
+          development. Practice consistently, track your progress, and stay on
+          track — whether you're brushing up on fundamentals or tackling
+          advanced concepts.
+        </Typography>
+      </Box>
+    </Box>
+  );
 }
 
 export default About;
