@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import QuizIcon from '@mui/icons-material/Quiz';
@@ -30,7 +30,6 @@ const cards = [
 ];
 
 function About() {
-  console.log(cards);
   return (
     <Box
       sx={{
@@ -64,6 +63,48 @@ function About() {
           development. Practice consistently, track your progress, and stay on
           track — whether you're brushing up on fundamentals or tackling
           advanced concepts.
+        </Typography>
+      </Box>
+      <Grid container spacing={4} mb={6}>
+        {cards.map((item, index) => (
+          <Grid size={{ xs: 12, md: 4 }} key={index}>
+            <Card
+              variant="outlined"
+              sx={{
+                height: '100%',
+                borderRadius: 4,
+                border: 'none',
+                userSelect: 'none',
+                boxShadow: '0 0 24px 1px rgba(0,0,0,0.08)',
+              }}
+            >
+              <CardContent sx={{ textAlign: 'center', py: 4 }}>
+                <Box
+                  sx={{
+                    color: 'rgba(255,0,0,0.6)',
+                    mb: 2,
+                  }}
+                >
+                  {item.icon}
+                </Box>
+                <Typography variant="h6" fontWeight={600} gutterBottom>
+                  {item.title}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  lineHeight={1.6}
+                >
+                  {item.description}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+      <Box textAlign="center" mb={4}>
+        <Typography variant="body1" color="text.secondary" mb={3}>
+          Built with care by Gang Of Four team
         </Typography>
       </Box>
     </Box>
