@@ -1,15 +1,14 @@
 import type {
-  MeaningMatcherProps,
+  MatchingData,
   Difficulty,
   MeaningMatcherType,
 } from './MeaningMatcher.types';
 
-export type MatchingLevels = Record<Difficulty, MeaningMatcherProps>;
+export type MatchingLevels = Record<Difficulty, MatchingData>;
 
-// HTML
 export const HTMLMatching: MatchingLevels = {
   easy: {
-    title: 'HTML — Basics: Common Tags',
+    title: 'Common Tags',
     pairs: [
       { id: 1, left: '<a>', right: 'Creates a hyperlink' },
       { id: 2, left: '<img>', right: 'Embeds an image' },
@@ -18,7 +17,7 @@ export const HTMLMatching: MatchingLevels = {
     ],
   },
   medium: {
-    title: 'HTML — Intermediate: Forms & Lists',
+    title: 'Forms & Lists',
     pairs: [
       { id: 1, left: '<form>', right: 'Collects user input' },
       { id: 2, left: '<input>', right: 'Input field for data' },
@@ -29,7 +28,7 @@ export const HTMLMatching: MatchingLevels = {
     ],
   },
   hard: {
-    title: 'HTML — Advanced: Semantic Tags',
+    title: 'Semantic Tags',
     pairs: [
       { id: 1, left: '<header>', right: 'Page or section header' },
       { id: 2, left: '<nav>', right: 'Navigation links' },
@@ -43,10 +42,9 @@ export const HTMLMatching: MatchingLevels = {
   },
 };
 
-// CSS
 export const CSSMatching: MatchingLevels = {
   easy: {
-    title: 'CSS — Basics: Core Properties',
+    title: 'Core Properties',
     pairs: [
       { id: 1, left: 'color', right: 'Sets text color' },
       { id: 2, left: 'margin', right: 'Outer spacing' },
@@ -55,7 +53,7 @@ export const CSSMatching: MatchingLevels = {
     ],
   },
   medium: {
-    title: 'CSS — Intermediate: Sizing & Position',
+    title: 'Sizing & Position',
     pairs: [
       { id: 1, left: 'position', right: 'Controls positioning' },
       { id: 2, left: 'display: flex', right: 'Flexible layout system' },
@@ -66,7 +64,7 @@ export const CSSMatching: MatchingLevels = {
     ],
   },
   hard: {
-    title: 'CSS — Advanced: Layout & Effects',
+    title: 'Layout & Effects',
     pairs: [
       { id: 1, left: 'display: grid', right: 'Two-dimensional layout' },
       { id: 2, left: 'overflow', right: 'Handles overflow content' },
@@ -80,10 +78,9 @@ export const CSSMatching: MatchingLevels = {
   },
 };
 
-// JS
 export const JSMatching: MatchingLevels = {
   easy: {
-    title: 'JavaScript — Basics: Array Methods',
+    title: 'Array Methods',
     pairs: [
       { id: 1, left: '.map()', right: 'Transforms each element' },
       { id: 2, left: '.filter()', right: 'Filters by condition' },
@@ -92,7 +89,7 @@ export const JSMatching: MatchingLevels = {
     ],
   },
   medium: {
-    title: 'JavaScript — Intermediate: Array Methods',
+    title: 'Array Methods',
     pairs: [
       { id: 1, left: '.reduce()', right: 'Reduces to one value' },
       { id: 2, left: '.some()', right: 'True if any match' },
@@ -103,7 +100,7 @@ export const JSMatching: MatchingLevels = {
     ],
   },
   hard: {
-    title: 'JavaScript — Advanced: Objects & Strings',
+    title: 'Objects & Strings',
     pairs: [
       { id: 1, left: 'Object.keys()', right: 'Returns array of keys' },
       { id: 2, left: 'Object.values()', right: 'Returns array of values' },
@@ -117,10 +114,9 @@ export const JSMatching: MatchingLevels = {
   },
 };
 
-// TS
 export const TSMatching: MatchingLevels = {
   easy: {
-    title: 'TypeScript — Basics: Core Keywords',
+    title: 'Core Keywords',
     pairs: [
       { id: 1, left: 'interface', right: 'Defines object shape' },
       { id: 2, left: 'type', right: 'Type alias' },
@@ -129,7 +125,7 @@ export const TSMatching: MatchingLevels = {
     ],
   },
   medium: {
-    title: 'TypeScript — Intermediate: Type System',
+    title: 'Type System',
     pairs: [
       { id: 1, left: 'unknown', right: 'Safer alternative to any' },
       { id: 2, left: 'never', right: 'Represents impossible value' },
@@ -140,7 +136,7 @@ export const TSMatching: MatchingLevels = {
     ],
   },
   hard: {
-    title: 'TypeScript — Advanced: Utility Types',
+    title: 'Utility Types',
     pairs: [
       { id: 1, left: 'T<Generic>', right: 'Reusable type parameter' },
       { id: 2, left: 'keyof T', right: 'Union of object keys' },
@@ -154,10 +150,9 @@ export const TSMatching: MatchingLevels = {
   },
 };
 
-// GitHub
 export const GitHubMatching: MatchingLevels = {
   easy: {
-    title: 'GitHub — Basics: Core Commands',
+    title: 'Core Commands',
     pairs: [
       { id: 1, left: 'repository', right: 'Project storage' },
       { id: 2, left: 'commit', right: 'Saved snapshot of changes' },
@@ -166,7 +161,7 @@ export const GitHubMatching: MatchingLevels = {
     ],
   },
   medium: {
-    title: 'GitHub — Intermediate: Branching',
+    title: 'Branching',
     pairs: [
       { id: 1, left: 'branch', right: 'Separate development line' },
       { id: 2, left: 'merge', right: 'Combine branches together' },
@@ -177,7 +172,7 @@ export const GitHubMatching: MatchingLevels = {
     ],
   },
   hard: {
-    title: 'GitHub — Advanced: Collaboration',
+    title: 'Collaboration',
     pairs: [
       { id: 1, left: 'pull request', right: 'Propose changes for review' },
       { id: 2, left: 'fork', right: 'Personal copy of a repository' },
