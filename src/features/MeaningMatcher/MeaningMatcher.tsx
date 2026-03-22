@@ -2,9 +2,26 @@ import type { DragEndEvent } from '@dnd-kit/core';
 import { useState } from 'react';
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
 import { Box, Paper, Typography, Button } from '@mui/material';
-import type { MeaningMatcherProps } from './MeaningMatcher.types';
+import type { MeaningMatcherProps, Pair } from './MeaningMatcher.types';
 
-// draggable card (used in options and drop zones)
+const OPTIONS_ZONE_ID = 'options';
+
+function getResultColor(checked: boolean, correct: boolean): string {
+  if (!checked) return '';
+  return correct ? '#c8e6c9' : '#ffcdd2';
+}
+
+function clearDragged(
+  prev: Record<number, number | null>,
+  draggedId: number
+): Record<number, number | null> {
+  const updated = { ...prev };
+  Object.keys(updated).forEach((k) => {
+    if (updated[Number(k)] === draggedId) updated[Number(k)] = null;
+  });
+  return updated;
+}
+
 function Card({
   id,
   text,
@@ -19,8 +36,7 @@ function Card({
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id });
 
-  let bgColor = 'white';
-  if (checked) bgColor = correct ? '#c8e6c9' : '#ffcdd2';
+  const resultColor = getResultColor(!!checked, !!correct);
 
   return (
     <Paper
@@ -36,7 +52,7 @@ function Card({
         opacity: isDragging ? 0.7 : 1,
         minWidth: 150,
         textAlign: 'center',
-        backgroundColor: bgColor,
+        backgroundColor: resultColor || 'white',
         transition: 'background-color 0.3s',
       }}
     >
@@ -45,34 +61,29 @@ function Card({
   );
 }
 
-// drop zone for matching
 function Drop({
   id,
   item,
   checked,
 }: {
   id: number;
-  item: { id: number; right: string } | null;
+  item: Pair | null;
   checked?: boolean;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id });
 
-  // default/hover background before checking
-  let bgColor = isOver ? '#e3f2fd' : '#f5f5f5';
-
-  // after checking - show correct/incorrect
-  if (checked && item) {
-    bgColor = item.id === id ? '#c8e6c9' : '#ffcdd2';
-  }
+  const isCorrect = item?.id === id;
+  const resultColor = item ? getResultColor(!!checked, isCorrect) : '';
 
   return (
     <Paper
       ref={setNodeRef}
       sx={{
         p: 1.5,
-        mt: 1,
         minHeight: 60,
-        backgroundColor: bgColor,
+        height: '100%',
+        boxSizing: 'border-box',
+        backgroundColor: resultColor || (isOver ? '#e3f2fd' : '#f5f5f5'),
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -83,7 +94,7 @@ function Drop({
         <Card
           id={item.id}
           text={item.right}
-          correct={item.id === id}
+          correct={isCorrect}
           checked={checked}
         />
       ) : (
@@ -93,7 +104,43 @@ function Drop({
   );
 }
 
-export function MeaningMatcher({ title, pairs }: MeaningMatcherProps) {
+function OptionsZone({ children }: { children: React.ReactNode }) {
+  const { setNodeRef } = useDroppable({ id: OPTIONS_ZONE_ID });
+
+  return (
+    <Box
+      ref={setNodeRef}
+      sx={{
+        border: '1px dashed #ccc',
+        borderRadius: 1,
+        p: 1.5,
+        position: { xs: 'static', md: 'sticky' },
+        top: 16,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 1,
+      }}
+    >
+      <Typography mb={0.5}>Options:</Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'row', md: 'column' },
+          flexWrap: 'wrap',
+          gap: 1,
+        }}
+      >
+        {children}
+      </Box>
+    </Box>
+  );
+}
+
+export function MeaningMatcher({
+  title,
+  pairs,
+  onSubmit,
+}: MeaningMatcherProps) {
   const [answers, setAnswers] = useState<Record<number, number | null>>(
     Object.fromEntries(pairs.map((p) => [p.id, null]))
   );
@@ -104,39 +151,16 @@ export function MeaningMatcher({ title, pairs }: MeaningMatcherProps) {
     if (!over) return;
 
     const draggedId = Number(active.id);
-
-    // reset check state when user moves cards
     setChecked(false);
 
-    // move card back to options
-    if (over.id === 'options') {
-      setAnswers((prev) => {
-        const updated = { ...prev };
-        Object.keys(updated).forEach((k) => {
-          if (updated[Number(k)] === draggedId) {
-            updated[Number(k)] = null;
-          }
-        });
-        return updated;
-      });
+    if (over.id === OPTIONS_ZONE_ID) {
+      setAnswers((prev) => clearDragged(prev, draggedId));
       return;
     }
 
-    const dropId = Number(over.id);
-
     setAnswers((prev) => {
-      const updated = { ...prev };
-
-      // remove card from any previous drop
-      Object.keys(updated).forEach((k) => {
-        if (updated[Number(k)] === draggedId) {
-          updated[Number(k)] = null;
-        }
-      });
-
-      // assign card to this drop zone
-      updated[dropId] = draggedId;
-
+      const updated = clearDragged(prev, draggedId);
+      updated[Number(over.id)] = draggedId;
       return updated;
     });
   };
@@ -144,8 +168,9 @@ export function MeaningMatcher({ title, pairs }: MeaningMatcherProps) {
   const usedIds = Object.values(answers).filter(
     (id): id is number => id !== null
   );
-
   const options = pairs.filter((p) => !usedIds.includes(p.id));
+
+  const getScore = () => pairs.filter((p) => answers[p.id] === p.id).length;
 
   return (
     <Box sx={{ maxWidth: 900, mx: 'auto', p: 3 }}>
@@ -154,40 +179,65 @@ export function MeaningMatcher({ title, pairs }: MeaningMatcherProps) {
       </Typography>
 
       <DndContext onDragEnd={handleDragEnd}>
-        {pairs.map((p) => {
-          const selected = pairs.find((x) => x.id === answers[p.id]) ?? null;
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: '1fr 260px' },
+            gap: 2,
+            alignItems: 'start',
+          }}
+        >
+          {/* Left column - pairs */}
+          <Box>
+            {pairs.map((p) => {
+              const selected =
+                pairs.find((x) => x.id === answers[p.id]) ?? null;
+              return (
+                <Box
+                  key={p.id}
+                  mb={1.5}
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: 1,
+                    alignItems: 'stretch',
+                  }}
+                >
+                  <Paper sx={{ p: 1, display: 'flex', alignItems: 'center' }}>
+                    <Typography>{p.left}</Typography>
+                  </Paper>
+                  <Drop id={p.id} item={selected} checked={checked} />
+                </Box>
+              );
+            })}
 
-          return (
-            <Box key={p.id} mb={2}>
-              <Paper sx={{ p: 1 }}>
-                <Typography>{p.left}</Typography>
-              </Paper>
-
-              <Drop id={p.id} item={selected} checked={checked} />
+            <Box mt={2} display="flex" gap={2}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setChecked(true);
+                }}
+              >
+                Check
+              </Button>
+              <Button
+                variant="outlined"
+                disabled={!checked}
+                onClick={() => onSubmit?.(getScore(), pairs.length)}
+              >
+                Submit
+              </Button>
             </Box>
-          );
-        })}
+          </Box>
 
-        <Box mt={4} sx={{ minHeight: 80, border: '1px dashed #ccc', p: 1 }}>
-          <Typography mb={1}>Options:</Typography>
-
-          <Box display="flex" gap={1} flexWrap="wrap">
+          {/* Right column — Options */}
+          <OptionsZone>
             {options.map((o) => (
               <Card key={o.id} id={o.id} text={o.right} />
             ))}
-          </Box>
+          </OptionsZone>
         </Box>
       </DndContext>
-
-      <Button
-        variant="contained"
-        sx={{ mt: 3 }}
-        onClick={() => {
-          setChecked(true);
-        }}
-      >
-        Check
-      </Button>
     </Box>
   );
 }
