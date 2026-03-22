@@ -5,6 +5,8 @@ export type MeaningMatcherType =
   | 'typescript'
   | 'github';
 
+export type Difficulty = 'easy' | 'medium' | 'hard';
+
 export interface Pair {
   id: number;
   left: string;
@@ -14,4 +16,5 @@ export interface Pair {
 export interface MeaningMatcherProps {
   title: string;
   pairs: Pair[];
+  onSubmit?: (score: number, total: number) => void;
 }
