@@ -30,43 +30,40 @@ export const useDragAndDrop = () => {
   const handleDrop = (zone: DropZone) => {
     if (!draggedItem) return;
 
+    const withoutDragged = (arr: AsyncSorterBlock[]) =>
+      arr.filter((item) => item.id !== draggedItem.id);
+
+    let nextCall = callStackItems;
+    let nextMicro = microtasksItems;
+    let nextMacro = macrotasksItems;
+
     if (zone === 'Call Stack') {
-      setCallStackItems((prev) => [...prev, draggedItem]);
-      setMicrotasksItems(
-        microtasksItems.filter((item) => item !== draggedItem)
-      );
-      setMacrotasksItems(
-        macrotasksItems.filter((item) => item !== draggedItem)
-      );
+      nextCall = [...withoutDragged(callStackItems), draggedItem];
+      nextMicro = withoutDragged(microtasksItems);
+      nextMacro = withoutDragged(macrotasksItems);
+    } else if (zone === 'Microtasks') {
+      nextMicro = [...withoutDragged(microtasksItems), draggedItem];
+      nextCall = withoutDragged(callStackItems);
+      nextMacro = withoutDragged(macrotasksItems);
+    } else {
+      nextMacro = [...withoutDragged(macrotasksItems), draggedItem];
+      nextCall = withoutDragged(callStackItems);
+      nextMicro = withoutDragged(microtasksItems);
     }
-    if (zone === 'Microtasks') {
-      setMicrotasksItems((prev) => [...prev, draggedItem]);
-      setCallStackItems(callStackItems.filter((item) => item !== draggedItem));
-      setMacrotasksItems(
-        macrotasksItems.filter((item) => item !== draggedItem)
-      );
-    }
-    if (zone === 'Macrotasks') {
-      setMacrotasksItems((prev) => [...prev, draggedItem]);
-      setCallStackItems(callStackItems.filter((item) => item !== draggedItem));
-      setMicrotasksItems(
-        microtasksItems.filter((item) => item !== draggedItem)
-      );
-    }
-    //console.log(macrotasksItems.length, microtasksItems.length,callStackItems.length)
+
+    setCallStackItems(nextCall);
+    setMicrotasksItems(nextMicro);
+    setMacrotasksItems(nextMacro);
 
     if (
-      macrotasksItems.length +
-        microtasksItems.length +
-        callStackItems.length +
-        1 ===
+      nextCall.length + nextMicro.length + nextMacro.length ===
         currentTask?.blocks.length &&
       !allDragged
     ) {
       setAllDragged(true);
     }
 
-    updateOutput();
+    updateOutput(nextCall, nextMicro, nextMacro);
   };
   const clearZones = () => {
     setCallStackItems([]);

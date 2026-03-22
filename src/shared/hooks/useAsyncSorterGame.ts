@@ -10,13 +10,17 @@ export const useAsyncSorterGame = () => {
     []
   );
   const [output, setOutput] = useState<string[]>([]);
-  const updateOutput = () => {
-    const updatedOutput = [
-      ...callStackItems.map((item) => item.label),
-      ...microtasksItems.map((item) => item.label),
-      ...macrotasksItems.map((item) => item.label),
-    ];
-    setOutput(updatedOutput);
+
+  const updateOutput = (
+    callStack: AsyncSorterBlock[],
+    microtasks: AsyncSorterBlock[],
+    macrotasks: AsyncSorterBlock[]
+  ) => {
+    setOutput([
+      ...callStack.map((item) => item.label),
+      ...microtasks.map((item) => item.label),
+      ...macrotasks.map((item) => item.label),
+    ]);
   };
 
   return {
