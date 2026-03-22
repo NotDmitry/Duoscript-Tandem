@@ -146,6 +146,10 @@ export function MeaningMatcher({
   );
   const [checked, setChecked] = useState(false);
 
+  const [shuffledIds] = useState<number[]>(() =>
+    [...pairs].sort(() => Math.random() - 0.5).map((p) => p.id)
+  );
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
@@ -168,7 +172,11 @@ export function MeaningMatcher({
   const usedIds = Object.values(answers).filter(
     (id): id is number => id !== null
   );
-  const options = pairs.filter((p) => !usedIds.includes(p.id));
+
+  const options = shuffledIds
+    .filter((id) => !usedIds.includes(id))
+    .map((id) => pairs.find((p) => p.id === id))
+    .filter((p): p is Pair => p !== undefined);
 
   const getScore = () => pairs.filter((p) => answers[p.id] === p.id).length;
 
@@ -187,7 +195,7 @@ export function MeaningMatcher({
             alignItems: 'start',
           }}
         >
-          {/* Left column - pairs */}
+          {/* Left column — pairs */}
           <Box>
             {pairs.map((p) => {
               const selected =
