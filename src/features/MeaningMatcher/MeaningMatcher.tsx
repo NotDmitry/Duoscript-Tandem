@@ -182,7 +182,10 @@ export function MeaningMatcher({
 
   return (
     <Box sx={{ maxWidth: 900, mx: 'auto', p: 3 }}>
-      <Typography variant="h6" mb={2}>
+      <Typography variant="h5" fontWeight={600}>
+        Meaning Matcher
+      </Typography>
+      <Typography variant="h6" sx={{ color: 'text.secondary', mt: 0.5, mb: 5 }}>
         {title}
       </Typography>
 
