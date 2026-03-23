@@ -27,9 +27,6 @@ function Home() {
   const { user } = useAuth();
   const userName: string =
     user !== null ? getUserNameFromLS() : DEFAULT_USERNAME;
-  console.log(GREETING, DEFAULT_USERNAME, images);
-  console.log(user, userName);
-  console.log(APP_DESCRIPTION);
   return (
     <Box
       sx={{
