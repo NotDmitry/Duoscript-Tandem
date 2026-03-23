@@ -24,6 +24,11 @@ export const asyncSorterTaskSchema = z.object({
   blocks: asyncSorterBlockArraySchema,
   answer: asyncSorterAnswerSchema,
 });
+export interface AnswerColor {
+  callStackBlock: ('green' | 'red')[];
+  microBlock: ('green' | 'red')[];
+  macroBlock: ('green' | 'red')[];
+}
 export const asyncSorterTasksArraySchema = z.array(asyncSorterTaskSchema);
 export type AsyncSorterTask = z.infer<typeof asyncSorterTaskSchema>;
 export type AsyncSorterBlock = z.infer<typeof asyncSorterBlockSchema>;

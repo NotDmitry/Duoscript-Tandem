@@ -9,7 +9,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import type { AsyncSorterTask } from './types';
+import { type AnswerColor, type AsyncSorterTask } from './types';
 import { useAsyncSorter } from '@/shared/hooks/useAsyncSorter';
 import AsyncSorterContainer from './AsyncSorterContainer';
 import { useDragAndDrop } from '@/shared/hooks/useDragAndDrop';
@@ -29,17 +29,22 @@ export default function AsyncSorter() {
     setAllDragged,
     /* setMicrotasksItems, */ macrotasksItems,
     output,
+    determineAnswerColor,
     isCorrectAnswer,
+    setAnswer,
     allDragged /* setMacrotasksItems , */,
   } = useDragAndDrop();
   const [taskIndex, setTaskIndex] = useState(0);
   const [isCorrectSolved, setIsCorrectSolved] = useState(false);
+  const [isIncorrectSolved, setIsIncorrectSolved] = useState(false);
   const [task, setTask] = useState<null | AsyncSorterTask>(null);
   const [tasksNumber, setTasksNumber] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitClicked, setIsSubmitClicked] = useState(false);
   const [doneTasks, setDoneTasks] = useState<number[]>([]);
   const [missedTasks, setMissedTasks] = useState<number[]>([]);
+  const [answersColorSchema, setAnswersColorSchema] =
+    useState<AnswerColor | null>(null);
   const { getAsyncSortTask, isLoading } = useAsyncSorter();
 
   useEffect(() => {
@@ -47,6 +52,7 @@ export default function AsyncSorter() {
     const loadTask = async () => {
       try {
         const taskData = await getAsyncSortTask(taskIndex);
+        setAnswer(taskData?.answer);
         const tasksArrayNumber = await getAsyncSortTasksNumber();
         if (!cancelled) {
           setTask(taskData ?? null);
@@ -62,7 +68,7 @@ export default function AsyncSorter() {
     return () => {
       cancelled = true;
     };
-  }, [getAsyncSortTask, taskIndex, setCurrentTask]);
+  }, [getAsyncSortTask, taskIndex, setCurrentTask, setAnswer]);
   const checkIsCompleted = () => {
     if (doneTasks.length + missedTasks.length === tasksNumber) {
       setIsCompleted(true);
@@ -74,7 +80,11 @@ export default function AsyncSorter() {
       const result = await isCorrectAnswer(task.id);
       setIsCorrectSolved(result);
       if (result) {
+        setAnswersColorSchema(determineAnswerColor());
         setDoneTasks([...doneTasks, task.id]);
+      } else {
+        setIsIncorrectSolved(true);
+        setAnswersColorSchema(determineAnswerColor());
       }
       setIsSubmitClicked(true);
     } catch {
@@ -83,11 +93,14 @@ export default function AsyncSorter() {
   };
   const onNextTaskClick = () => {
     checkIsCompleted();
-    if (tasksNumber > taskIndex + 1) setTaskIndex(taskIndex + 1);
+
     clearZones();
     setDraggedItem(null);
     setAllDragged(false);
     setIsSubmitClicked(false);
+    setIsCorrectSolved(false);
+    setIsIncorrectSolved(false);
+    if (tasksNumber > taskIndex + 1) setTaskIndex(taskIndex + 1);
   };
 
   if (isLoading) {
@@ -188,7 +201,9 @@ export default function AsyncSorter() {
                       elevation={3}
                       sx={{
                         p: '10px',
-                        backgroundColor: isCorrectSolved ? 'green' : '',
+                        backgroundColor: isSubmitClicked
+                          ? answersColorSchema?.callStackBlock[index]
+                          : '',
                       }}
                       key={index}
                     >
@@ -223,7 +238,9 @@ export default function AsyncSorter() {
                       elevation={3}
                       sx={{
                         p: '10px',
-                        backgroundColor: isCorrectSolved ? 'green' : '',
+                        backgroundColor: isSubmitClicked
+                          ? answersColorSchema?.microBlock[index]
+                          : '',
                       }}
                       key={index}
                     >
@@ -258,7 +275,9 @@ export default function AsyncSorter() {
                       elevation={3}
                       sx={{
                         p: '10px',
-                        backgroundColor: isCorrectSolved ? 'green' : '',
+                        backgroundColor: isSubmitClicked
+                          ? answersColorSchema?.macroBlock[index]
+                          : '',
                       }}
                       key={index}
                     >
@@ -281,6 +300,9 @@ export default function AsyncSorter() {
         </Paper>
         {isCorrectSolved && (
           <Typography color="success">Your answer is correct</Typography>
+        )}
+        {isIncorrectSolved && (
+          <Typography color="error">Your answer is incorrect</Typography>
         )}
       </Container>
       <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>

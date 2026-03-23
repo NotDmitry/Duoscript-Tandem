@@ -1,7 +1,11 @@
 import { getAsyncSortTaskByIndex, submitAnswer } from '@/api/asyncSort.api';
 import { useCallback, useState } from 'react';
 import { useUI } from './useUI';
-import type { AsyncSorterBlock } from '@/features/Async-sorter/types';
+import type {
+  AnswerColor,
+  AsyncSorterAnswer,
+  AsyncSorterBlock,
+} from '@/features/Async-sorter/types';
 
 export const useAsyncSorter = () => {
   const [callStackItems, setCallStackItems] = useState<AsyncSorterBlock[]>([]);
@@ -14,6 +18,9 @@ export const useAsyncSorter = () => {
   const [output, setOutput] = useState<string[]>([]);
   const { showToast } = useUI();
   const [isLoading, setIsLoading] = useState(false);
+  const [answer, setAnswer] = useState<AsyncSorterAnswer | undefined>(
+    undefined
+  );
   const getAsyncSortTask = useCallback(
     async (index: number) => {
       setIsLoading(true);
@@ -41,6 +48,29 @@ export const useAsyncSorter = () => {
       ...macrotasks.map((item) => item.label),
     ]);
   };
+  const determineAnswerColor = (): AnswerColor => {
+    if (!answer) throw new Error("The answer wasn't determined");
+    const callStackAnswers = callStackItems.map((item, i) => {
+      if (i < answer.callStack.length && answer.callStack[i] === item.label)
+        return 'green';
+      return 'red';
+    }); //вынести в функцию
+    const microAnswers = microtasksItems.map((item, i) => {
+      if (i < answer.microtasks.length && answer.microtasks[i] === item.label)
+        return 'green';
+      return 'red';
+    });
+    const macroAnswers = macrotasksItems.map((item, i) => {
+      if (i < answer.macrotasks.length && answer.macrotasks[i] === item.label)
+        return 'green';
+      return 'red';
+    });
+    return {
+      callStackBlock: callStackAnswers,
+      microBlock: microAnswers,
+      macroBlock: macroAnswers,
+    };
+  };
   const isCorrectAnswer = async (id: number) => {
     const userAnswer = {
       callStack: callStackItems.map((item) => item.label),
@@ -63,5 +93,7 @@ export const useAsyncSorter = () => {
     output,
     updateOutput,
     isCorrectAnswer,
+    setAnswer,
+    determineAnswerColor,
   };
 };

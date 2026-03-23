@@ -17,6 +17,8 @@ export const useDragAndDrop = () => {
     output,
     updateOutput,
     isCorrectAnswer,
+    setAnswer,
+    determineAnswerColor,
   } = useAsyncSorter();
   const [draggedItem, setDraggedItem] = useState<AsyncSorterBlock | null>(null);
   const [allDragged, setAllDragged] = useState(false);
@@ -90,5 +92,7 @@ export const useDragAndDrop = () => {
     allDragged,
     setCurrentTask,
     isCorrectAnswer,
+    setAnswer,
+    determineAnswerColor,
   };
 };
