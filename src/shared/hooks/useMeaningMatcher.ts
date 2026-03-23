@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type {
   Difficulty,
   CompletedResult,
@@ -23,8 +23,10 @@ export function useMeaningMatcher({
   const [results, setResults] = useState<CompletedResult[]>([]);
   const [dataState, setDataState] = useState<DataState>({ status: 'loading' });
 
+  const topicRef = useRef(topic);
+
   useEffect(() => {
-    void getMeaningMatcherData(topic).then((result) => {
+    void getMeaningMatcherData(topicRef.current).then((result) => {
       setDataState({ status: 'ready', data: result });
     });
   }, []);
