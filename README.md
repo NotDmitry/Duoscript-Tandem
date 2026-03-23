@@ -13,6 +13,12 @@ and enhancement of your hard-skills. The app contains multiple widgets and a das
 - Alena Danilchenko ([GitHub: Alena Danilchenko](https://github.com/anelka777));
 - Svetlana Angeliuk ([GitHub: SwetlanaAng](https://github.com/swetlanaang)).
 
+### Deploy
+
+Available at:
+
+- [Netlify](https://duoscript-tandem.netlify.app/)
+
 ### Week 5 Checkpoint
 
 [video](https://youtu.be/Ntsj5kxZHLo)

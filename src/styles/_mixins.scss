@@ -1,0 +1,64 @@
+@use 'variables' as *;
+
+@mixin header-1 {
+  font-family: $primary-font;
+  font-size: $header-1-size;
+  font-weight: $semibold-text-weight;
+  letter-spacing: $header-1-letter-spacing;
+  line-height: $header-1-line-height;
+}
+
+@mixin header-2 {
+  font-family: $primary-font;
+  font-size: $header-2-size;
+  font-weight: $semibold-text-weight;
+  letter-spacing: $header-2-letter-spacing;
+  line-height: $header-2-line-height;
+}
+
+@mixin header-3 {
+  font-family: $primary-font;
+  font-size: $header-3-size;
+  font-weight: $semibold-text-weight;
+  letter-spacing: $header-3-letter-spacing;
+  line-height: $header-3-line-height;
+}
+
+@mixin header-4 {
+  font-family: $primary-font;
+  font-size: $header-4-size;
+  font-weight: $semibold-text-weight;
+  letter-spacing: $header-4-letter-spacing;
+  line-height: $header-4-line-height;
+}
+
+@mixin paragraph-text {
+  font-family: $primary-font;
+  font-size: $paragraph-text-size;
+  letter-spacing: $paragraph-text-letter-spacing;
+  line-height: $paragraph-text-line-height;
+}
+
+@mixin link-text {
+  font-family: $primary-font;
+  font-size: $paragraph-text-size;
+  letter-spacing: $paragraph-text-letter-spacing;
+  line-height: $paragraph-text-line-height;
+  color: $link-color;
+}
+
+@mixin action-lg-text {
+  font-family: $primary-font;
+  font-size: $action-lg-text-size;
+  font-weight: $semibold-text-weight;
+  letter-spacing: $action-lg-text-letter-spacing;
+  line-height: $action-lg-text-line-height;
+}
+
+@mixin action-sm-text {
+  font-family: $primary-font;
+  font-size: $action-sm-text-size;
+  font-weight: $semibold-text-weight;
+  letter-spacing: $action-sm-text-letter-spacing;
+  line-height: $action-sm-text-line-height;
+}
