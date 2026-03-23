@@ -28,18 +28,10 @@ export function useMeaningMatcher({
   const [dataState, setDataState] = useState<DataState>({ status: 'loading' });
 
   useEffect(() => {
-    let cancelled = false;
-
     void getMeaningMatcherData(topic).then((result) => {
-      if (!cancelled) {
-        setDataState({ status: 'ready', data: result });
-      }
+      setDataState({ status: 'ready', data: result });
     });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [topic]);
+  }, []);
 
   const goToNext = (skipped: boolean, score = 0, total = 0) => {
     const currentIndex = DIFFICULTIES.indexOf(difficulty);
