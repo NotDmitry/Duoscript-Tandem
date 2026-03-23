@@ -18,3 +18,7 @@ and enhancement of your hard-skills. The app contains multiple widgets and a das
 Available at:
 
 - [Netlify](https://duoscript-tandem.netlify.app/)
+
+### Week 5 Checkpoint
+
+[video](https://youtu.be/Ntsj5kxZHLo)
