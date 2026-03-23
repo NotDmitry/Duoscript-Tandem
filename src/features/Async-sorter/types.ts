@@ -24,6 +24,9 @@ export const asyncSorterTaskSchema = z.object({
   blocks: asyncSorterBlockArraySchema,
   answer: asyncSorterAnswerSchema,
 });
+export const asyncSorterTasksArraySchema = z.array(asyncSorterTaskSchema);
 export type AsyncSorterTask = z.infer<typeof asyncSorterTaskSchema>;
 export type AsyncSorterBlock = z.infer<typeof asyncSorterBlockSchema>;
+export type AsyncSorterTasksArray = z.infer<typeof asyncSorterTasksArraySchema>;
+export type AsyncSorterAnswer = z.infer<typeof asyncSorterAnswerSchema>;
 export type DropZone = 'Call Stack' | 'Microtasks' | 'Macrotasks';

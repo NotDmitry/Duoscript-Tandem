@@ -4,7 +4,7 @@ import type {
   DropZone,
 } from '@/features/Async-sorter/types';
 import { useState } from 'react';
-import { useAsyncSorterGame } from './useAsyncSorterGame';
+import { useAsyncSorter } from './useAsyncSorter';
 
 export const useDragAndDrop = () => {
   const {
@@ -16,7 +16,8 @@ export const useDragAndDrop = () => {
     setMacrotasksItems,
     output,
     updateOutput,
-  } = useAsyncSorterGame();
+    isCorrectAnswer,
+  } = useAsyncSorter();
   const [draggedItem, setDraggedItem] = useState<AsyncSorterBlock | null>(null);
   const [allDragged, setAllDragged] = useState(false);
   const [currentTask, setCurrentTask] = useState<null | AsyncSorterTask>(null);
@@ -88,5 +89,6 @@ export const useDragAndDrop = () => {
     setAllDragged,
     allDragged,
     setCurrentTask,
+    isCorrectAnswer,
   };
 };

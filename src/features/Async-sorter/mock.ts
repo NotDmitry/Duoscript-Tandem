@@ -120,7 +120,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
 
-  {
+  /*  {
     id: 6,
     type: 'async-sorter',
     codeSnippet: [
@@ -679,5 +679,5 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
       macrotasks: ['2'],
       outputOrder: ['1', '4', '3', '5', '2'],
     },
-  },
+  }, */
 ];

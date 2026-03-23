@@ -13,6 +13,7 @@ import type { AsyncSorterTask } from './types';
 import { useAsyncSorter } from '@/shared/hooks/useAsyncSorter';
 import AsyncSorterContainer from './AsyncSorterContainer';
 import { useDragAndDrop } from '@/shared/hooks/useDragAndDrop';
+import { getAsyncSortTasksNumber } from '@/api/asyncSort.api';
 
 export default function AsyncSorter() {
   const {
@@ -25,22 +26,32 @@ export default function AsyncSorter() {
     setCurrentTask,
     /* setCallStackItems, */ clearZones,
     microtasksItems,
+    setAllDragged,
     /* setMicrotasksItems, */ macrotasksItems,
     output,
+    isCorrectAnswer,
     allDragged /* setMacrotasksItems , */,
   } = useDragAndDrop();
   const [taskIndex, setTaskIndex] = useState(0);
+  const [isCorrectSolved, setIsCorrectSolved] = useState(false);
   const [task, setTask] = useState<null | AsyncSorterTask>(null);
-  const { getAsyncSortTaskByIndex, isLoading } = useAsyncSorter();
+  const [tasksNumber, setTasksNumber] = useState(0);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+  const [doneTasks, setDoneTasks] = useState<number[]>([]);
+  const [missedTasks, setMissedTasks] = useState<number[]>([]);
+  const { getAsyncSortTask, isLoading } = useAsyncSorter();
 
   useEffect(() => {
     let cancelled = false;
     const loadTask = async () => {
       try {
-        const taskData = await getAsyncSortTaskByIndex(taskIndex);
+        const taskData = await getAsyncSortTask(taskIndex);
+        const tasksArrayNumber = await getAsyncSortTasksNumber();
         if (!cancelled) {
           setTask(taskData ?? null);
           setCurrentTask(taskData ?? null);
+          setTasksNumber(tasksArrayNumber);
         }
       } catch {
         if (!cancelled) setTask(null);
@@ -51,13 +62,39 @@ export default function AsyncSorter() {
     return () => {
       cancelled = true;
     };
-  }, [getAsyncSortTaskByIndex, taskIndex, setCurrentTask]);
+  }, [getAsyncSortTask, taskIndex, setCurrentTask]);
+  const checkIsCompleted = () => {
+    if (doneTasks.length + missedTasks.length === tasksNumber) {
+      setIsCompleted(true);
+    }
+  };
+  const onSubmitClick = async () => {
+    console.log('submit');
+    if (!task) return;
+    try {
+      const result = await isCorrectAnswer(task.id);
+      setIsCorrectSolved(result);
+    } catch {
+      throw new Error('something went wrong');
+    } finally {
+      setIsSubmitClicked(true);
+      setDoneTasks([...doneTasks, task.id]); // ok?
+      /*checkIsCompleted();
+      if(tasksNumber> taskIndex + 1)setTaskIndex(taskIndex + 1);
+              clearZones();
+              setDraggedItem(null);
+              setAllDragged(false); */
+    }
+  };
   if (isLoading) {
     return (
       <AsyncSorterContainer>
         <CircularProgress sx={{ mt: 3 }} />
       </AsyncSorterContainer>
     );
+  }
+  if (isCompleted) {
+    return <AsyncSorterContainer>Good job</AsyncSorterContainer>;
   }
   if (!task) {
     return (
@@ -145,7 +182,10 @@ export default function AsyncSorter() {
                         handleDragStart(item);
                       }}
                       elevation={3}
-                      sx={{ p: '10px' }}
+                      sx={{
+                        p: '10px',
+                        backgroundColor: isCorrectSolved ? 'green' : '',
+                      }}
                       key={index}
                     >
                       {item.label}
@@ -177,7 +217,10 @@ export default function AsyncSorter() {
                         handleDragStart(item);
                       }}
                       elevation={3}
-                      sx={{ p: '10px' }}
+                      sx={{
+                        p: '10px',
+                        backgroundColor: isCorrectSolved ? 'green' : '',
+                      }}
                       key={index}
                     >
                       {item.label}
@@ -209,7 +252,10 @@ export default function AsyncSorter() {
                         handleDragStart(item);
                       }}
                       elevation={3}
-                      sx={{ p: '10px' }}
+                      sx={{
+                        p: '10px',
+                        backgroundColor: isCorrectSolved ? 'green' : '',
+                      }}
                       key={index}
                     >
                       {item.label}
@@ -223,27 +269,41 @@ export default function AsyncSorter() {
       </Box>
       <Container>
         <Typography>Final order of output:</Typography>
-        <Paper sx={{ p: 1, mb: 2, backgroundColor: '#f0f0f0' }}>
+        <Paper sx={{ p: 1, mb: 2, backgroundColor: '#f0f0f0', minHeight: 40 }}>
           {allDragged &&
             output.map((item) => {
-              return <Typography>{item}</Typography>;
+              return item + '  ';
             })}
         </Paper>
       </Container>
       <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Box>
           <Button
+            disabled={isSubmitClicked}
             onClick={() => {
-              setTaskIndex(taskIndex + 1);
+              if (tasksNumber > taskIndex + 1) {
+                setTaskIndex(taskIndex + 1);
+              }
               clearZones();
               setDraggedItem(null);
+              setAllDragged(false);
+              setMissedTasks([...missedTasks, task.id]);
+              checkIsCompleted();
             }}
             variant="outlined"
             sx={{ mr: 1 }}
           >
             Skip
           </Button>
-          <Button variant="outlined">Submit</Button>
+          <Button
+            variant="outlined"
+            disabled={!allDragged}
+            onClick={() => {
+              void onSubmitClick();
+            }}
+          >
+            {isSubmitClicked ? 'Next Task' : 'Submit'}
+          </Button>
         </Box>
         <Box>
           <Button variant="contained">Run Loop</Button>
