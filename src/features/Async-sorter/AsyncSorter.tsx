@@ -69,23 +69,26 @@ export default function AsyncSorter() {
     }
   };
   const onSubmitClick = async () => {
-    console.log('submit');
     if (!task) return;
     try {
       const result = await isCorrectAnswer(task.id);
       setIsCorrectSolved(result);
+      if (result) setDoneTasks([...doneTasks, task.id]);
     } catch {
       throw new Error('something went wrong');
     } finally {
       setIsSubmitClicked(true);
-      setDoneTasks([...doneTasks, task.id]); // ok?
-      /*checkIsCompleted();
-      if(tasksNumber> taskIndex + 1)setTaskIndex(taskIndex + 1);
-              clearZones();
-              setDraggedItem(null);
-              setAllDragged(false); */
     }
   };
+  const onNextTaskClick = () => {
+    checkIsCompleted();
+    if (tasksNumber > taskIndex + 1) setTaskIndex(taskIndex + 1);
+    clearZones();
+    setDraggedItem(null);
+    setAllDragged(false);
+    setIsSubmitClicked(false);
+  };
+
   if (isLoading) {
     return (
       <AsyncSorterContainer>
@@ -298,9 +301,15 @@ export default function AsyncSorter() {
           <Button
             variant="outlined"
             disabled={!allDragged}
-            onClick={() => {
-              void onSubmitClick();
-            }}
+            onClick={
+              !isSubmitClicked
+                ? () => {
+                    void onSubmitClick();
+                  }
+                : () => {
+                    onNextTaskClick();
+                  }
+            }
           >
             {isSubmitClicked ? 'Next Task' : 'Submit'}
           </Button>
