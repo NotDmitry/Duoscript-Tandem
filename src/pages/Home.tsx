@@ -52,7 +52,7 @@ function Home() {
         textAlign="center"
         typography="subtitle1"
         sx={{
-          width: 'fit-context',
+          width: 'fit-content',
           maxWidth: '700px',
         }}
       >
