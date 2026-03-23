@@ -180,9 +180,9 @@ export default function AsyncSorter() {
                 {callStackItems.map((item, index) => {
                   return (
                     <Paper
-                      draggable
+                      draggable={!isSubmitClicked}
                       onDragStart={() => {
-                        handleDragStart(item);
+                        if (!isSubmitClicked) handleDragStart(item);
                       }}
                       elevation={3}
                       sx={{
@@ -215,9 +215,9 @@ export default function AsyncSorter() {
                 {microtasksItems.map((item, index) => {
                   return (
                     <Paper
-                      draggable
+                      draggable={!isSubmitClicked}
                       onDragStart={() => {
-                        handleDragStart(item);
+                        if (!isSubmitClicked) handleDragStart(item);
                       }}
                       elevation={3}
                       sx={{
@@ -250,9 +250,9 @@ export default function AsyncSorter() {
                 {macrotasksItems.map((item, index) => {
                   return (
                     <Paper
-                      draggable
+                      draggable={!isSubmitClicked}
                       onDragStart={() => {
-                        handleDragStart(item);
+                        if (!isSubmitClicked) handleDragStart(item);
                       }}
                       elevation={3}
                       sx={{
