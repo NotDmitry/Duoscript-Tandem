@@ -14,6 +14,7 @@ import { useAsyncSorter } from '@/shared/hooks/useAsyncSorter';
 import AsyncSorterContainer from './AsyncSorterContainer';
 import { useDragAndDrop } from '@/shared/hooks/useDragAndDrop';
 import { getAsyncSortTasksNumber } from '@/api/asyncSort.api';
+import { AsyncSorterResults } from './AsyncSorterResults';
 
 export default function AsyncSorter() {
   const {
@@ -41,8 +42,8 @@ export default function AsyncSorter() {
   const [tasksNumber, setTasksNumber] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitClicked, setIsSubmitClicked] = useState(false);
-  const [doneTasks, setDoneTasks] = useState<number[]>([]);
-  const [missedTasks, setMissedTasks] = useState<number[]>([]);
+  const [successfulTasks, setSuccessfulTasks] = useState<number[]>([]);
+  const [failedTasks, setFailedTasks] = useState<number[]>([]);
   const [answersColorSchema, setAnswersColorSchema] =
     useState<AnswerColor | null>(null);
   const { getAsyncSortTask, isLoading } = useAsyncSorter();
@@ -70,7 +71,7 @@ export default function AsyncSorter() {
     };
   }, [getAsyncSortTask, taskIndex, setCurrentTask, setAnswer]);
   const checkIsCompleted = () => {
-    if (doneTasks.length + missedTasks.length === tasksNumber) {
+    if (successfulTasks.length + failedTasks.length === tasksNumber) {
       setIsCompleted(true);
     }
   };
@@ -81,7 +82,7 @@ export default function AsyncSorter() {
       setIsCorrectSolved(result);
       if (result) {
         setAnswersColorSchema(determineAnswerColor());
-        setDoneTasks([...doneTasks, task.id]);
+        setSuccessfulTasks([...successfulTasks, task.id]);
       } else {
         setIsIncorrectSolved(true);
         setAnswersColorSchema(determineAnswerColor());
@@ -111,7 +112,14 @@ export default function AsyncSorter() {
     );
   }
   if (isCompleted) {
-    return <AsyncSorterContainer>Good job</AsyncSorterContainer>;
+    return (
+      <AsyncSorterContainer>
+        <AsyncSorterResults
+          solvedTasks={successfulTasks}
+          unsolvedTasks={failedTasks}
+        ></AsyncSorterResults>
+      </AsyncSorterContainer>
+    );
   }
   if (!task) {
     return (
@@ -316,7 +324,7 @@ export default function AsyncSorter() {
               clearZones();
               setDraggedItem(null);
               setAllDragged(false);
-              setMissedTasks([...missedTasks, task.id]);
+              setFailedTasks([...failedTasks, task.id]);
               checkIsCompleted();
             }}
             variant="outlined"
