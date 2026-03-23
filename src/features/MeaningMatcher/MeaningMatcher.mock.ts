@@ -189,7 +189,7 @@ export const GitHubMatching: MatchingLevels = {
 export const topicsMap: Record<MeaningMatcherType, MatchingLevels> = {
   html: HTMLMatching,
   css: CSSMatching,
-  javascript: JSMatching,
-  typescript: TSMatching,
+  js: JSMatching,
+  ts: TSMatching,
   github: GitHubMatching,
 };

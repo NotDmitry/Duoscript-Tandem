@@ -1,9 +1,4 @@
-export type MeaningMatcherType =
-  | 'html'
-  | 'css'
-  | 'javascript'
-  | 'typescript'
-  | 'github';
+export type MeaningMatcherType = 'html' | 'css' | 'js' | 'ts' | 'github';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -16,8 +11,8 @@ export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
 export const TOPIC_LABELS: Record<MeaningMatcherType, string> = {
   html: 'HTML',
   css: 'CSS',
-  javascript: 'JavaScript',
-  typescript: 'TypeScript',
+  js: 'JavaScript',
+  ts: 'TypeScript',
   github: 'GitHub',
 };
 

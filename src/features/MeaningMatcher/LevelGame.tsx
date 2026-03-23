@@ -8,7 +8,6 @@ import type {
   MeaningMatcherType,
 } from './MeaningMatcher.types';
 import { DIFFICULTY_LABELS, TOPIC_LABELS } from './MeaningMatcher.types';
-import { topicsMap } from './MeaningMatcher.mock';
 
 const OPTIONS_ZONE_ID = 'options';
 const DIFFICULTIES: Difficulty[] = ['easy', 'medium', 'hard'];
@@ -275,6 +274,8 @@ export function LevelGame({
   topic,
   difficulty,
   completedLevels,
+  title,
+  pairs,
   onSubmit,
   onNext,
   onSkip,
@@ -282,12 +283,12 @@ export function LevelGame({
   topic: MeaningMatcherType;
   difficulty: Difficulty;
   completedLevels: Difficulty[];
+  title: string;
+  pairs: Pair[];
   onSubmit: (score: number, total: number) => void;
   onNext: () => void;
   onSkip: () => void;
 }) {
-  const { title, pairs } = topicsMap[topic][difficulty];
-
   const [answers, setAnswers] = useState<Record<number, number | null>>(
     Object.fromEntries(pairs.map((p) => [p.id, null]))
   );

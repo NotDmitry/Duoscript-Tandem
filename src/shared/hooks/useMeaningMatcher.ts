@@ -1,21 +1,45 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type {
   Difficulty,
   CompletedResult,
+  MatchingLevels,
+  MeaningMatcherType,
 } from '@/features/MeaningMatcher/MeaningMatcher.types.ts';
+import getMeaningMatcherData from '@/api/meaningMatcher.api';
 
 const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 
+type DataState =
+  | { status: 'loading' }
+  | { status: 'ready'; data: MatchingLevels };
+
 export function useMeaningMatcher({
+  topic,
   initialDifficulty = 'easy',
   onComplete,
 }: {
+  topic: MeaningMatcherType;
   initialDifficulty?: Difficulty;
   onComplete?: (results: CompletedResult[]) => void;
 }) {
   const [difficulty, setDifficulty] = useState<Difficulty>(initialDifficulty);
   const [completedLevels, setCompletedLevels] = useState<Difficulty[]>([]);
   const [results, setResults] = useState<CompletedResult[]>([]);
+  const [dataState, setDataState] = useState<DataState>({ status: 'loading' });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void getMeaningMatcherData(topic).then((result) => {
+      if (!cancelled) {
+        setDataState({ status: 'ready', data: result });
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [topic]);
 
   const goToNext = (skipped: boolean, score = 0, total = 0) => {
     const currentIndex = DIFFICULTIES.indexOf(difficulty);
@@ -36,5 +60,5 @@ export function useMeaningMatcher({
     }
   };
 
-  return { difficulty, completedLevels, goToNext };
+  return { difficulty, completedLevels, goToNext, dataState };
 }

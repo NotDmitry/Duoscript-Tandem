@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, CircularProgress } from '@mui/material';
 import type { MeaningMatcherProps } from './MeaningMatcher.types';
 import { useMeaningMatcher } from '@/shared/hooks/useMeaningMatcher.ts';
 import { LevelGame } from './LevelGame';
@@ -8,10 +8,22 @@ export function MeaningMatcher({
   initialDifficulty,
   onComplete,
 }: MeaningMatcherProps) {
-  const { difficulty, completedLevels, goToNext } = useMeaningMatcher({
-    initialDifficulty,
-    onComplete,
-  });
+  const { difficulty, completedLevels, goToNext, dataState } =
+    useMeaningMatcher({
+      topic,
+      initialDifficulty,
+      onComplete,
+    });
+
+  if (dataState.status === 'loading') {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 6 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  const levelData = dataState.data[difficulty];
 
   return (
     <Box sx={{ maxWidth: 900, mx: 'auto', p: 3 }}>
@@ -24,6 +36,8 @@ export function MeaningMatcher({
         topic={topic}
         difficulty={difficulty}
         completedLevels={completedLevels}
+        title={levelData.title}
+        pairs={levelData.pairs}
         onSubmit={(score, total) => {
           goToNext(false, score, total);
         }}
