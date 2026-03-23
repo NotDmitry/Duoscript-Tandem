@@ -53,6 +53,7 @@ export const useAsyncSorter = () => {
   return {
     getAsyncSortTask,
     isLoading,
+    setIsLoading,
     callStackItems,
     setCallStackItems,
     microtasksItems,

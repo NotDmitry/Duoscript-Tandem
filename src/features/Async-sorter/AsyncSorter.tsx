@@ -73,11 +73,12 @@ export default function AsyncSorter() {
     try {
       const result = await isCorrectAnswer(task.id);
       setIsCorrectSolved(result);
-      if (result) setDoneTasks([...doneTasks, task.id]);
+      if (result) {
+        setDoneTasks([...doneTasks, task.id]);
+      }
+      setIsSubmitClicked(true);
     } catch {
       throw new Error('something went wrong');
-    } finally {
-      setIsSubmitClicked(true);
     }
   };
   const onNextTaskClick = () => {
@@ -278,6 +279,9 @@ export default function AsyncSorter() {
               return item + '  ';
             })}
         </Paper>
+        {isCorrectSolved && (
+          <Typography color="success">Your answer is correct</Typography>
+        )}
       </Container>
       <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Box>
