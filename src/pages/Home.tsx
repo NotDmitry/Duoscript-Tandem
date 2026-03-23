@@ -1,3 +1,6 @@
+import { useAuth } from '@/shared/hooks/useAuth.ts';
+import { getUserNameFromLS } from '@/api/auth.api.ts';
+
 const GREETING = 'Hello dear';
 const DEFAULT_USERNAME = 'developer';
 
@@ -13,8 +16,12 @@ const images = [
 ];
 
 function Home() {
+  const { user } = useAuth();
+  const userName: string =
+    user !== null ? getUserNameFromLS() : DEFAULT_USERNAME;
   console.log(GREETING, DEFAULT_USERNAME, images);
   return <div>Home page</div>;
+  console.log(user, userName);
 }
 
 export default Home;
