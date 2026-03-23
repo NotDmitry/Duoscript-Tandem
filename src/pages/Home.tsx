@@ -1,5 +1,6 @@
 import { useAuth } from '@/shared/hooks/useAuth.ts';
 import { getUserNameFromLS } from '@/api/auth.api.ts';
+import { Box, Typography } from '@mui/material';
 
 const GREETING = 'Hello dear';
 const DEFAULT_USERNAME = 'developer';
@@ -27,6 +28,63 @@ function Home() {
   console.log(GREETING, DEFAULT_USERNAME, images);
   console.log(user, userName);
   console.log(APP_DESCRIPTION);
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        rowGap: 4,
+        maxWidth: { xs: 1, md: 1300, xl: 1600 },
+        mx: 'auto',
+        px: 3,
+        py: 5,
+      }}
+    >
+      <Typography
+        typography="h5"
+        sx={{
+          textTransform: 'uppercase',
+        }}
+      >
+        {GREETING} {userName}
+      </Typography>
+      <Typography
+        textAlign="center"
+        typography="subtitle1"
+        sx={{
+          width: 'fit-context',
+          maxWidth: '700px',
+        }}
+      >
+        {APP_DESCRIPTION}
+      </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          alignItems: 'center',
+          gap: 3,
+          maxWidth: { xs: 1, md: 1300, xl: 1600 },
+        }}
+      >
+        {images.map((image, index) => (
+          <Box
+            key={index}
+            component="img"
+            sx={{
+              maxWidth: { xs: 1, md: 350, xl: 500 },
+              borderRadius: 2,
+              padding: 2,
+              boxShadow: '0 0 24px 1px rgba(0,0,0,0.08)',
+            }}
+            alt={image.alt}
+            src={image.link}
+          />
+        ))}
+      </Box>
+    </Box>
+  );
 }
 
 export default Home;
