@@ -1,6 +1,7 @@
+import { useNavigate } from 'react-router';
 import { useAuth } from '@/shared/hooks/useAuth.ts';
 import { getUserNameFromLS } from '@/api/auth.api.ts';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 
 const GREETING = 'Hello dear';
 const DEFAULT_USERNAME = 'developer';
@@ -22,6 +23,7 @@ const images = [
 ];
 
 function Home() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const userName: string =
     user !== null ? getUserNameFromLS() : DEFAULT_USERNAME;
@@ -83,6 +85,16 @@ function Home() {
           />
         ))}
       </Box>
+      {user === null && (
+        <Button
+          variant="contained"
+          onClick={() => {
+            navigate('/register');
+          }}
+        >
+          Registration
+        </Button>
+      )}
     </Box>
   );
 }
