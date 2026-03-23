@@ -3,7 +3,7 @@ import type {
   Difficulty,
   CompletedResult,
   MatchingLevels,
-  MeaningMatcherType,
+  MeaningMatcherProps,
 } from '@/features/MeaningMatcher/MeaningMatcher.types.ts';
 import getMeaningMatcherData from '@/api/meaningMatcher.api';
 
@@ -17,11 +17,7 @@ export function useMeaningMatcher({
   topic,
   initialDifficulty = 'easy',
   onComplete,
-}: {
-  topic: MeaningMatcherType;
-  initialDifficulty?: Difficulty;
-  onComplete?: (results: CompletedResult[]) => void;
-}) {
+}: MeaningMatcherProps) {
   const [difficulty, setDifficulty] = useState<Difficulty>(initialDifficulty);
   const [completedLevels, setCompletedLevels] = useState<Difficulty[]>([]);
   const [results, setResults] = useState<CompletedResult[]>([]);
