@@ -6,6 +6,7 @@ export type WidgetType = 'quiz' | 'meaningMatcher';
 export interface WidgetDocument<T> {
   widgetId: string;
   type: WidgetType;
+  topic: CourseTag;
   config: T;
   createdAt: Timestamp;
 }
@@ -23,7 +24,6 @@ export interface QuizQuestion {
 
 export interface QuizConfig {
   quizName: string;
-  type: CourseTag;
   questions: QuizQuestion[];
   rightAnswers: (number | null)[];
 }
