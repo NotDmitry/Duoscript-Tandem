@@ -91,6 +91,7 @@ export const useAsyncSorter = () => {
     macrotasksItems,
     setMacrotasksItems,
     output,
+    setOutput,
     updateOutput,
     isCorrectAnswer,
     setAnswer,

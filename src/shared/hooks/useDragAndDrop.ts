@@ -15,6 +15,7 @@ export const useDragAndDrop = () => {
     macrotasksItems,
     setMacrotasksItems,
     output,
+    setOutput,
     updateOutput,
     isCorrectAnswer,
     setAnswer,
@@ -76,6 +77,7 @@ export const useDragAndDrop = () => {
     setCallStackItems([]);
     setMicrotasksItems([]);
     setMacrotasksItems([]);
+    setOutput([]);
   };
 
   return {

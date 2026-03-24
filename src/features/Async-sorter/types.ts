@@ -29,6 +29,12 @@ export interface AnswerColor {
   microBlock: ('green' | 'red')[];
   macroBlock: ('green' | 'red')[];
 }
+export interface DropZones {
+  zone: 'Call Stack' | 'Microtasks' | 'Macrotasks';
+  title: string;
+  items: AsyncSorterBlock[];
+  answerColors: ('green' | 'red')[] | undefined;
+}
 export const asyncSorterTasksArraySchema = z.array(asyncSorterTaskSchema);
 export type AsyncSorterTask = z.infer<typeof asyncSorterTaskSchema>;
 export type AsyncSorterBlock = z.infer<typeof asyncSorterBlockSchema>;

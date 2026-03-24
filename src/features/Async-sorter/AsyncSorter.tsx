@@ -9,7 +9,11 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { type AnswerColor, type AsyncSorterTask } from './types';
+import {
+  type AnswerColor,
+  type AsyncSorterTask,
+  type DropZones,
+} from './types';
 import { useAsyncSorter } from '@/shared/hooks/useAsyncSorter';
 import AsyncSorterContainer from './AsyncSorterContainer';
 import { useDragAndDrop } from '@/shared/hooks/useDragAndDrop';
@@ -140,7 +144,26 @@ export default function AsyncSorter() {
       </AsyncSorterContainer>
     );
   }
-
+  const dropZones: DropZones[] = [
+    {
+      zone: 'Call Stack',
+      title: 'Call Stack',
+      items: callStackItems,
+      answerColors: answersColorSchema?.callStackBlock,
+    },
+    {
+      zone: 'Microtasks',
+      title: 'Microtasks',
+      items: microtasksItems,
+      answerColors: answersColorSchema?.microBlock,
+    },
+    {
+      zone: 'Macrotasks',
+      title: 'Macrotasks',
+      items: macrotasksItems,
+      answerColors: answersColorSchema?.macroBlock,
+    },
+  ];
   return (
     <AsyncSorterContainer>
       <Typography gutterBottom sx={{ textAlign: 'center', m: 2 }}>
@@ -164,7 +187,7 @@ export default function AsyncSorter() {
           sx={{ p: 3, backgroundColor: '#f0f0f0', minHeight: 92 }}
         >
           <Stack direction="row" spacing={2}>
-            {task.blocks.map((item, index) => {
+            {task.blocks.map((item) => {
               if (
                 callStackItems.find((csItem) => csItem === item) ||
                 microtasksItems.find((miItem) => miItem === item) ||
@@ -184,7 +207,7 @@ export default function AsyncSorter() {
                     p: '10px',
                     background: isDragging ? '#cbcbcb' : 'white',
                   }}
-                  key={index}
+                  key={item.id}
                 >
                   {item.label}
                 </Paper>
@@ -196,126 +219,56 @@ export default function AsyncSorter() {
 
       <Box sx={{ m: 3, width: '90%' }}>
         <Grid container spacing={2}>
-          <Grid size={{ xs: 4 }}>
-            <Paper
-              sx={{ backgroundColor: draggedItem ? `#56f6565b` : '#f0f0f0' }}
-            >
-              <Typography sx={{ fontWeight: 800, textAlign: 'center' }}>
-                Call Stack
-              </Typography>
-              <Stack
-                direction="row"
-                spacing={callStackItems.length < 5 ? 1 : 0}
-                onDragOver={handleDragOver}
-                onDrop={() => {
-                  handleDrop('Call Stack');
+          {dropZones.map(({ zone, title, items, answerColors }) => (
+            <Grid size={{ xs: 4 }} key={zone}>
+              <Paper
+                sx={{
+                  backgroundColor: draggedItem ? '#56f6565b' : '#f0f0f0',
                 }}
-                sx={{ p: 1, minHeight: 60 }}
               >
-                {callStackItems.map((item, index) => {
-                  return (
+                <Typography sx={{ fontWeight: 800, textAlign: 'center' }}>
+                  {title}
+                </Typography>
+                <Stack
+                  direction="row"
+                  spacing={items.length < 5 ? 1 : 0}
+                  onDragOver={handleDragOver}
+                  onDragEnd={handleDragEnd}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    handleDrop(zone); // изменить, добавить число индекс куда вставить элемент
+                  }}
+                  sx={{ p: 1, minHeight: 60 }}
+                >
+                  {items.map((item, index) => (
                     <Paper
+                      key={item.id}
                       draggable={!isSubmitClicked}
                       onDragStart={() => {
                         if (!isSubmitClicked) handleDragStart(item);
                       }}
+                      onDragOver={handleDragOver}
                       onDragEnd={handleDragEnd}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleDrop(zone); // изменить, добавить число индекс куда вставить элемент
+                      }}
                       elevation={3}
                       sx={{
                         p: '10px',
                         backgroundColor: isSubmitClicked
-                          ? answersColorSchema?.callStackBlock[index]
+                          ? answerColors?.[index]
                           : '',
                       }}
-                      key={index}
                     >
                       {item.label}
                     </Paper>
-                  );
-                })}
-              </Stack>
-            </Paper>
-          </Grid>
-          <Grid size={{ xs: 4 }}>
-            <Paper
-              sx={{ backgroundColor: draggedItem ? `#56f6565b` : '#f0f0f0' }}
-            >
-              <Typography sx={{ fontWeight: 800, textAlign: 'center' }}>
-                Microtasks
-              </Typography>
-              <Stack
-                direction="row"
-                spacing={microtasksItems.length < 5 ? 1 : 0}
-                onDragOver={handleDragOver}
-                onDrop={() => {
-                  handleDrop('Microtasks');
-                }}
-                sx={{ p: 1, minHeight: 60 }}
-              >
-                {microtasksItems.map((item, index) => {
-                  return (
-                    <Paper
-                      draggable={!isSubmitClicked}
-                      onDragStart={() => {
-                        if (!isSubmitClicked) handleDragStart(item);
-                      }}
-                      onDragEnd={handleDragEnd}
-                      elevation={3}
-                      sx={{
-                        p: '10px',
-                        backgroundColor: isSubmitClicked
-                          ? answersColorSchema?.microBlock[index]
-                          : '',
-                      }}
-                      key={index}
-                    >
-                      {item.label}
-                    </Paper>
-                  );
-                })}
-              </Stack>
-            </Paper>
-          </Grid>
-          <Grid size={{ xs: 4 }}>
-            <Paper
-              sx={{ backgroundColor: draggedItem ? `#56f6565b` : '#f0f0f0' }}
-            >
-              <Typography sx={{ fontWeight: 800, textAlign: 'center' }}>
-                Macrotasks
-              </Typography>
-              <Stack
-                direction="row"
-                spacing={macrotasksItems.length < 5 ? 1 : 0}
-                onDragOver={handleDragOver}
-                onDrop={() => {
-                  handleDrop('Macrotasks');
-                }}
-                sx={{ p: 1, minHeight: 60 }}
-              >
-                {macrotasksItems.map((item, index) => {
-                  return (
-                    <Paper
-                      draggable={!isSubmitClicked}
-                      onDragStart={() => {
-                        if (!isSubmitClicked) handleDragStart(item);
-                      }}
-                      onDragEnd={handleDragEnd}
-                      elevation={3}
-                      sx={{
-                        p: '10px',
-                        backgroundColor: isSubmitClicked
-                          ? answersColorSchema?.macroBlock[index]
-                          : '',
-                      }}
-                      key={index}
-                    >
-                      {item.label}
-                    </Paper>
-                  );
-                })}
-              </Stack>
-            </Paper>
-          </Grid>
+                  ))}
+                </Stack>
+              </Paper>
+            </Grid>
+          ))}
         </Grid>
       </Box>
       <Container>
