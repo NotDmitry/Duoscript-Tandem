@@ -70,8 +70,8 @@ export default function AsyncSorter() {
       cancelled = true;
     };
   }, [getAsyncSortTask, taskIndex, setCurrentTask, setAnswer]);
-  const checkIsCompleted = () => {
-    if (successfulTasks.length + failedTasks.length === tasksNumber) {
+  const checkIsCompleted = (successLength: number, failLength: number) => {
+    if (successLength + failLength === tasksNumber) {
       setIsCompleted(true);
     }
   };
@@ -85,6 +85,7 @@ export default function AsyncSorter() {
         setSuccessfulTasks([...successfulTasks, task.id]);
       } else {
         setIsIncorrectSolved(true);
+        setFailedTasks([...failedTasks, task.id]);
         setAnswersColorSchema(determineAnswerColor());
       }
       setIsSubmitClicked(true);
@@ -93,7 +94,7 @@ export default function AsyncSorter() {
     }
   };
   const onNextTaskClick = () => {
-    checkIsCompleted();
+    checkIsCompleted(successfulTasks.length, failedTasks.length);
 
     clearZones();
     setDraggedItem(null);
@@ -318,14 +319,16 @@ export default function AsyncSorter() {
           <Button
             disabled={isSubmitClicked}
             onClick={() => {
-              if (tasksNumber > taskIndex + 1) {
-                setTaskIndex(taskIndex + 1);
-              }
               clearZones();
               setDraggedItem(null);
               setAllDragged(false);
-              setFailedTasks([...failedTasks, task.id]);
-              checkIsCompleted();
+              const newFailedTasks = [...failedTasks, task.id];
+              setFailedTasks(newFailedTasks);
+
+              checkIsCompleted(successfulTasks.length, newFailedTasks.length);
+              if (tasksNumber > taskIndex + 1) {
+                setTaskIndex(taskIndex + 1);
+              }
             }}
             variant="outlined"
             sx={{ mr: 1 }}
