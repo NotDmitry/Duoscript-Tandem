@@ -33,6 +33,7 @@ export default function AsyncSorter() {
     determineAnswerColor,
     isCorrectAnswer,
     setAnswer,
+    handleDragEnd,
     allDragged /* setMacrotasksItems , */,
   } = useDragAndDrop();
   const [taskIndex, setTaskIndex] = useState(0);
@@ -177,6 +178,7 @@ export default function AsyncSorter() {
                   onDragStart={() => {
                     handleDragStart(item);
                   }}
+                  onDragEnd={handleDragEnd}
                   elevation={3}
                   sx={{
                     p: '10px',
@@ -195,7 +197,9 @@ export default function AsyncSorter() {
       <Box sx={{ m: 3, width: '90%' }}>
         <Grid container spacing={2}>
           <Grid size={{ xs: 4 }}>
-            <Paper sx={{ backgroundColor: '#f0f0f0' }}>
+            <Paper
+              sx={{ backgroundColor: draggedItem ? `#56f6565b` : '#f0f0f0' }}
+            >
               <Typography sx={{ fontWeight: 800, textAlign: 'center' }}>
                 Call Stack
               </Typography>
@@ -215,6 +219,7 @@ export default function AsyncSorter() {
                       onDragStart={() => {
                         if (!isSubmitClicked) handleDragStart(item);
                       }}
+                      onDragEnd={handleDragEnd}
                       elevation={3}
                       sx={{
                         p: '10px',
@@ -232,7 +237,9 @@ export default function AsyncSorter() {
             </Paper>
           </Grid>
           <Grid size={{ xs: 4 }}>
-            <Paper sx={{ backgroundColor: '#f0f0f0' }}>
+            <Paper
+              sx={{ backgroundColor: draggedItem ? `#56f6565b` : '#f0f0f0' }}
+            >
               <Typography sx={{ fontWeight: 800, textAlign: 'center' }}>
                 Microtasks
               </Typography>
@@ -252,6 +259,7 @@ export default function AsyncSorter() {
                       onDragStart={() => {
                         if (!isSubmitClicked) handleDragStart(item);
                       }}
+                      onDragEnd={handleDragEnd}
                       elevation={3}
                       sx={{
                         p: '10px',
@@ -269,7 +277,9 @@ export default function AsyncSorter() {
             </Paper>
           </Grid>
           <Grid size={{ xs: 4 }}>
-            <Paper sx={{ backgroundColor: '#f0f0f0' }}>
+            <Paper
+              sx={{ backgroundColor: draggedItem ? `#56f6565b` : '#f0f0f0' }}
+            >
               <Typography sx={{ fontWeight: 800, textAlign: 'center' }}>
                 Macrotasks
               </Typography>
@@ -289,6 +299,7 @@ export default function AsyncSorter() {
                       onDragStart={() => {
                         if (!isSubmitClicked) handleDragStart(item);
                       }}
+                      onDragEnd={handleDragEnd}
                       elevation={3}
                       sx={{
                         p: '10px',

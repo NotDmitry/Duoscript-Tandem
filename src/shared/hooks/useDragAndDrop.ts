@@ -30,8 +30,12 @@ export const useDragAndDrop = () => {
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
+  const handleDragEnd = () => {
+    setDraggedItem(null);
+  };
   const handleDrop = (zone: DropZone) => {
     if (!draggedItem) return;
+    setDraggedItem(null);
 
     const withoutDragged = (arr: AsyncSorterBlock[]) =>
       arr.filter((item) => item.id !== draggedItem.id);
@@ -94,5 +98,6 @@ export const useDragAndDrop = () => {
     isCorrectAnswer,
     setAnswer,
     determineAnswerColor,
+    handleDragEnd,
   };
 };
