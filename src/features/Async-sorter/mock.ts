@@ -23,39 +23,8 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
       outputOrder: ['1', '4', '3', '2'],
     },
   },
-
   {
     id: 2,
-    type: 'async-sorter',
-    codeSnippet: [
-      'setTimeout(() => {',
-      "  console.log('1');",
-      "  Promise.resolve().then(() => console.log('2'));",
-      "  console.log('3');",
-      '}, 0);',
-      "console.log('4');",
-      "Promise.resolve().then(() => console.log('5'));",
-    ],
-    blocks: [
-      { id: 'b1', code: 'setTimeout callback', label: '1' },
-      {
-        id: 'b2',
-        code: 'Promise.then callback (inside setTimeout)',
-        label: '2',
-      },
-      { id: 'b3', code: 'setTimeout callback', label: '3' },
-      { id: 'b4', code: "console.log('4')", label: '4' },
-      { id: 'b5', code: 'Promise.then callback', label: '5' },
-    ],
-    answer: {
-      callStack: ['4'],
-      microtasks: ['5', '2'],
-      macrotasks: ['1', '3'],
-      outputOrder: ['4', '5', '1', '3', '2'],
-    },
-  },
-  {
-    id: 3,
     type: 'async-sorter',
     codeSnippet: [
       "(async () => {console.log('1');",
@@ -77,7 +46,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 4,
+    id: 3,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -98,7 +67,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 5,
+    id: 4,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -120,8 +89,8 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
 
-  /*  {
-    id: 6,
+  {
+    id: 5,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -144,7 +113,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 7,
+    id: 6,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -167,7 +136,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 8,
+    id: 7,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -192,7 +161,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 9,
+    id: 8,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -217,7 +186,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 10,
+    id: 9,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -243,7 +212,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 11,
+    id: 10,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -266,7 +235,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 12,
+    id: 11,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -291,88 +260,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 13,
-    type: 'async-sorter',
-    codeSnippet: [
-      "console.log('1');",
-      'setTimeout(() => {',
-      "  console.log('2');",
-      "  Promise.resolve().then(() => console.log('3'));",
-      '}, 0);',
-      "console.log('4');",
-    ],
-    blocks: [
-      { id: 'b1', code: "console.log('1')", label: '1' },
-      { id: 'b2', code: 'setTimeout callback', label: '2' },
-      {
-        id: 'b3',
-        code: 'Promise.then callback (inside setTimeout)',
-        label: '3',
-      },
-      { id: 'b4', code: "console.log('4')", label: '4' },
-    ],
-    answer: {
-      callStack: ['1', '4'],
-      microtasks: ['3'],
-      macrotasks: ['2'],
-      outputOrder: ['1', '4', '2', '3'],
-    },
-  },
-  {
-    id: 14,
-    type: 'async-sorter',
-    codeSnippet: [
-      'setTimeout(async () => {',
-      "  console.log('1');",
-      '  await Promise.resolve();',
-      "  console.log('2');",
-      '}, 0);',
-      "console.log('3');",
-    ],
-    blocks: [
-      { id: 'b1', code: 'setTimeout callback', label: '1' },
-      {
-        id: 'b2',
-        code: 'async/await continuation (inside setTimeout)',
-        label: '2',
-      },
-      { id: 'b3', code: "console.log('3')", label: '3' },
-    ],
-    answer: {
-      callStack: ['3'],
-      microtasks: ['2'],
-      macrotasks: ['1'],
-      outputOrder: ['3', '1', '2'],
-    },
-  },
-  {
-    id: 15,
-    type: 'async-sorter',
-    codeSnippet: [
-      "console.log('1');",
-      "setTimeout(() => {console.log('2');",
-      "  Promise.resolve().then(() => {console.log('3');",
-      "    Promise.resolve().then(() => console.log('4'));",
-      '  });',
-      '}, 0);',
-      "console.log('5');",
-    ],
-    blocks: [
-      { id: 'b1', code: "console.log('1')", label: '1' },
-      { id: 'b2', code: 'setTimeout callback', label: '2' },
-      { id: 'b3', code: 'Promise.then callback', label: '3' },
-      { id: 'b4', code: 'Promise.then callback (nested)', label: '4' },
-      { id: 'b5', code: "console.log('5')", label: '5' },
-    ],
-    answer: {
-      callStack: ['1', '5'],
-      microtasks: ['3', '4'],
-      macrotasks: ['2'],
-      outputOrder: ['1', '5', '2', '3', '4'],
-    },
-  },
-  {
-    id: 16,
+    id: 12,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -396,7 +284,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 17,
+    id: 13,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -422,7 +310,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 18,
+    id: 14,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -444,7 +332,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 19,
+    id: 15,
     type: 'async-sorter',
     codeSnippet: [
       "const f = () => console.log('1');",
@@ -469,7 +357,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 20,
+    id: 16,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -496,32 +384,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 21,
-    type: 'async-sorter',
-    codeSnippet: [
-      "console.log('1');",
-      "setTimeout(() => {console.log('2');",
-      "  Promise.resolve().then(() => console.log('3'));",
-      "  queueMicrotask(() => console.log('4'));",
-      '}, 0);',
-      "console.log('5');",
-    ],
-    blocks: [
-      { id: 'b1', code: "console.log('1')", label: '1' },
-      { id: 'b2', code: 'setTimeout callback', label: '2' },
-      { id: 'b3', code: 'Promise.then callback', label: '3' },
-      { id: 'b4', code: 'queueMicrotask callback', label: '4' },
-      { id: 'b5', code: "console.log('5')", label: '5' },
-    ],
-    answer: {
-      callStack: ['1', '5'],
-      microtasks: ['3', '4'],
-      macrotasks: ['2'],
-      outputOrder: ['1', '5', '2', '3', '4'],
-    },
-  },
-  {
-    id: 22,
+    id: 17,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -547,7 +410,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 23,
+    id: 18,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -576,7 +439,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 24,
+    id: 19,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -600,7 +463,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 25,
+    id: 20,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -625,7 +488,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 26,
+    id: 21,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -657,7 +520,7 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
     },
   },
   {
-    id: 27,
+    id: 22,
     type: 'async-sorter',
     codeSnippet: [
       "console.log('1');",
@@ -679,5 +542,5 @@ export const asyncSorterTasks: AsyncSorterTask[] = [
       macrotasks: ['2'],
       outputOrder: ['1', '4', '3', '5', '2'],
     },
-  }, */
+  },
 ];
