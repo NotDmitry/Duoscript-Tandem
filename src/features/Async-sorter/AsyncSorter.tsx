@@ -236,7 +236,7 @@ export default function AsyncSorter() {
                   onDragEnd={handleDragEnd}
                   onDrop={(e) => {
                     e.preventDefault();
-                    handleDrop(zone); // изменить, добавить число индекс куда вставить элемент
+                    handleDrop(zone, items.length);
                   }}
                   sx={{ p: 1, minHeight: 60 }}
                 >
@@ -252,7 +252,7 @@ export default function AsyncSorter() {
                       onDrop={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        handleDrop(zone); // изменить, добавить число индекс куда вставить элемент
+                        handleDrop(zone, index);
                       }}
                       elevation={3}
                       sx={{

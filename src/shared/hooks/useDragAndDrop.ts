@@ -6,6 +6,18 @@ import type {
 import { useState } from 'react';
 import { useAsyncSorter } from './useAsyncSorter';
 
+function insertInto(
+  baseItems: AsyncSorterBlock[],
+  item: AsyncSorterBlock,
+  insertIndex: number
+): AsyncSorterBlock[] {
+  return [
+    ...baseItems.slice(0, insertIndex),
+    item,
+    ...baseItems.slice(insertIndex),
+  ];
+}
+
 export const useDragAndDrop = () => {
   const {
     callStackItems,
@@ -34,29 +46,23 @@ export const useDragAndDrop = () => {
   const handleDragEnd = () => {
     setDraggedItem(null);
   };
-  const handleDrop = (zone: DropZone) => {
+  const handleDrop = (zone: DropZone, insertBeforeInd: number) => {
     if (!draggedItem) return;
     setDraggedItem(null);
 
     const withoutDragged = (arr: AsyncSorterBlock[]) =>
       arr.filter((item) => item.id !== draggedItem.id);
 
-    let nextCall = callStackItems;
-    let nextMicro = microtasksItems;
-    let nextMacro = macrotasksItems;
+    let nextCall = withoutDragged(callStackItems);
+    let nextMicro = withoutDragged(microtasksItems);
+    let nextMacro = withoutDragged(macrotasksItems);
 
     if (zone === 'Call Stack') {
-      nextCall = [...withoutDragged(callStackItems), draggedItem];
-      nextMicro = withoutDragged(microtasksItems);
-      nextMacro = withoutDragged(macrotasksItems);
+      nextCall = insertInto(nextCall, draggedItem, insertBeforeInd);
     } else if (zone === 'Microtasks') {
-      nextMicro = [...withoutDragged(microtasksItems), draggedItem];
-      nextCall = withoutDragged(callStackItems);
-      nextMacro = withoutDragged(macrotasksItems);
+      nextMicro = insertInto(nextMicro, draggedItem, insertBeforeInd);
     } else {
-      nextMacro = [...withoutDragged(macrotasksItems), draggedItem];
-      nextCall = withoutDragged(callStackItems);
-      nextMicro = withoutDragged(microtasksItems);
+      nextMacro = insertInto(nextMacro, draggedItem, insertBeforeInd);
     }
 
     setCallStackItems(nextCall);
