@@ -1,7 +1,7 @@
 import type { Timestamp } from 'firebase/firestore';
 import type { CourseTag } from '@/shared/models/courseModel.ts';
 
-export type WidgetType = 'quiz';
+export type WidgetType = 'quiz' | 'meaningMatcher';
 
 export interface WidgetDocument<T> {
   widgetId: string;
@@ -12,7 +12,7 @@ export interface WidgetDocument<T> {
 
 export type WidgetView<T> = Omit<WidgetDocument<T>, 'createdAt'>;
 
-// Concrete widgets
+// Quiz Widget
 
 export interface QuizQuestion {
   isText: boolean;
@@ -27,3 +27,23 @@ export interface QuizConfig {
   questions: QuizQuestion[];
   rightAnswers: (number | null)[];
 }
+
+// Meaning Matcher Widget
+
+export type MeaningMatcherDifficulty = 'easy' | 'medium' | 'hard';
+
+export interface MatcherPair {
+  id: number;
+  left: string;
+  right: string;
+}
+
+export interface MatcherLevelData {
+  title: string;
+  pairs: MatcherPair[];
+}
+
+export type MeaningMatcherConfig = Record<
+  MeaningMatcherDifficulty,
+  MatcherLevelData
+>;
