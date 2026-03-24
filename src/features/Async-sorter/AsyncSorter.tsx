@@ -42,8 +42,12 @@ export default function AsyncSorter() {
   const [tasksNumber, setTasksNumber] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSubmitClicked, setIsSubmitClicked] = useState(false);
-  const [successfulTasks, setSuccessfulTasks] = useState<number[]>([]);
-  const [failedTasks, setFailedTasks] = useState<number[]>([]);
+  const [successfulTasks, setSuccessfulTasks] = useState<
+    Map<number, AsyncSorterTask>
+  >(new Map());
+  const [failedTasks, setFailedTasks] = useState<Map<number, AsyncSorterTask>>(
+    new Map()
+  );
   const [answersColorSchema, setAnswersColorSchema] =
     useState<AnswerColor | null>(null);
   const { getAsyncSortTask, isLoading } = useAsyncSorter();
@@ -82,10 +86,14 @@ export default function AsyncSorter() {
       setIsCorrectSolved(result);
       if (result) {
         setAnswersColorSchema(determineAnswerColor());
-        setSuccessfulTasks([...successfulTasks, task.id]);
+        const newMap = new Map(successfulTasks);
+        newMap.set(taskIndex, task);
+        setSuccessfulTasks(newMap);
       } else {
         setIsIncorrectSolved(true);
-        setFailedTasks([...failedTasks, task.id]);
+        const newMap = new Map(failedTasks);
+        newMap.set(taskIndex, task);
+        setFailedTasks(newMap);
         setAnswersColorSchema(determineAnswerColor());
       }
       setIsSubmitClicked(true);
@@ -94,7 +102,7 @@ export default function AsyncSorter() {
     }
   };
   const onNextTaskClick = () => {
-    checkIsCompleted(successfulTasks.length, failedTasks.length);
+    checkIsCompleted(successfulTasks.size, failedTasks.size);
 
     clearZones();
     setDraggedItem(null);
@@ -322,10 +330,11 @@ export default function AsyncSorter() {
               clearZones();
               setDraggedItem(null);
               setAllDragged(false);
-              const newFailedTasks = [...failedTasks, task.id];
-              setFailedTasks(newFailedTasks);
+              const newMap = new Map(failedTasks);
+              newMap.set(taskIndex, task);
+              setFailedTasks(newMap);
 
-              checkIsCompleted(successfulTasks.length, newFailedTasks.length);
+              checkIsCompleted(successfulTasks.size, newMap.size);
               if (tasksNumber > taskIndex + 1) {
                 setTaskIndex(taskIndex + 1);
               }
