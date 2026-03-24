@@ -98,8 +98,9 @@ export function useWidgetBugHunter(quizType: QuizType) {
   }
 
   function manageAnswer(): void {
-    setFinish(currentTaskIndex >= tasks.length - 1);
-    if (!isFinish) {
+const isLastTask = currentTaskIndex >= tasks.length - 1
+    setFinish(isLastTask);
+    if (!isLastTask) {
       setCurrentTaskIndex((prev) => prev + 1);
     }
   }
