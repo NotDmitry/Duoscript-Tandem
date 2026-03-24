@@ -1,4 +1,14 @@
-import { Container, Typography, Paper, Button } from '@mui/material';
+import {
+  Container,
+  Box,
+  Typography,
+  Paper,
+  Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { AsyncSorterTask } from './types';
 interface AsyncSorterResultsProps {
   solvedTasks: Map<number, AsyncSorterTask>;
@@ -10,31 +20,58 @@ export function AsyncSorterResults({
   unsolvedTasks,
 }: AsyncSorterResultsProps) {
   return (
-    <Container>
+    <Container sx={{ textAlign: 'center' }}>
       <Paper>
-        <Typography sx={{ textAlign: 'center', m: 2 }}>
-          {' '}
+        <Typography color="success" sx={{ textAlign: 'center', m: 2, pt: 2 }}>
           Correct solved tasks
         </Typography>
         {Array.from(solvedTasks).map((item) => {
           return (
-            <Typography key={item[0]}>{item[1].answer.outputOrder}</Typography>
+            <Accordion key={item[0]}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+              >
+                <Typography component="span">Task #{item[0] + 1}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {item[1].codeSnippet.map((item, index) => {
+                  return <Box key={index}>{item}</Box>;
+                })}
+              </AccordionDetails>
+            </Accordion>
           );
         })}
       </Paper>
 
       <Paper>
-        <Typography sx={{ textAlign: 'center', m: 2 }}>
+        <Typography color="error" sx={{ textAlign: 'center', m: 2, pt: 2 }}>
           {' '}
           Incorrect solved or skipped tasks
         </Typography>
         {Array.from(unsolvedTasks).map((item) => {
           return (
-            <Typography key={item[0]}>{item[1].answer.outputOrder}</Typography>
+            <Accordion key={item[0]}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+              >
+                <Typography component="span">Task #{item[0] + 1}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {item[1].codeSnippet.map((item, index) => {
+                  return <Box key={index}>{item}</Box>;
+                })}
+              </AccordionDetails>
+            </Accordion>
           );
         })}
       </Paper>
-      <Button>Repeat challenge</Button>
+      <Button variant="contained" sx={{ mt: 3, display: 'inline-block' }}>
+        Repeat challenge
+      </Button>
     </Container>
   );
 }
