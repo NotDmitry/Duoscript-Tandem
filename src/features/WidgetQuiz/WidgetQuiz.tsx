@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { blue, grey } from '@mui/material/colors';
 import type { QuizType } from './WidgetQuiz.types.ts';
-import { useWidgetQuiz } from '@/shared/hooks/useWidgetQuiz.ts';
+import { useWidgetQuiz } from './useWidgetQuiz.ts';
 
 function WidgetQuiz(quizType: QuizType) {
   const {

@@ -1,6 +1,6 @@
 import { Box, Typography, CircularProgress } from '@mui/material';
 import type { MeaningMatcherProps } from './MeaningMatcher.types';
-import { useMeaningMatcher } from '@/shared/hooks/useMeaningMatcher.ts';
+import { useMeaningMatcher } from './useMeaningMatcher.ts';
 import { LevelGame } from './LevelGame';
 
 export function MeaningMatcher({

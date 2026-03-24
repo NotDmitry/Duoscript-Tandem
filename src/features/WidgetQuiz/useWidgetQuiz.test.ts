@@ -2,10 +2,7 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { describe, beforeEach, it, expect, vi } from 'vitest';
 import { useWidgetQuiz } from './useWidgetQuiz.ts';
-import type {
-  QuizProps,
-  QuizType,
-} from '@/features/WidgetQuiz/WidgetQuiz.types.ts';
+import type { QuizProps, QuizType } from './WidgetQuiz.types.ts';
 
 const mockQuizData: QuizProps = {
   quizName: 'Test Quiz',

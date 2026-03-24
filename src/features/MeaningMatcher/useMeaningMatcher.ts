@@ -5,7 +5,7 @@ import type {
   MatchingLevels,
   MeaningMatcherProps,
 } from '@/features/MeaningMatcher/MeaningMatcher.types.ts';
-import getMeaningMatcherData from '@/api/meaningMatcher.api';
+import getMeaningMatcherData from '@/api/meaningMatcher.api.ts';
 
 const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 

@@ -4,7 +4,7 @@ import type {
   QuizType,
   QuizQuestion,
   UserAnswer,
-} from '@/features/WidgetQuiz/WidgetQuiz.types.ts';
+} from './WidgetQuiz.types.ts';
 import getQuizData from '@/api/widgetQuiz.api.ts';
 
 export function useWidgetQuiz(quizType: QuizType) {

@@ -1,7 +1,4 @@
-import type {
-  QuizProps,
-  QuizQuestion,
-} from '@/features/WidgetQuiz/WidgetQuiz.types.ts';
+import type { QuizProps, QuizQuestion } from './WidgetQuiz.types.ts';
 
 const htmlMockQuestions: QuizQuestion[] = [
   {
