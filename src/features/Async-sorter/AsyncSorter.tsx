@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import {
   type AnswerColor,
   type AsyncSorterTask,
+  type DropIndicator,
   type DropZones,
 } from './types';
 import { useAsyncSorter } from '@/shared/hooks/useAsyncSorter';
@@ -29,16 +30,16 @@ export default function AsyncSorter() {
     draggedItem,
     setDraggedItem,
     setCurrentTask,
-    /* setCallStackItems, */ clearZones,
+    clearZones,
     microtasksItems,
     setAllDragged,
-    /* setMicrotasksItems, */ macrotasksItems,
+    macrotasksItems,
     output,
     determineAnswerColor,
     isCorrectAnswer,
     setAnswer,
     handleDragEnd,
-    allDragged /* setMacrotasksItems , */,
+    allDragged,
   } = useDragAndDrop();
   const [taskIndex, setTaskIndex] = useState(0);
   const [isCorrectSolved, setIsCorrectSolved] = useState(false);
@@ -55,6 +56,9 @@ export default function AsyncSorter() {
   );
   const [answersColorSchema, setAnswersColorSchema] =
     useState<AnswerColor | null>(null);
+  const [dropIndicator, setDropIndicator] = useState<DropIndicator | null>(
+    null
+  );
   const { getAsyncSortTask, isLoading } = useAsyncSorter();
 
   useEffect(() => {
@@ -131,6 +135,8 @@ export default function AsyncSorter() {
         <AsyncSorterResults
           solvedTasks={successfulTasks}
           unsolvedTasks={failedTasks}
+          resetTasks={setTaskIndex}
+          resetWidget={setIsCompleted}
         ></AsyncSorterResults>
       </AsyncSorterContainer>
     );
@@ -231,8 +237,20 @@ export default function AsyncSorter() {
                 </Typography>
                 <Stack
                   direction="row"
-                  spacing={items.length < 5 ? 1 : 0}
-                  onDragOver={handleDragOver}
+                  spacing={items.length < 4 ? 1 : 0}
+                  onDragOver={(e) => {
+                    handleDragOver(e);
+                    if (
+                      draggedItem &&
+                      !isSubmitClicked &&
+                      e.target === e.currentTarget
+                    ) {
+                      setDropIndicator({
+                        zone,
+                        insertBefore: items.length,
+                      });
+                    }
+                  }}
                   onDragEnd={handleDragEnd}
                   onDrop={(e) => {
                     e.preventDefault();
@@ -247,7 +265,13 @@ export default function AsyncSorter() {
                       onDragStart={() => {
                         if (!isSubmitClicked) handleDragStart(item);
                       }}
-                      onDragOver={handleDragOver}
+                      onDragOver={(e) => {
+                        handleDragOver(e);
+                        e.stopPropagation();
+                        if (draggedItem && !isSubmitClicked) {
+                          setDropIndicator({ zone, insertBefore: index });
+                        }
+                      }}
                       onDragEnd={handleDragEnd}
                       onDrop={(e) => {
                         e.preventDefault();
@@ -260,6 +284,14 @@ export default function AsyncSorter() {
                         backgroundColor: isSubmitClicked
                           ? answerColors?.[index]
                           : '',
+                        borderLeft:
+                          !isSubmitClicked &&
+                          draggedItem &&
+                          dropIndicator?.zone === zone &&
+                          dropIndicator.insertBefore === index
+                            ? '3px solid #2e7d32'
+                            : '3px solid transparent',
+                        boxSizing: 'border-box',
                       }}
                     >
                       {item.label}
@@ -303,13 +335,13 @@ export default function AsyncSorter() {
                 setTaskIndex(taskIndex + 1);
               }
             }}
-            variant="outlined"
+            variant="contained"
             sx={{ mr: 1 }}
           >
             Skip
           </Button>
           <Button
-            variant="outlined"
+            variant="contained"
             disabled={!allDragged}
             onClick={
               !isSubmitClicked
@@ -323,9 +355,6 @@ export default function AsyncSorter() {
           >
             {isSubmitClicked ? 'Next Task' : 'Submit'}
           </Button>
-        </Box>
-        <Box>
-          <Button variant="contained">Run Loop</Button>
         </Box>
       </Container>
     </AsyncSorterContainer>

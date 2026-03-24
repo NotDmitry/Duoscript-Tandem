@@ -29,8 +29,13 @@ export interface AnswerColor {
   microBlock: ('green' | 'red')[];
   macroBlock: ('green' | 'red')[];
 }
+export interface DropIndicator {
+  zone: Zone;
+  insertBefore: number;
+}
+export type Zone = 'Call Stack' | 'Microtasks' | 'Macrotasks';
 export interface DropZones {
-  zone: 'Call Stack' | 'Microtasks' | 'Macrotasks';
+  zone: Zone;
   title: string;
   items: AsyncSorterBlock[];
   answerColors: ('green' | 'red')[] | undefined;

@@ -10,14 +10,19 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { AsyncSorterTask } from './types';
+
 interface AsyncSorterResultsProps {
   solvedTasks: Map<number, AsyncSorterTask>;
   unsolvedTasks: Map<number, AsyncSorterTask>;
+  resetTasks: React.Dispatch<React.SetStateAction<number>>;
+  resetWidget: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function AsyncSorterResults({
   solvedTasks,
   unsolvedTasks,
+  resetTasks,
+  resetWidget,
 }: AsyncSorterResultsProps) {
   return (
     <Container sx={{ textAlign: 'center' }}>
@@ -69,7 +74,14 @@ export function AsyncSorterResults({
           );
         })}
       </Paper>
-      <Button variant="contained" sx={{ mt: 3, display: 'inline-block' }}>
+      <Button
+        onClick={() => {
+          resetTasks(0);
+          resetWidget(false);
+        }}
+        variant="contained"
+        sx={{ mt: 3, display: 'inline-block' }}
+      >
         Repeat challenge
       </Button>
     </Container>

@@ -55,7 +55,7 @@ export async function getAsyncSortTaskByIndex(
 export async function getAsyncSortTasksNumber(): Promise<number> {
   try {
     if (USE_MOCK_DATA) {
-      await delay(1000);
+      await delay(0);
 
       return asyncSorterTasks.length;
     }
@@ -74,7 +74,14 @@ const ifAnswersEqual = (
   userAnswer: AsyncSorterAnswer,
   serverAnswer: AsyncSorterAnswer
 ): boolean => {
-  return JSON.stringify(userAnswer) === JSON.stringify(serverAnswer);
+  return (
+    JSON.stringify(userAnswer.callStack) ===
+      JSON.stringify(serverAnswer.callStack) &&
+    JSON.stringify(userAnswer.microtasks) ===
+      JSON.stringify(serverAnswer.microtasks) &&
+    JSON.stringify(userAnswer.macrotasks) ===
+      JSON.stringify(serverAnswer.macrotasks)
+  );
 };
 export async function submitAnswer(
   userAnswer: AsyncSorterAnswer,

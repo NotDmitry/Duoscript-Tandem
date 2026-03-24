@@ -48,23 +48,20 @@ export const useAsyncSorter = () => {
       ...macrotasks.map((item) => item.label),
     ]);
   };
+  function getColor(
+    arrayItems: AsyncSorterBlock[],
+    answers: string[]
+  ): ('green' | 'red')[] {
+    return arrayItems.map((item, i) => {
+      if (i < answers.length && answers[i] === item.label) return 'green';
+      return 'red';
+    });
+  }
   const determineAnswerColor = (): AnswerColor => {
     if (!answer) throw new Error("The answer wasn't determined");
-    const callStackAnswers = callStackItems.map((item, i) => {
-      if (i < answer.callStack.length && answer.callStack[i] === item.label)
-        return 'green';
-      return 'red';
-    }); //вынести в функцию
-    const microAnswers = microtasksItems.map((item, i) => {
-      if (i < answer.microtasks.length && answer.microtasks[i] === item.label)
-        return 'green';
-      return 'red';
-    });
-    const macroAnswers = macrotasksItems.map((item, i) => {
-      if (i < answer.macrotasks.length && answer.macrotasks[i] === item.label)
-        return 'green';
-      return 'red';
-    });
+    const callStackAnswers = getColor(callStackItems, answer.callStack);
+    const microAnswers = getColor(microtasksItems, answer.microtasks);
+    const macroAnswers = getColor(macrotasksItems, answer.macrotasks);
     return {
       callStackBlock: callStackAnswers,
       microBlock: microAnswers,
