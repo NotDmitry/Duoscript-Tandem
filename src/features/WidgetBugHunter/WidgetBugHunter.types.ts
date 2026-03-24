@@ -4,13 +4,13 @@ interface QuizType {
 
 interface QuizTask {
   code: string;
-  answers: string[] | string[][];
+  answers: string[][];
 }
 
 interface BugHunterQuiz {
   quizName: string;
   tasks: QuizTask[];
-  rightAnswers: number[];
+  rightAnswers: string[];
 }
 
 export type { QuizType, QuizTask, BugHunterQuiz };
