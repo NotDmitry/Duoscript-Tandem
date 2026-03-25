@@ -67,7 +67,6 @@ export const useDragAndDrop = () => {
     } else {
       nextMacro = insertInto(nextMacro, draggedItem, insertBeforeInd);
     }
-    console.log(nextCall);
     setCallStackItems(nextCall);
     setMicrotasksItems(nextMicro);
     setMacrotasksItems(nextMacro);

@@ -88,6 +88,12 @@ export default function AsyncSorter() {
       setSelectedItem(null);
     }
   };
+  const handleItemZoneKeyDown = (
+    e: React.KeyboardEvent<HTMLDivElement>,
+    item: AsyncSorterBlock
+  ) => {
+    handleItemKeyDown(e, item);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -229,7 +235,6 @@ export default function AsyncSorter() {
               )
                 return null;
               const isDragging = draggedItem?.id === item.id;
-              const isSelected = selectedItem?.id === item.id;
               return (
                 <Paper
                   tabIndex={0}
@@ -244,11 +249,7 @@ export default function AsyncSorter() {
                   elevation={3}
                   sx={{
                     p: '10px',
-                    background: isDragging
-                      ? '#cbcbcb'
-                      : isSelected
-                        ? '   #4edfff5b'
-                        : 'white',
+                    background: isDragging ? '#cbcbcb' : 'white',
                   }}
                   key={item.id}
                 >
@@ -299,50 +300,59 @@ export default function AsyncSorter() {
                   }}
                   sx={{ p: 1, minHeight: 60 }}
                 >
-                  {items.map((item, index) => (
-                    <Paper
-                      key={item.id}
-                      tabIndex={0}
-                      draggable={!isSubmitClicked}
-                      onKeyDown={(e) => {
-                        handleZoneKeyDown(e, zone, index);
-                      }}
-                      onDragStart={() => {
-                        if (!isSubmitClicked) handleDragStart(item);
-                      }}
-                      onDragOver={(e) => {
-                        handleDragOver(e);
-                        e.stopPropagation();
-                        if (draggedItem && !isSubmitClicked) {
-                          setDropIndicator({ zone, insertBefore: index });
-                        }
-                      }}
-                      onDragEnd={handleDragEnd}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleDrop(zone, index);
-                      }}
-                      elevation={3}
-                      sx={{
-                        p: '10px',
-                        backgroundColor: isSubmitClicked
-                          ? answerColors?.[index]
-                          : '',
-                        borderLeft:
-                          !isSubmitClicked &&
-                          !selectedItem &&
-                          draggedItem &&
-                          dropIndicator?.zone === zone &&
-                          dropIndicator.insertBefore === index
-                            ? '3px solid #2e7d32'
-                            : '3px solid transparent',
-                        boxSizing: 'border-box',
-                      }}
-                    >
-                      {item.label}
-                    </Paper>
-                  ))}
+                  {items.map((item, index) => {
+                    const isSelected = selectedItem?.id === item.id;
+                    return (
+                      <Paper
+                        key={item.id}
+                        tabIndex={0}
+                        draggable={!isSubmitClicked}
+                        onKeyDown={(e) => {
+                          if (selectedItem) {
+                            handleZoneKeyDown(e, zone, index);
+                          } else {
+                            handleItemZoneKeyDown(e, item);
+                          }
+                        }}
+                        onDragStart={() => {
+                          if (!isSubmitClicked) handleDragStart(item);
+                        }}
+                        onDragOver={(e) => {
+                          handleDragOver(e);
+                          e.stopPropagation();
+                          if (draggedItem && !isSubmitClicked) {
+                            setDropIndicator({ zone, insertBefore: index });
+                          }
+                        }}
+                        onDragEnd={handleDragEnd}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleDrop(zone, index);
+                        }}
+                        elevation={3}
+                        sx={{
+                          p: '10px',
+                          backgroundColor: isSelected
+                            ? '#cbcbcb'
+                            : isSubmitClicked
+                              ? answerColors?.[index]
+                              : '',
+                          borderLeft:
+                            !isSubmitClicked &&
+                            !selectedItem &&
+                            draggedItem &&
+                            dropIndicator?.zone === zone &&
+                            dropIndicator.insertBefore === index
+                              ? '3px solid #2e7d32'
+                              : '3px solid transparent',
+                          boxSizing: 'border-box',
+                        }}
+                      >
+                        {item.label}
+                      </Paper>
+                    );
+                  })}
                 </Stack>
               </Paper>
             </Grid>
