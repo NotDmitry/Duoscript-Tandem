@@ -36,6 +36,9 @@ export const useDragAndDrop = () => {
   const [draggedItem, setDraggedItem] = useState<AsyncSorterBlock | null>(null);
   const [allDragged, setAllDragged] = useState(false);
   const [currentTask, setCurrentTask] = useState<null | AsyncSorterTask>(null);
+  const [selectedItem, setSelectedItem] = useState<AsyncSorterBlock | null>(
+    null
+  );
 
   const handleDragStart = (item: AsyncSorterBlock) => {
     setDraggedItem(item);
@@ -64,7 +67,7 @@ export const useDragAndDrop = () => {
     } else {
       nextMacro = insertInto(nextMacro, draggedItem, insertBeforeInd);
     }
-
+    console.log(nextCall);
     setCallStackItems(nextCall);
     setMicrotasksItems(nextMicro);
     setMacrotasksItems(nextMacro);
@@ -107,5 +110,7 @@ export const useDragAndDrop = () => {
     setAnswer,
     determineAnswerColor,
     handleDragEnd,
+    selectedItem,
+    setSelectedItem,
   };
 };

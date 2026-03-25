@@ -11,9 +11,11 @@ import {
 import { useEffect, useState } from 'react';
 import {
   type AnswerColor,
+  type AsyncSorterBlock,
   type AsyncSorterTask,
   type DropIndicator,
   type DropZones,
+  type Zone,
 } from './types';
 import { useAsyncSorter } from '@/shared/hooks/useAsyncSorter';
 import AsyncSorterContainer from './AsyncSorterContainer';
@@ -40,6 +42,8 @@ export default function AsyncSorter() {
     setAnswer,
     handleDragEnd,
     allDragged,
+    selectedItem,
+    setSelectedItem,
   } = useDragAndDrop();
   const [taskIndex, setTaskIndex] = useState(0);
   const [isCorrectSolved, setIsCorrectSolved] = useState(false);
@@ -60,6 +64,30 @@ export default function AsyncSorter() {
     null
   );
   const { getAsyncSortTask, isLoading } = useAsyncSorter();
+
+  const handleItemKeyDown = (
+    e: React.KeyboardEvent<HTMLDivElement>,
+    item: AsyncSorterBlock
+  ) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.stopPropagation();
+      setSelectedItem(item);
+      setDraggedItem(item);
+    }
+  };
+  const handleZoneKeyDown = (
+    e: React.KeyboardEvent<HTMLDivElement>,
+    zone: Zone,
+    insertBefore: number
+  ) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.stopPropagation();
+      handleDrop(zone, insertBefore);
+      setSelectedItem(null);
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -201,8 +229,13 @@ export default function AsyncSorter() {
               )
                 return null;
               const isDragging = draggedItem?.id === item.id;
+              const isSelected = selectedItem?.id === item.id;
               return (
                 <Paper
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    handleItemKeyDown(e, item);
+                  }}
                   draggable
                   onDragStart={() => {
                     handleDragStart(item);
@@ -211,7 +244,11 @@ export default function AsyncSorter() {
                   elevation={3}
                   sx={{
                     p: '10px',
-                    background: isDragging ? '#cbcbcb' : 'white',
+                    background: isDragging
+                      ? '#cbcbcb'
+                      : isSelected
+                        ? '   #4edfff5b'
+                        : 'white',
                   }}
                   key={item.id}
                 >
@@ -228,6 +265,10 @@ export default function AsyncSorter() {
           {dropZones.map(({ zone, title, items, answerColors }) => (
             <Grid size={{ xs: 4 }} key={zone}>
               <Paper
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  handleZoneKeyDown(e, zone, items.length);
+                }}
                 sx={{
                   backgroundColor: draggedItem ? '#56f6565b' : '#f0f0f0',
                 }}
@@ -261,7 +302,11 @@ export default function AsyncSorter() {
                   {items.map((item, index) => (
                     <Paper
                       key={item.id}
+                      tabIndex={0}
                       draggable={!isSubmitClicked}
+                      onKeyDown={(e) => {
+                        handleZoneKeyDown(e, zone, index);
+                      }}
                       onDragStart={() => {
                         if (!isSubmitClicked) handleDragStart(item);
                       }}
@@ -286,6 +331,7 @@ export default function AsyncSorter() {
                           : '',
                         borderLeft:
                           !isSubmitClicked &&
+                          !selectedItem &&
                           draggedItem &&
                           dropIndicator?.zone === zone &&
                           dropIndicator.insertBefore === index
