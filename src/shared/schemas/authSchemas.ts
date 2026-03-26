@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
-export const nicknameSchema = z
+export const emailSchema = z.email('Must be a valid email address');
+
+export const displayNameSchema = z
   .string()
   .trim()
   .min(3, 'Name must contain at least 3 characters')
@@ -8,6 +10,7 @@ export const nicknameSchema = z
     message:
       'Name must contain only Latin characters and no special characters or numbers',
   });
+
 export const passwordSchema = z
   .string()
   .nonempty({ message: 'Password is required' })
@@ -22,32 +25,30 @@ export const passwordSchema = z
     message: 'Must contain at least one special character (!@#$%^&*)',
   })
   .refine((value: string) => /[a-zA-Z]/.test(value), {
-    message: 'Name must contain only Latin characters',
+    message: 'Password must contain at least one Latin character',
   });
 
 const baseAuthSchema = z.object({
-  nickname: nicknameSchema,
+  email: emailSchema,
   password: passwordSchema,
 });
-export const profileSchema = baseAuthSchema;
+
 export const logInSchema = baseAuthSchema;
+
 export const signUpSchema = baseAuthSchema
   .extend({
+    displayName: displayNameSchema,
     repeatPassword: passwordSchema,
   })
-  .refine(
-    (data) => {
-      return data.password === data.repeatPassword;
-    },
-    { message: 'Passwords must match', path: ['repeatPassword'] }
-  );
+  .refine((data) => data.password === data.repeatPassword, {
+    message: 'Passwords must match',
+    path: ['repeatPassword'],
+  });
 
-export const userStorageSchema = z.object({
-  nickname: nicknameSchema,
-  accessToken: z.string(),
-  refreshToken: z.string(),
+export const profileSchema = baseAuthSchema.extend({
+  displayName: displayNameSchema,
 });
-export type UserStorage = z.infer<typeof userStorageSchema>;
 
-export type LogInProfileFields = z.infer<typeof baseAuthSchema>;
-export type SingUpFields = z.infer<typeof signUpSchema>;
+export type LogInFields = z.infer<typeof logInSchema>;
+export type SignUpFields = z.infer<typeof signUpSchema>;
+export type ProfileFields = z.infer<typeof profileSchema>;
