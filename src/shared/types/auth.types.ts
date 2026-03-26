@@ -1,43 +1,29 @@
-export interface User {
-  id: string;
-  nickname: string;
+import type { UserAuthView } from '@/shared/models/userModel';
+
+export interface LoginData {
+  email: string;
   password: string;
 }
-export interface UserLS {
-  accessToken: string;
-  refreshToken: string;
-  nickname: string;
-}
-export interface loginData {
-  nickname: string;
-  password: string;
-}
-export interface registerData {
-  nickname: string;
+
+export interface RegisterData {
+  email: string;
+  displayName: string;
   password: string;
   repeatPassword: string;
 }
-export interface AuthResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: {
-    id: string;
-    nickname: string;
-  };
+
+export interface UpdateProfileData {
+  email: string;
+  displayName: string;
+  password: string;
 }
+
 export interface AuthContextType {
-  user: Omit<User, 'password'> | null;
-  loginFunc: (loginData: loginData) => Promise<void>;
-  registerFunc: (registerData: registerData) => Promise<void>;
+  user: UserAuthView | null;
+  loginFunc: (data: LoginData) => Promise<void>;
+  registerFunc: (data: RegisterData) => Promise<void>;
   logout: () => void;
-  updateProfileFunc: (loginData: loginData) => Promise<void>;
+  updateProfileFunc: (data: UpdateProfileData) => Promise<void>;
 }
-export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: {
-    id: string;
-    nickname: string;
-  };
-}
+
 export type AuthMode = 'LOGIN' | 'SIGN UP' | 'PROFILE';
