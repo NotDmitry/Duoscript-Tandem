@@ -34,6 +34,7 @@ export interface DropIndicator {
   insertBefore: number;
 }
 export type Zone = 'Call Stack' | 'Microtasks' | 'Macrotasks';
+export type FocusZone = Zone | 'source';
 export interface DropZones {
   zone: Zone;
   title: string;
@@ -45,4 +46,3 @@ export type AsyncSorterTask = z.infer<typeof asyncSorterTaskSchema>;
 export type AsyncSorterBlock = z.infer<typeof asyncSorterBlockSchema>;
 export type AsyncSorterTasksArray = z.infer<typeof asyncSorterTasksArraySchema>;
 export type AsyncSorterAnswer = z.infer<typeof asyncSorterAnswerSchema>;
-export type DropZone = 'Call Stack' | 'Microtasks' | 'Macrotasks';

@@ -1,7 +1,7 @@
 import type {
   AsyncSorterBlock,
   AsyncSorterTask,
-  DropZone,
+  Zone,
 } from '@/features/Async-sorter/types';
 import { useState } from 'react';
 import { useAsyncSorter } from './useAsyncSorter';
@@ -49,7 +49,7 @@ export const useDragAndDrop = () => {
   const handleDragEnd = () => {
     setDraggedItem(null);
   };
-  const handleDrop = (zone: DropZone, insertBeforeInd: number) => {
+  const handleDrop = (zone: Zone, insertBeforeInd: number) => {
     if (!draggedItem) return;
     setDraggedItem(null);
 
@@ -85,6 +85,7 @@ export const useDragAndDrop = () => {
     setCallStackItems([]);
     setMicrotasksItems([]);
     setMacrotasksItems([]);
+    setSelectedItem(null);
     setOutput([]);
   };
 

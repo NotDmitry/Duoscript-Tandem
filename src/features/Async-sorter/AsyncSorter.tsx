@@ -8,14 +8,14 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   type AnswerColor,
   type AsyncSorterBlock,
   type AsyncSorterTask,
   type DropIndicator,
   type DropZones,
-  type Zone,
+  type FocusZone,
 } from './types';
 import { useAsyncSorter } from '@/shared/hooks/useAsyncSorter';
 import AsyncSorterContainer from './AsyncSorterContainer';
@@ -64,35 +64,131 @@ export default function AsyncSorter() {
     null
   );
   const { getAsyncSortTask, isLoading } = useAsyncSorter();
-
+  const itemRefs = useRef<{
+    source: HTMLDivElement[];
+    'Call Stack': HTMLDivElement[];
+    Microtasks: HTMLDivElement[];
+    Macrotasks: HTMLDivElement[];
+  }>({
+    source: [],
+    'Call Stack': [],
+    Microtasks: [],
+    Macrotasks: [],
+  });
+  const focusZones: FocusZone[] = [
+    'source',
+    'Call Stack',
+    'Microtasks',
+    'Macrotasks',
+  ];
+  const zoneRefs = useRef<Record<FocusZone, HTMLDivElement | null>>({
+    source: null,
+    'Call Stack': null,
+    Microtasks: null,
+    Macrotasks: null,
+  });
   const handleItemKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement>,
-    item: AsyncSorterBlock
+    item: AsyncSorterBlock,
+    zone: FocusZone,
+    index: number
   ) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      e.stopPropagation();
-      setSelectedItem(item);
-      setDraggedItem(item);
+    e.preventDefault();
+    e.stopPropagation();
+    switch (e.key) {
+      case 'Enter':
+        setSelectedItem(item);
+        setDraggedItem(item);
+        break;
+      case 'ArrowLeft':
+        itemRefs.current[zone][index - 1]?.focus();
+        break;
+      case 'ArrowRight':
+        itemRefs.current[zone][index + 1]?.focus();
+        break;
+      case 'ArrowUp':
+        zoneRefs.current[zone]?.focus();
+        break;
     }
   };
   const handleZoneKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement>,
-    zone: Zone,
-    insertBefore: number
+    zone: FocusZone,
+    insertBefore: number,
+    index: number
   ) => {
+    const zoneIndex = focusZones.indexOf(zone);
+
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const prev = focusZones[zoneIndex - 1];
+      zoneRefs.current[prev]?.focus();
+      return;
+    }
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      const next = focusZones[zoneIndex + 1];
+      zoneRefs.current[next]?.focus();
+      return;
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      itemRefs.current[zone][0]?.focus();
+      return;
+    }
     if (e.key === 'Enter') {
       e.preventDefault();
       e.stopPropagation();
-      handleDrop(zone, insertBefore);
+      if (zone !== 'source') {
+        handleDrop(zone, insertBefore);
+      }
       setSelectedItem(null);
-    }
+    } else handleOtherKeyDown(e, zone, index);
   };
-  const handleItemZoneKeyDown = (
+  const handleOtherKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement>,
-    item: AsyncSorterBlock
+    zone: FocusZone,
+    index: number
   ) => {
-    handleItemKeyDown(e, item);
+    const refs = itemRefs.current;
+    const zoneOrder: FocusZone[] = ['Call Stack', 'Microtasks', 'Macrotasks'];
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+
+      const currentIndex = zoneOrder.indexOf(zone);
+      if (currentIndex === -1 || currentIndex === zoneOrder.length - 1) return;
+      const nextZone = zoneOrder[currentIndex + 1];
+      const nextList = nextZone === 'source' ? refs.source : refs[nextZone];
+      (nextList[index] ?? nextList.at(-1)).focus();
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const currentIndex = zoneOrder.indexOf(zone);
+      if (currentIndex === -1 || currentIndex === 0) return;
+      const prevZone = zoneOrder[currentIndex - 1];
+      const prevList = prevZone === 'source' ? refs.source : refs[prevZone];
+      (prevList[index] ?? prevList.at(-1)).focus();
+    }
+
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      const list = zone === 'source' ? refs.source : refs[zone];
+      list[index + 1]?.focus();
+      return;
+    }
+
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const list = zone === 'source' ? refs.source : refs[zone];
+      if (index > 0) {
+        list[index - 1]?.focus();
+      } else if (zone !== 'source') {
+        refs.source[index]?.focus();
+      }
+      return;
+    }
   };
 
   useEffect(() => {
@@ -184,6 +280,12 @@ export default function AsyncSorter() {
       </AsyncSorterContainer>
     );
   }
+  const sourceItems = task.blocks.filter(
+    (item) =>
+      !callStackItems.some((csItem) => csItem.id === item.id) &&
+      !microtasksItems.some((miItem) => miItem.id === item.id) &&
+      !macrotasksItems.some((maItem) => maItem.id === item.id)
+  );
   const dropZones: DropZones[] = [
     {
       zone: 'Call Stack',
@@ -223,11 +325,18 @@ export default function AsyncSorter() {
       </Typography>
       <Container>
         <Paper
+          ref={(el: HTMLDivElement | null) => {
+            zoneRefs.current.source = el;
+          }}
+          tabIndex={0}
+          onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>): void => {
+            handleZoneKeyDown(e, 'source', 0, 0);
+          }}
           square={false}
           sx={{ p: 3, backgroundColor: '#f0f0f0', minHeight: 92 }}
         >
           <Stack direction="row" spacing={2}>
-            {task.blocks.map((item) => {
+            {sourceItems.map((item, index) => {
               if (
                 callStackItems.find((csItem) => csItem === item) ||
                 microtasksItems.find((miItem) => miItem === item) ||
@@ -237,9 +346,13 @@ export default function AsyncSorter() {
               const isDragging = draggedItem?.id === item.id;
               return (
                 <Paper
+                  ref={(el: HTMLDivElement | null) => {
+                    if (!el) return;
+                    itemRefs.current.source[index] = el;
+                  }}
                   tabIndex={0}
-                  onKeyDown={(e) => {
-                    handleItemKeyDown(e, item);
+                  onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>): void => {
+                    handleItemKeyDown(e, item, 'source', index);
                   }}
                   draggable
                   onDragStart={() => {
@@ -263,12 +376,15 @@ export default function AsyncSorter() {
 
       <Box sx={{ m: 3, width: '90%' }}>
         <Grid container spacing={2}>
-          {dropZones.map(({ zone, title, items, answerColors }) => (
+          {dropZones.map(({ zone, title, items, answerColors }, index) => (
             <Grid size={{ xs: 4 }} key={zone}>
               <Paper
                 tabIndex={0}
+                ref={(el: HTMLDivElement | null) => {
+                  zoneRefs.current[zone] = el;
+                }}
                 onKeyDown={(e) => {
-                  handleZoneKeyDown(e, zone, items.length);
+                  handleZoneKeyDown(e, zone, items.length, index);
                 }}
                 sx={{
                   backgroundColor: draggedItem ? '#56f6565b' : '#f0f0f0',
@@ -304,20 +420,26 @@ export default function AsyncSorter() {
                     const isSelected = selectedItem?.id === item.id;
                     return (
                       <Paper
+                        ref={(el: HTMLDivElement | null) => {
+                          if (!el) return;
+                          itemRefs.current[zone][index] = el;
+                        }}
                         key={item.id}
                         tabIndex={0}
                         draggable={!isSubmitClicked}
-                        onKeyDown={(e) => {
+                        onKeyDown={(
+                          e: React.KeyboardEvent<HTMLDivElement>
+                        ): void => {
                           if (selectedItem) {
-                            handleZoneKeyDown(e, zone, index);
+                            handleZoneKeyDown(e, zone, index, index);
                           } else {
-                            handleItemZoneKeyDown(e, item);
+                            handleItemKeyDown(e, item, zone, index);
                           }
                         }}
                         onDragStart={() => {
                           if (!isSubmitClicked) handleDragStart(item);
                         }}
-                        onDragOver={(e) => {
+                        onDragOver={(e: React.DragEvent<HTMLDivElement>) => {
                           handleDragOver(e);
                           e.stopPropagation();
                           if (draggedItem && !isSubmitClicked) {
@@ -325,7 +447,7 @@ export default function AsyncSorter() {
                           }
                         }}
                         onDragEnd={handleDragEnd}
-                        onDrop={(e) => {
+                        onDrop={(e: React.DragEvent<HTMLDivElement>) => {
                           e.preventDefault();
                           e.stopPropagation();
                           handleDrop(zone, index);
