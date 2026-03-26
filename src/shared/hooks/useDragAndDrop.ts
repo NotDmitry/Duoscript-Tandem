@@ -18,7 +18,17 @@ function insertInto(
   ];
 }
 
-export const useDragAndDrop = () => {
+export const useDragAndDrop = (
+  selectedItemSetter: React.Dispatch<
+    React.SetStateAction<AsyncSorterBlock | null>
+  >,
+  task: null | AsyncSorterTask,
+  taskIndex: number,
+  tasksNumber: number,
+  setTaskIndex: React.Dispatch<React.SetStateAction<number>>
+) => {
+  const [draggedItem, setDraggedItem] = useState<AsyncSorterBlock | null>(null);
+  const [allDragged, setAllDragged] = useState(false);
   const {
     callStackItems,
     setCallStackItems,
@@ -29,16 +39,32 @@ export const useDragAndDrop = () => {
     output,
     setOutput,
     updateOutput,
-    isCorrectAnswer,
     setAnswer,
-    determineAnswerColor,
-  } = useAsyncSorter();
-  const [draggedItem, setDraggedItem] = useState<AsyncSorterBlock | null>(null);
-  const [allDragged, setAllDragged] = useState(false);
-  const [currentTask, setCurrentTask] = useState<null | AsyncSorterTask>(null);
-  const [selectedItem, setSelectedItem] = useState<AsyncSorterBlock | null>(
-    null
+    isCorrectSolved,
+    isIncorrectSolved,
+    onNextTaskClick,
+    onSubmitClick,
+    successfulTasks,
+    failedTasks,
+    setFailedTasks,
+    isSubmitClicked,
+    isCompleted,
+    checkIsCompleted,
+    setIsCompleted,
+    getAsyncSortTask,
+    isLoading,
+    sourceItems,
+    dropZones,
+  } = useAsyncSorter(
+    task,
+    taskIndex,
+    tasksNumber,
+    setTaskIndex,
+    setDraggedItem,
+    setAllDragged
   );
+
+  const [currentTask, setCurrentTask] = useState<null | AsyncSorterTask>(null);
 
   const handleDragStart = (item: AsyncSorterBlock) => {
     setDraggedItem(item);
@@ -85,11 +111,17 @@ export const useDragAndDrop = () => {
     setCallStackItems([]);
     setMicrotasksItems([]);
     setMacrotasksItems([]);
-    setSelectedItem(null);
+    selectedItemSetter(null);
     setOutput([]);
+  };
+  const onNextTaskClickExtended = () => {
+    onNextTaskClick();
+    clearZones();
   };
 
   return {
+    getAsyncSortTask,
+    isLoading,
     handleDragStart,
     handleDragOver,
     draggedItem,
@@ -106,11 +138,20 @@ export const useDragAndDrop = () => {
     setAllDragged,
     allDragged,
     setCurrentTask,
-    isCorrectAnswer,
     setAnswer,
-    determineAnswerColor,
     handleDragEnd,
-    selectedItem,
-    setSelectedItem,
+    isCorrectSolved,
+    isIncorrectSolved,
+    onNextTaskClick: onNextTaskClickExtended,
+    onSubmitClick,
+    successfulTasks,
+    failedTasks,
+    setFailedTasks,
+    isSubmitClicked,
+    isCompleted,
+    checkIsCompleted,
+    setIsCompleted,
+    sourceItems,
+    dropZones,
   };
 };

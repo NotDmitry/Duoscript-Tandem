@@ -5,9 +5,18 @@ import type {
   AnswerColor,
   AsyncSorterAnswer,
   AsyncSorterBlock,
+  AsyncSorterTask,
+  DropZones,
 } from '@/features/Async-sorter/types';
 
-export const useAsyncSorter = () => {
+export const useAsyncSorter = (
+  task: null | AsyncSorterTask,
+  taskIndex: number,
+  tasksNumber: number,
+  setTaskIndex: React.Dispatch<React.SetStateAction<number>>,
+  setDraggedItem: React.Dispatch<React.SetStateAction<AsyncSorterBlock | null>>,
+  setAllDragged: React.Dispatch<React.SetStateAction<boolean>>
+) => {
   const [callStackItems, setCallStackItems] = useState<AsyncSorterBlock[]>([]);
   const [microtasksItems, setMicrotasksItems] = useState<AsyncSorterBlock[]>(
     []
@@ -15,12 +24,52 @@ export const useAsyncSorter = () => {
   const [macrotasksItems, setMacrotasksItems] = useState<AsyncSorterBlock[]>(
     []
   );
+  const [answersColorSchema, setAnswersColorSchema] =
+    useState<AnswerColor | null>(null);
+  const sourceItems = task?.blocks.filter(
+    (item) =>
+      !callStackItems.some((csItem) => csItem.id === item.id) &&
+      !microtasksItems.some((miItem) => miItem.id === item.id) &&
+      !macrotasksItems.some((maItem) => maItem.id === item.id)
+  );
+  const dropZones: DropZones[] = [
+    {
+      zone: 'Call Stack',
+      title: 'Call Stack',
+      items: callStackItems,
+      answerColors: answersColorSchema?.callStackBlock,
+    },
+    {
+      zone: 'Microtasks',
+      title: 'Microtasks',
+      items: microtasksItems,
+      answerColors: answersColorSchema?.microBlock,
+    },
+    {
+      zone: 'Macrotasks',
+      title: 'Macrotasks',
+      items: macrotasksItems,
+      answerColors: answersColorSchema?.macroBlock,
+    },
+  ];
+
   const [output, setOutput] = useState<string[]>([]);
   const { showToast } = useUI();
   const [isLoading, setIsLoading] = useState(false);
   const [answer, setAnswer] = useState<AsyncSorterAnswer | undefined>(
     undefined
   );
+  const [isCorrectSolved, setIsCorrectSolved] = useState(false);
+  const [isIncorrectSolved, setIsIncorrectSolved] = useState(false);
+
+  const [successfulTasks, setSuccessfulTasks] = useState<
+    Map<number, AsyncSorterTask>
+  >(new Map());
+  const [failedTasks, setFailedTasks] = useState<Map<number, AsyncSorterTask>>(
+    new Map()
+  );
+  const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
   const getAsyncSortTask = useCallback(
     async (index: number) => {
       setIsLoading(true);
@@ -77,6 +126,42 @@ export const useAsyncSorter = () => {
     };
     return await submitAnswer(userAnswer, id);
   };
+  const onSubmitClick = async () => {
+    if (!task) return;
+    try {
+      const result = await isCorrectAnswer(task.id);
+      setIsCorrectSolved(result);
+      if (result) {
+        setAnswersColorSchema(determineAnswerColor());
+        const newMap = new Map(successfulTasks);
+        newMap.set(taskIndex, task);
+        setSuccessfulTasks(newMap);
+      } else {
+        setIsIncorrectSolved(true);
+        const newMap = new Map(failedTasks);
+        newMap.set(taskIndex, task);
+        setFailedTasks(newMap);
+        setAnswersColorSchema(determineAnswerColor());
+      }
+      setIsSubmitClicked(true);
+    } catch {
+      throw new Error('something went wrong');
+    }
+  };
+  const checkIsCompleted = (successLength: number, failLength: number) => {
+    if (successLength + failLength === tasksNumber) {
+      setIsCompleted(true);
+    }
+  };
+  const onNextTaskClick = () => {
+    checkIsCompleted(successfulTasks.size, failedTasks.size);
+    setDraggedItem(null);
+    setAllDragged(false);
+    setIsSubmitClicked(false);
+    setIsCorrectSolved(false);
+    setIsIncorrectSolved(false);
+    if (tasksNumber > taskIndex + 1) setTaskIndex(taskIndex + 1);
+  };
   return {
     getAsyncSortTask,
     isLoading,
@@ -92,6 +177,18 @@ export const useAsyncSorter = () => {
     updateOutput,
     isCorrectAnswer,
     setAnswer,
-    determineAnswerColor,
+    onSubmitClick,
+    onNextTaskClick,
+    isCorrectSolved,
+    isIncorrectSolved,
+    successfulTasks,
+    failedTasks,
+    setFailedTasks,
+    isSubmitClicked,
+    isCompleted,
+    checkIsCompleted,
+    setIsCompleted,
+    sourceItems,
+    dropZones,
   };
 };

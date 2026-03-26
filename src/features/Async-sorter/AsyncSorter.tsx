@@ -10,20 +10,30 @@ import {
 } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
 import {
-  type AnswerColor,
   type AsyncSorterBlock,
   type AsyncSorterTask,
   type DropIndicator,
-  type DropZones,
   type FocusZone,
 } from './types';
-import { useAsyncSorter } from '@/shared/hooks/useAsyncSorter';
 import AsyncSorterContainer from './AsyncSorterContainer';
 import { useDragAndDrop } from '@/shared/hooks/useDragAndDrop';
 import { getAsyncSortTasksNumber } from '@/api/asyncSort.api';
 import { AsyncSorterResults } from './AsyncSorterResults';
+import { useAsyncA11y } from './useAsyncA11y';
 
 export default function AsyncSorter() {
+  const [task, setTask] = useState<null | AsyncSorterTask>(null);
+  const [taskIndex, setTaskIndex] = useState(0);
+  const [tasksNumber, setTasksNumber] = useState(0);
+  const [selectedItem, setSelectedItem] = useState<AsyncSorterBlock | null>(
+    null
+  );
+  const zoneRefs = useRef<Record<FocusZone, HTMLDivElement | null>>({
+    source: null,
+    'Call Stack': null,
+    Microtasks: null,
+    Macrotasks: null,
+  });
   const {
     handleDragStart,
     handleDragOver,
@@ -37,159 +47,42 @@ export default function AsyncSorter() {
     setAllDragged,
     macrotasksItems,
     output,
-    determineAnswerColor,
-    isCorrectAnswer,
     setAnswer,
     handleDragEnd,
     allDragged,
-    selectedItem,
+    isCorrectSolved,
+    isIncorrectSolved,
+    onNextTaskClick,
+    onSubmitClick,
+    successfulTasks,
+    failedTasks,
+    setFailedTasks,
+    isSubmitClicked,
+    isCompleted,
+    checkIsCompleted,
+    setIsCompleted,
+    getAsyncSortTask,
+    isLoading,
+    sourceItems,
+    dropZones,
+  } = useDragAndDrop(
     setSelectedItem,
-  } = useDragAndDrop();
-  const [taskIndex, setTaskIndex] = useState(0);
-  const [isCorrectSolved, setIsCorrectSolved] = useState(false);
-  const [isIncorrectSolved, setIsIncorrectSolved] = useState(false);
-  const [task, setTask] = useState<null | AsyncSorterTask>(null);
-  const [tasksNumber, setTasksNumber] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [isSubmitClicked, setIsSubmitClicked] = useState(false);
-  const [successfulTasks, setSuccessfulTasks] = useState<
-    Map<number, AsyncSorterTask>
-  >(new Map());
-  const [failedTasks, setFailedTasks] = useState<Map<number, AsyncSorterTask>>(
-    new Map()
+    task,
+    taskIndex,
+    tasksNumber,
+    setTaskIndex
   );
-  const [answersColorSchema, setAnswersColorSchema] =
-    useState<AnswerColor | null>(null);
+
+  const { itemRefs, handleItemKeyDown, handleZoneKeyDown } = useAsyncA11y(
+    setSelectedItem,
+    setDraggedItem,
+    handleDrop,
+    zoneRefs
+  );
+
   const [dropIndicator, setDropIndicator] = useState<DropIndicator | null>(
     null
   );
-  const { getAsyncSortTask, isLoading } = useAsyncSorter();
-  const itemRefs = useRef<{
-    source: HTMLDivElement[];
-    'Call Stack': HTMLDivElement[];
-    Microtasks: HTMLDivElement[];
-    Macrotasks: HTMLDivElement[];
-  }>({
-    source: [],
-    'Call Stack': [],
-    Microtasks: [],
-    Macrotasks: [],
-  });
-  const focusZones: FocusZone[] = [
-    'source',
-    'Call Stack',
-    'Microtasks',
-    'Macrotasks',
-  ];
-  const zoneRefs = useRef<Record<FocusZone, HTMLDivElement | null>>({
-    source: null,
-    'Call Stack': null,
-    Microtasks: null,
-    Macrotasks: null,
-  });
-  const handleItemKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>,
-    item: AsyncSorterBlock,
-    zone: FocusZone,
-    index: number
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-    switch (e.key) {
-      case 'Enter':
-        setSelectedItem(item);
-        setDraggedItem(item);
-        break;
-      case 'ArrowLeft':
-        itemRefs.current[zone][index - 1]?.focus();
-        break;
-      case 'ArrowRight':
-        itemRefs.current[zone][index + 1]?.focus();
-        break;
-      case 'ArrowUp':
-        zoneRefs.current[zone]?.focus();
-        break;
-    }
-  };
-  const handleZoneKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>,
-    zone: FocusZone,
-    insertBefore: number,
-    index: number
-  ) => {
-    const zoneIndex = focusZones.indexOf(zone);
-
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      const prev = focusZones[zoneIndex - 1];
-      zoneRefs.current[prev]?.focus();
-      return;
-    }
-    if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      const next = focusZones[zoneIndex + 1];
-      zoneRefs.current[next]?.focus();
-      return;
-    }
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      itemRefs.current[zone][0]?.focus();
-      return;
-    }
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      e.stopPropagation();
-      if (zone !== 'source') {
-        handleDrop(zone, insertBefore);
-      }
-      setSelectedItem(null);
-    } else handleOtherKeyDown(e, zone, index);
-  };
-  const handleOtherKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>,
-    zone: FocusZone,
-    index: number
-  ) => {
-    const refs = itemRefs.current;
-    const zoneOrder: FocusZone[] = ['Call Stack', 'Microtasks', 'Macrotasks'];
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-
-      const currentIndex = zoneOrder.indexOf(zone);
-      if (currentIndex === -1 || currentIndex === zoneOrder.length - 1) return;
-      const nextZone = zoneOrder[currentIndex + 1];
-      const nextList = nextZone === 'source' ? refs.source : refs[nextZone];
-      (nextList[index] ?? nextList.at(-1)).focus();
-      return;
-    }
-
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      const currentIndex = zoneOrder.indexOf(zone);
-      if (currentIndex === -1 || currentIndex === 0) return;
-      const prevZone = zoneOrder[currentIndex - 1];
-      const prevList = prevZone === 'source' ? refs.source : refs[prevZone];
-      (prevList[index] ?? prevList.at(-1)).focus();
-    }
-
-    if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      const list = zone === 'source' ? refs.source : refs[zone];
-      list[index + 1]?.focus();
-      return;
-    }
-
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      const list = zone === 'source' ? refs.source : refs[zone];
-      if (index > 0) {
-        list[index - 1]?.focus();
-      } else if (zone !== 'source') {
-        refs.source[index]?.focus();
-      }
-      return;
-    }
-  };
 
   useEffect(() => {
     let cancelled = false;
@@ -213,44 +106,6 @@ export default function AsyncSorter() {
       cancelled = true;
     };
   }, [getAsyncSortTask, taskIndex, setCurrentTask, setAnswer]);
-  const checkIsCompleted = (successLength: number, failLength: number) => {
-    if (successLength + failLength === tasksNumber) {
-      setIsCompleted(true);
-    }
-  };
-  const onSubmitClick = async () => {
-    if (!task) return;
-    try {
-      const result = await isCorrectAnswer(task.id);
-      setIsCorrectSolved(result);
-      if (result) {
-        setAnswersColorSchema(determineAnswerColor());
-        const newMap = new Map(successfulTasks);
-        newMap.set(taskIndex, task);
-        setSuccessfulTasks(newMap);
-      } else {
-        setIsIncorrectSolved(true);
-        const newMap = new Map(failedTasks);
-        newMap.set(taskIndex, task);
-        setFailedTasks(newMap);
-        setAnswersColorSchema(determineAnswerColor());
-      }
-      setIsSubmitClicked(true);
-    } catch {
-      throw new Error('something went wrong');
-    }
-  };
-  const onNextTaskClick = () => {
-    checkIsCompleted(successfulTasks.size, failedTasks.size);
-
-    clearZones();
-    setDraggedItem(null);
-    setAllDragged(false);
-    setIsSubmitClicked(false);
-    setIsCorrectSolved(false);
-    setIsIncorrectSolved(false);
-    if (tasksNumber > taskIndex + 1) setTaskIndex(taskIndex + 1);
-  };
 
   if (isLoading) {
     return (
@@ -280,32 +135,6 @@ export default function AsyncSorter() {
       </AsyncSorterContainer>
     );
   }
-  const sourceItems = task.blocks.filter(
-    (item) =>
-      !callStackItems.some((csItem) => csItem.id === item.id) &&
-      !microtasksItems.some((miItem) => miItem.id === item.id) &&
-      !macrotasksItems.some((maItem) => maItem.id === item.id)
-  );
-  const dropZones: DropZones[] = [
-    {
-      zone: 'Call Stack',
-      title: 'Call Stack',
-      items: callStackItems,
-      answerColors: answersColorSchema?.callStackBlock,
-    },
-    {
-      zone: 'Microtasks',
-      title: 'Microtasks',
-      items: microtasksItems,
-      answerColors: answersColorSchema?.microBlock,
-    },
-    {
-      zone: 'Macrotasks',
-      title: 'Macrotasks',
-      items: macrotasksItems,
-      answerColors: answersColorSchema?.macroBlock,
-    },
-  ];
   return (
     <AsyncSorterContainer>
       <Typography gutterBottom sx={{ textAlign: 'center', m: 2 }}>
@@ -336,7 +165,7 @@ export default function AsyncSorter() {
           sx={{ p: 3, backgroundColor: '#f0f0f0', minHeight: 92 }}
         >
           <Stack direction="row" spacing={2}>
-            {sourceItems.map((item, index) => {
+            {sourceItems?.map((item, index) => {
               if (
                 callStackItems.find((csItem) => csItem === item) ||
                 microtasksItems.find((miItem) => miItem === item) ||
