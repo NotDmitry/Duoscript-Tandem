@@ -1,4 +1,5 @@
 import type {
+  AsyncSorterAnswer,
   AsyncSorterBlock,
   AsyncSorterTask,
   Zone,
@@ -23,9 +24,12 @@ export const useDragAndDrop = (
     React.SetStateAction<AsyncSorterBlock | null>
   >,
   task: null | AsyncSorterTask,
+  currentTask: null | AsyncSorterTask,
   taskIndex: number,
   tasksNumber: number,
-  setTaskIndex: React.Dispatch<React.SetStateAction<number>>
+
+  setTaskIndex: React.Dispatch<React.SetStateAction<number>>,
+  answer: AsyncSorterAnswer | undefined
 ) => {
   const [draggedItem, setDraggedItem] = useState<AsyncSorterBlock | null>(null);
   const [allDragged, setAllDragged] = useState(false);
@@ -39,7 +43,6 @@ export const useDragAndDrop = (
     output,
     setOutput,
     updateOutput,
-    setAnswer,
     isCorrectSolved,
     isIncorrectSolved,
     onNextTaskClick,
@@ -51,8 +54,6 @@ export const useDragAndDrop = (
     isCompleted,
     checkIsCompleted,
     setIsCompleted,
-    getAsyncSortTask,
-    isLoading,
     sourceItems,
     dropZones,
   } = useAsyncSorter(
@@ -60,11 +61,10 @@ export const useDragAndDrop = (
     taskIndex,
     tasksNumber,
     setTaskIndex,
+    answer,
     setDraggedItem,
     setAllDragged
   );
-
-  const [currentTask, setCurrentTask] = useState<null | AsyncSorterTask>(null);
 
   const handleDragStart = (item: AsyncSorterBlock) => {
     setDraggedItem(item);
@@ -120,8 +120,6 @@ export const useDragAndDrop = (
   };
 
   return {
-    getAsyncSortTask,
-    isLoading,
     handleDragStart,
     handleDragOver,
     draggedItem,
@@ -137,8 +135,6 @@ export const useDragAndDrop = (
     output,
     setAllDragged,
     allDragged,
-    setCurrentTask,
-    setAnswer,
     handleDragEnd,
     isCorrectSolved,
     isIncorrectSolved,

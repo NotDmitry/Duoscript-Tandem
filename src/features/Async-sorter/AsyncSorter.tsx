@@ -8,8 +8,9 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import {
+  type AsyncSorterAnswer,
   type AsyncSorterBlock,
   type AsyncSorterTask,
   type DropIndicator,
@@ -17,23 +18,27 @@ import {
 } from './types';
 import AsyncSorterContainer from './AsyncSorterContainer';
 import { useDragAndDrop } from '@/shared/hooks/useDragAndDrop';
-import { getAsyncSortTasksNumber } from '@/api/asyncSort.api';
 import { AsyncSorterResults } from './AsyncSorterResults';
 import { useAsyncA11y } from './useAsyncA11y';
+import { useAsyncSorterApi } from './useAsynsSorterApi';
 
 export default function AsyncSorter() {
-  const [task, setTask] = useState<null | AsyncSorterTask>(null);
-  const [taskIndex, setTaskIndex] = useState(0);
-  const [tasksNumber, setTasksNumber] = useState(0);
   const [selectedItem, setSelectedItem] = useState<AsyncSorterBlock | null>(
     null
   );
+  const [answer, setAnswer] = useState<AsyncSorterAnswer | undefined>(
+    undefined
+  );
+  const [currentTask, setCurrentTask] = useState<null | AsyncSorterTask>(null);
   const zoneRefs = useRef<Record<FocusZone, HTMLDivElement | null>>({
     source: null,
     'Call Stack': null,
     Microtasks: null,
     Macrotasks: null,
   });
+  const { task, taskIndex, setTaskIndex, tasksNumber, isLoading } =
+    useAsyncSorterApi(setAnswer, setCurrentTask);
+
   const {
     handleDragStart,
     handleDragOver,
@@ -41,13 +46,11 @@ export default function AsyncSorter() {
     callStackItems,
     draggedItem,
     setDraggedItem,
-    setCurrentTask,
     clearZones,
     microtasksItems,
     setAllDragged,
     macrotasksItems,
     output,
-    setAnswer,
     handleDragEnd,
     allDragged,
     isCorrectSolved,
@@ -61,16 +64,16 @@ export default function AsyncSorter() {
     isCompleted,
     checkIsCompleted,
     setIsCompleted,
-    getAsyncSortTask,
-    isLoading,
     sourceItems,
     dropZones,
   } = useDragAndDrop(
     setSelectedItem,
     task,
+    currentTask,
     taskIndex,
     tasksNumber,
-    setTaskIndex
+    setTaskIndex,
+    answer
   );
 
   const { itemRefs, handleItemKeyDown, handleZoneKeyDown } = useAsyncA11y(
@@ -83,29 +86,6 @@ export default function AsyncSorter() {
   const [dropIndicator, setDropIndicator] = useState<DropIndicator | null>(
     null
   );
-
-  useEffect(() => {
-    let cancelled = false;
-    const loadTask = async () => {
-      try {
-        const taskData = await getAsyncSortTask(taskIndex);
-        setAnswer(taskData?.answer);
-        const tasksArrayNumber = await getAsyncSortTasksNumber();
-        if (!cancelled) {
-          setTask(taskData ?? null);
-          setCurrentTask(taskData ?? null);
-          setTasksNumber(tasksArrayNumber);
-        }
-      } catch {
-        if (!cancelled) setTask(null);
-      }
-    };
-    void loadTask();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [getAsyncSortTask, taskIndex, setCurrentTask, setAnswer]);
 
   if (isLoading) {
     return (

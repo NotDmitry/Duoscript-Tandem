@@ -1,6 +1,6 @@
-import { getAsyncSortTaskByIndex, submitAnswer } from '@/api/asyncSort.api';
-import { useCallback, useState } from 'react';
-import { useUI } from './useUI';
+import { submitAnswer } from '@/api/asyncSort.api';
+import { useState } from 'react';
+
 import type {
   AnswerColor,
   AsyncSorterAnswer,
@@ -14,6 +14,7 @@ export const useAsyncSorter = (
   taskIndex: number,
   tasksNumber: number,
   setTaskIndex: React.Dispatch<React.SetStateAction<number>>,
+  answer: AsyncSorterAnswer | undefined,
   setDraggedItem: React.Dispatch<React.SetStateAction<AsyncSorterBlock | null>>,
   setAllDragged: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
@@ -54,11 +55,6 @@ export const useAsyncSorter = (
   ];
 
   const [output, setOutput] = useState<string[]>([]);
-  const { showToast } = useUI();
-  const [isLoading, setIsLoading] = useState(false);
-  const [answer, setAnswer] = useState<AsyncSorterAnswer | undefined>(
-    undefined
-  );
   const [isCorrectSolved, setIsCorrectSolved] = useState(false);
   const [isIncorrectSolved, setIsIncorrectSolved] = useState(false);
 
@@ -70,22 +66,7 @@ export const useAsyncSorter = (
   );
   const [isSubmitClicked, setIsSubmitClicked] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
-  const getAsyncSortTask = useCallback(
-    async (index: number) => {
-      setIsLoading(true);
-      try {
-        const task = await getAsyncSortTaskByIndex(index);
-        return task;
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Ups, task can not be shown';
-        showToast(message, 'error');
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [showToast]
-  );
+
   const updateOutput = (
     callStack: AsyncSorterBlock[],
     microtasks: AsyncSorterBlock[],
@@ -163,9 +144,6 @@ export const useAsyncSorter = (
     if (tasksNumber > taskIndex + 1) setTaskIndex(taskIndex + 1);
   };
   return {
-    getAsyncSortTask,
-    isLoading,
-    setIsLoading,
     callStackItems,
     setCallStackItems,
     microtasksItems,
@@ -176,7 +154,6 @@ export const useAsyncSorter = (
     setOutput,
     updateOutput,
     isCorrectAnswer,
-    setAnswer,
     onSubmitClick,
     onNextTaskClick,
     isCorrectSolved,
