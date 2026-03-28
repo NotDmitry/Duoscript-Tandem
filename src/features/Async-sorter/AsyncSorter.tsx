@@ -5,7 +5,6 @@ import {
   Stack,
   Container,
   Paper,
-  Button,
   CircularProgress,
 } from '@mui/material';
 import { useState, useRef, useCallback } from 'react';
@@ -22,6 +21,7 @@ import { AsyncSorterResults } from './AsyncSorterResults';
 import { useAsyncA11y } from './useAsyncA11y';
 import { useAsyncSorterApi } from './useAsynsSorterApi';
 import Source from './Source';
+import ButtonsBox from './ButtonsBox';
 
 export default function AsyncSorter() {
   const [selectedItem, setSelectedItem] = useState<AsyncSorterBlock | null>(
@@ -262,45 +262,23 @@ export default function AsyncSorter() {
           <Typography color="error">Your answer is incorrect</Typography>
         )}
       </Container>
-      <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Box>
-          <Button
-            disabled={isSubmitClicked}
-            onClick={() => {
-              clearZones();
-              setDraggedItem(null);
-              setAllDragged(false);
-              const newMap = new Map(failedTasks);
-              newMap.set(taskIndex, task);
-              setFailedTasks(newMap);
-
-              checkIsCompleted(successfulTasks.size, newMap.size);
-              if (tasksNumber > taskIndex + 1) {
-                setTaskIndex(taskIndex + 1);
-              }
-            }}
-            variant="contained"
-            sx={{ mr: 1 }}
-          >
-            Skip
-          </Button>
-          <Button
-            variant="contained"
-            disabled={!allDragged}
-            onClick={
-              !isSubmitClicked
-                ? () => {
-                    void onSubmitClick();
-                  }
-                : () => {
-                    onNextTaskClick();
-                  }
-            }
-          >
-            {isSubmitClicked ? 'Next Task' : 'Submit'}
-          </Button>
-        </Box>
-      </Container>
+      <ButtonsBox
+        isSubmitClicked={isSubmitClicked}
+        clearZones={clearZones}
+        setDraggedItem={setDraggedItem}
+        setAllDragged={setAllDragged}
+        failedTasks={failedTasks}
+        taskIndex={taskIndex}
+        task={task}
+        setFailedTasks={setFailedTasks}
+        checkIsCompleted={checkIsCompleted}
+        successfulTasks={successfulTasks}
+        tasksNumber={tasksNumber}
+        setTaskIndex={setTaskIndex}
+        allDragged={allDragged}
+        onSubmitClick={onSubmitClick}
+        onNextTaskClick={onNextTaskClick}
+      />
     </AsyncSorterContainer>
   );
 }
