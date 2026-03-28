@@ -8,7 +8,7 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import {
   type AsyncSorterAnswer,
   type AsyncSorterBlock,
@@ -21,6 +21,7 @@ import { useDragAndDrop } from '@/shared/hooks/useDragAndDrop';
 import { AsyncSorterResults } from './AsyncSorterResults';
 import { useAsyncA11y } from './useAsyncA11y';
 import { useAsyncSorterApi } from './useAsynsSorterApi';
+import Source from './Source';
 
 export default function AsyncSorter() {
   const [selectedItem, setSelectedItem] = useState<AsyncSorterBlock | null>(
@@ -43,13 +44,10 @@ export default function AsyncSorter() {
     handleDragStart,
     handleDragOver,
     handleDrop,
-    callStackItems,
     draggedItem,
     setDraggedItem,
     clearZones,
-    microtasksItems,
     setAllDragged,
-    macrotasksItems,
     output,
     handleDragEnd,
     allDragged,
@@ -76,12 +74,11 @@ export default function AsyncSorter() {
     answer
   );
 
-  const { itemRefs, handleItemKeyDown, handleZoneKeyDown } = useAsyncA11y(
-    setSelectedItem,
-    setDraggedItem,
-    handleDrop,
-    zoneRefs
-  );
+  const { itemRefs, handleItemKeyDown, handleZoneKeyDown, setSourceItemRef } =
+    useAsyncA11y(setSelectedItem, setDraggedItem, handleDrop, zoneRefs);
+  const setSourceContainerRef = useCallback((el: HTMLDivElement | null) => {
+    zoneRefs.current.source = el;
+  }, []);
 
   const [dropIndicator, setDropIndicator] = useState<DropIndicator | null>(
     null
@@ -132,56 +129,16 @@ export default function AsyncSorter() {
       <Typography gutterBottom sx={{ textAlign: 'center', m: 2 }}>
         Drag the blocks into the correct queues:
       </Typography>
-      <Container>
-        <Paper
-          ref={(el: HTMLDivElement | null) => {
-            zoneRefs.current.source = el;
-          }}
-          tabIndex={0}
-          onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>): void => {
-            handleZoneKeyDown(e, 'source', 0, 0);
-          }}
-          square={false}
-          sx={{ p: 3, backgroundColor: '#f0f0f0', minHeight: 92 }}
-        >
-          <Stack direction="row" spacing={2}>
-            {sourceItems?.map((item, index) => {
-              if (
-                callStackItems.find((csItem) => csItem === item) ||
-                microtasksItems.find((miItem) => miItem === item) ||
-                macrotasksItems.find((maItem) => maItem === item)
-              )
-                return null;
-              const isDragging = draggedItem?.id === item.id;
-              return (
-                <Paper
-                  ref={(el: HTMLDivElement | null) => {
-                    if (!el) return;
-                    itemRefs.current.source[index] = el;
-                  }}
-                  tabIndex={0}
-                  onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>): void => {
-                    handleItemKeyDown(e, item, 'source', index);
-                  }}
-                  draggable
-                  onDragStart={() => {
-                    handleDragStart(item);
-                  }}
-                  onDragEnd={handleDragEnd}
-                  elevation={3}
-                  sx={{
-                    p: '10px',
-                    background: isDragging ? '#cbcbcb' : 'white',
-                  }}
-                  key={item.id}
-                >
-                  {item.label}
-                </Paper>
-              );
-            })}
-          </Stack>
-        </Paper>
-      </Container>
+      <Source
+        onSourceContainerRef={setSourceContainerRef}
+        handleZoneKeyDown={handleZoneKeyDown}
+        sourceItems={sourceItems}
+        draggedItem={draggedItem}
+        onSourceItemRef={setSourceItemRef}
+        handleItemKeyDown={handleItemKeyDown}
+        handleDragStart={handleDragStart}
+        handleDragEnd={handleDragEnd}
+      ></Source>
 
       <Box sx={{ m: 3, width: '90%' }}>
         <Grid container spacing={2}>

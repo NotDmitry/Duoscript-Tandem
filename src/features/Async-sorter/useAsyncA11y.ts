@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useCallback } from 'react';
 import type { AsyncSorterBlock, FocusZone, Zone } from './types';
 export const useAsyncA11y = (
   setSelectedItem: React.Dispatch<
@@ -25,12 +25,14 @@ export const useAsyncA11y = (
     'Microtasks',
     'Macrotasks',
   ];
-  /* const zoneRefs = useRef<Record<FocusZone, HTMLDivElement | null>>({
-    source: null,
-    'Call Stack': null,
-    Microtasks: null,
-    Macrotasks: null,
-  }); */
+
+  const setSourceItemRef = useCallback(
+    (index: number, el: HTMLDivElement | null) => {
+      if (!el) return;
+      itemRefs.current.source[index] = el;
+    },
+    []
+  );
   const handleItemKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement>,
     item: AsyncSorterBlock,
@@ -140,5 +142,6 @@ export const useAsyncA11y = (
     handleItemKeyDown,
     handleZoneKeyDown,
     handleOtherKeyDown,
+    setSourceItemRef,
   };
 };
