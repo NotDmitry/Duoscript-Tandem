@@ -1,7 +1,6 @@
 import {
   Box,
   Typography,
-  Grid,
   Stack,
   Container,
   Paper,
@@ -14,6 +13,7 @@ import {
   type AsyncSorterTask,
   type DropIndicator,
   type FocusZone,
+  type Zone,
 } from './types';
 import AsyncSorterContainer from './AsyncSorterContainer';
 import { useDragAndDrop } from '@/shared/hooks/useDragAndDrop';
@@ -22,6 +22,7 @@ import { useAsyncA11y } from './useAsyncA11y';
 import { useAsyncSorterApi } from './useAsynsSorterApi';
 import Source from './Source';
 import ButtonsBox from './ButtonsBox';
+import Queues from './Queues';
 
 export default function AsyncSorter() {
   const [selectedItem, setSelectedItem] = useState<AsyncSorterBlock | null>(
@@ -37,6 +38,15 @@ export default function AsyncSorter() {
     Microtasks: null,
     Macrotasks: null,
   });
+  const setSourceContainerRef = useCallback((el: HTMLDivElement | null) => {
+    zoneRefs.current.source = el;
+  }, []);
+  const setQueuesContainerRef = useCallback(
+    (el: HTMLDivElement | null, zone: Zone) => {
+      zoneRefs.current[zone] = el;
+    },
+    []
+  );
   const { task, taskIndex, setTaskIndex, tasksNumber, isLoading } =
     useAsyncSorterApi(setAnswer, setCurrentTask);
 
@@ -74,11 +84,12 @@ export default function AsyncSorter() {
     answer
   );
 
-  const { itemRefs, handleItemKeyDown, handleZoneKeyDown, setSourceItemRef } =
-    useAsyncA11y(setSelectedItem, setDraggedItem, handleDrop, zoneRefs);
-  const setSourceContainerRef = useCallback((el: HTMLDivElement | null) => {
-    zoneRefs.current.source = el;
-  }, []);
+  const {
+    handleItemKeyDown,
+    handleZoneKeyDown,
+    setSourceItemRef,
+    setQueuesItemRef,
+  } = useAsyncA11y(setSelectedItem, setDraggedItem, handleDrop, zoneRefs);
 
   const [dropIndicator, setDropIndicator] = useState<DropIndicator | null>(
     null
@@ -139,114 +150,23 @@ export default function AsyncSorter() {
         handleDragStart={handleDragStart}
         handleDragEnd={handleDragEnd}
       ></Source>
+      <Queues
+        dropZones={dropZones}
+        handleZoneKeyDown={handleZoneKeyDown}
+        draggedItem={draggedItem}
+        handleDragOver={handleDragOver}
+        isSubmitClicked={isSubmitClicked}
+        setDropIndicator={setDropIndicator}
+        handleDragEnd={handleDragEnd}
+        handleDrop={handleDrop}
+        selectedItem={selectedItem}
+        handleItemKeyDown={handleItemKeyDown}
+        handleDragStart={handleDragStart}
+        dropIndicator={dropIndicator}
+        setQueuesItemRef={setQueuesItemRef}
+        setQueuesContainerRef={setQueuesContainerRef}
+      ></Queues>
 
-      <Box sx={{ m: 3, width: '90%' }}>
-        <Grid container spacing={2}>
-          {dropZones.map(({ zone, title, items, answerColors }, index) => (
-            <Grid size={{ xs: 4 }} key={zone}>
-              <Paper
-                tabIndex={0}
-                ref={(el: HTMLDivElement | null) => {
-                  zoneRefs.current[zone] = el;
-                }}
-                onKeyDown={(e) => {
-                  handleZoneKeyDown(e, zone, items.length, index);
-                }}
-                sx={{
-                  backgroundColor: draggedItem ? '#56f6565b' : '#f0f0f0',
-                }}
-              >
-                <Typography sx={{ fontWeight: 800, textAlign: 'center' }}>
-                  {title}
-                </Typography>
-                <Stack
-                  direction="row"
-                  spacing={items.length < 4 ? 1 : 0}
-                  onDragOver={(e) => {
-                    handleDragOver(e);
-                    if (
-                      draggedItem &&
-                      !isSubmitClicked &&
-                      e.target === e.currentTarget
-                    ) {
-                      setDropIndicator({
-                        zone,
-                        insertBefore: items.length,
-                      });
-                    }
-                  }}
-                  onDragEnd={handleDragEnd}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    handleDrop(zone, items.length);
-                  }}
-                  sx={{ p: 1, minHeight: 60 }}
-                >
-                  {items.map((item, index) => {
-                    const isSelected = selectedItem?.id === item.id;
-                    return (
-                      <Paper
-                        ref={(el: HTMLDivElement | null) => {
-                          if (!el) return;
-                          itemRefs.current[zone][index] = el;
-                        }}
-                        key={item.id}
-                        tabIndex={0}
-                        draggable={!isSubmitClicked}
-                        onKeyDown={(
-                          e: React.KeyboardEvent<HTMLDivElement>
-                        ): void => {
-                          if (selectedItem) {
-                            handleZoneKeyDown(e, zone, index, index);
-                          } else {
-                            handleItemKeyDown(e, item, zone, index);
-                          }
-                        }}
-                        onDragStart={() => {
-                          if (!isSubmitClicked) handleDragStart(item);
-                        }}
-                        onDragOver={(e: React.DragEvent<HTMLDivElement>) => {
-                          handleDragOver(e);
-                          e.stopPropagation();
-                          if (draggedItem && !isSubmitClicked) {
-                            setDropIndicator({ zone, insertBefore: index });
-                          }
-                        }}
-                        onDragEnd={handleDragEnd}
-                        onDrop={(e: React.DragEvent<HTMLDivElement>) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleDrop(zone, index);
-                        }}
-                        elevation={3}
-                        sx={{
-                          p: '10px',
-                          backgroundColor: isSelected
-                            ? '#cbcbcb'
-                            : isSubmitClicked
-                              ? answerColors?.[index]
-                              : '',
-                          borderLeft:
-                            !isSubmitClicked &&
-                            !selectedItem &&
-                            draggedItem &&
-                            dropIndicator?.zone === zone &&
-                            dropIndicator.insertBefore === index
-                              ? '3px solid #2e7d32'
-                              : '3px solid transparent',
-                          boxSizing: 'border-box',
-                        }}
-                      >
-                        {item.label}
-                      </Paper>
-                    );
-                  })}
-                </Stack>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
       <Container>
         <Typography>Final order of output:</Typography>
         <Paper sx={{ p: 1, mb: 2, backgroundColor: '#f0f0f0', minHeight: 40 }}>

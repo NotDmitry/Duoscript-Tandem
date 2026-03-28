@@ -33,6 +33,13 @@ export const useAsyncA11y = (
     },
     []
   );
+  const setQueuesItemRef = useCallback(
+    (zone: Zone, el: HTMLDivElement | null, index: number) => {
+      if (!el) return;
+      itemRefs.current[zone][index] = el;
+    },
+    []
+  );
   const handleItemKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement>,
     item: AsyncSorterBlock,
@@ -143,5 +150,6 @@ export const useAsyncA11y = (
     handleZoneKeyDown,
     handleOtherKeyDown,
     setSourceItemRef,
+    setQueuesItemRef,
   };
 };
