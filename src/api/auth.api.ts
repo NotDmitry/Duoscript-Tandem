@@ -1,125 +1,83 @@
+import type { UserAuthView } from '@/shared/models/userModel';
 import type {
-  LoginResponse,
-  loginData,
-  registerData,
+  LoginData,
+  RegisterData,
+  UpdateProfileData,
 } from '@/shared/types/auth.types';
 import {
-  addUser,
-  getUserId,
-  isPasswordCorrect,
-  userExist,
-  updateUser,
-} from './auth.mock';
-import {
-  createAccessToken,
-  createRefreshToken,
-} from '@/shared/utils/jwt.utils';
-import {
-  userStorageSchema,
-  type UserStorage,
-} from '@/shared/schemas/authSchemas';
+  mockGetUidByEmail,
+  mockGetUserByUid,
+  mockIsPasswordCorrect,
+  mockRegisterUser,
+  mockUpdateUser,
+  mockUserEmailExists,
+} from '@/mocks/auth.mock';
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const SESSION_KEY = 'auth_id';
 
-function setUserDataToLS(
-  accessToken: string,
-  refreshToken: string,
-  nickname: string
-) {
-  localStorage.setItem(
-    'user',
-    JSON.stringify({ accessToken, refreshToken, nickname })
-  );
+const delay = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
+function saveUserSession(uid: string): void {
+  localStorage.setItem(SESSION_KEY, uid);
 }
-export function getUserNameFromLS(): string {
-  const user = localStorage.getItem('user');
-  if (!user) {
-    throw Error('User is not logged in');
+
+function clearUserSession(): void {
+  localStorage.removeItem(SESSION_KEY);
+}
+
+export function getCurrentUser(): UserAuthView | null {
+  const uid = localStorage.getItem(SESSION_KEY);
+  if (!uid) return null;
+  try {
+    return mockGetUserByUid(uid);
+  } catch {
+    clearUserSession();
+    return null;
   }
-  const parsedUser: UserStorage = userStorageSchema.parse(JSON.parse(user));
-  return parsedUser.nickname;
 }
-export async function register(
-  registerData: registerData
-): Promise<LoginResponse> {
+
+export async function register(data: RegisterData): Promise<UserAuthView> {
   await delay(1000);
-  if (userExist(registerData.nickname)) {
-    throw Error('User with this nickname has already registered');
+  if (mockUserEmailExists(data.email)) {
+    throw new Error(`A user with email ${data.email} is already registered`);
   }
-  const newUser = {
-    nickname: registerData.nickname,
-    password: registerData.password,
-  };
-  const newUserData = addUser(newUser);
-  const accessToken = createAccessToken(newUserData.id, registerData.nickname);
-  const refreshToken = createRefreshToken(
-    newUserData.id,
-    registerData.nickname
-  );
-  setUserDataToLS(accessToken, refreshToken, registerData.nickname);
-  return {
-    accessToken,
-    refreshToken,
-    user: {
-      id: newUserData.id,
-      nickname: newUserData.nickname,
-    },
-  };
+  const newUser = mockRegisterUser(data.email, data.displayName, data.password);
+  saveUserSession(newUser.uid);
+  return newUser;
 }
-export async function login(loginData: loginData): Promise<LoginResponse> {
+
+export async function login(data: LoginData): Promise<UserAuthView> {
   await delay(1000);
-  if (!userExist(loginData.nickname)) {
-    throw Error(`User with nickname ${loginData.nickname} isn't registered`);
+  if (!mockUserEmailExists(data.email)) {
+    throw new Error(`No user found with email ${data.email}`);
   }
-  if (!isPasswordCorrect(loginData.password, loginData.nickname)) {
-    throw Error('Password is incorrect');
+  if (!mockIsPasswordCorrect(data.email, data.password)) {
+    throw new Error('Password is incorrect');
   }
-  const id = getUserId(loginData.nickname);
-  const accessToken = createAccessToken(id, loginData.nickname);
-  const refreshToken = createRefreshToken(id, loginData.nickname);
-  setUserDataToLS(accessToken, refreshToken, loginData.nickname);
-  return {
-    accessToken,
-    refreshToken,
-    user: {
-      id,
-      nickname: loginData.nickname,
-    },
-  };
+  const uid = mockGetUidByEmail(data.email);
+  saveUserSession(uid);
+  return mockGetUserByUid(uid);
 }
-export async function updateProfile(
-  profileData: loginData
-): Promise<LoginResponse> {
+
+export async function updateUserProfile(
+  uid: string,
+  newData: UpdateProfileData
+): Promise<UserAuthView> {
   await delay(1000);
-  if (userExist(profileData.nickname)) {
-    throw Error(`User with nickname ${profileData.nickname} is already exist`);
+  if (mockUserEmailExists(newData.email)) {
+    throw new Error(`User with email ${newData.email} already exists`);
   }
-  const savedUser: string | null = localStorage.getItem('user');
-  if (!savedUser) {
-    throw Error(`You are not logged in`);
-  }
-  const parsedUser: UserStorage = userStorageSchema.parse(
-    JSON.parse(savedUser)
-  );
-  const savedNickname = parsedUser.nickname;
-  const id = getUserId(savedNickname);
-  updateUser({
-    nickname: profileData.nickname,
-    password: profileData.password,
-    id,
+  const updatedUser = mockUpdateUser(uid, {
+    email: newData.email,
+    displayName: newData.displayName,
+    password: newData.password,
   });
-  setUserDataToLS(
-    parsedUser.accessToken,
-    parsedUser.refreshToken,
-    profileData.nickname
-  );
+  saveUserSession(updatedUser.uid);
+  return updatedUser;
+}
 
-  return {
-    accessToken: parsedUser.accessToken,
-    refreshToken: parsedUser.refreshToken,
-    user: {
-      id,
-      nickname: profileData.nickname,
-    },
-  };
+export async function signOut(): Promise<void> {
+  await delay(1000);
+  clearUserSession();
 }
