@@ -16,28 +16,33 @@ import {
   logInSchema,
   profileSchema,
   signUpSchema,
-  type LogInProfileFields,
-  type SingUpFields,
+  type LogInFields,
+  type SignUpFields,
+  type ProfileFields,
 } from '@/shared/schemas/authSchemas';
 import { useAuthSubmit } from '@/shared/hooks/useAuthSubmit';
+import { useAuth } from '@/shared/hooks/useAuth';
 import type { AuthMode } from '@/shared/types/auth.types';
 
 interface FormInterface {
   mode: AuthMode;
   profileTitle?: string;
-  onProfileUpdate?: (newName: string) => void;
+  onProfileUpdate?: (newDisplayName: string) => void;
 }
 
-const getTitle = ({ mode, profileTitle }: FormInterface) => {
+type AuthFormData = LogInFields | SignUpFields | ProfileFields;
+
+const getTitle = ({ mode, profileTitle }: FormInterface): string => {
   switch (mode) {
     case 'LOGIN':
       return 'WELCOME';
     case 'SIGN UP':
       return 'NEW PROFILE';
     case 'PROFILE':
-      return profileTitle;
+      return profileTitle ?? 'PROFILE';
   }
 };
+
 const getAuthSchema = (mode: AuthMode) => {
   switch (mode) {
     case 'LOGIN':
@@ -51,9 +56,10 @@ const getAuthSchema = (mode: AuthMode) => {
 
 function AuthForm({ mode, profileTitle, onProfileUpdate }: FormInterface) {
   const schema = getAuthSchema(mode);
-  type AuthFormData = LogInProfileFields | SingUpFields;
   const [formKey, setFormKey] = useState(0);
   const resolver: Resolver<AuthFormData> = zodResolver(schema);
+  const { logout } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -62,13 +68,20 @@ function AuthForm({ mode, profileTitle, onProfileUpdate }: FormInterface) {
   } = useForm<AuthFormData>({
     resolver,
     mode: 'onChange',
-    defaultValues: { nickname: '', password: '', repeatPassword: '' },
+    defaultValues:
+      mode === 'SIGN UP'
+        ? { email: '', displayName: '', password: '', repeatPassword: '' }
+        : mode === 'PROFILE'
+          ? { email: '', displayName: '', password: '' }
+          : { email: '', password: '' },
   });
+
   const { handleAuthSubmit, isLoading, isSuccess } = useAuthSubmit(mode);
-  const onSubmit = async (data: AuthFormData) => {
+
+  const onSubmit = async (data: AuthFormData): Promise<void> => {
     await handleAuthSubmit(data);
-    if (onProfileUpdate) {
-      onProfileUpdate(data.nickname);
+    if (onProfileUpdate && 'displayName' in data) {
+      onProfileUpdate(data.displayName);
     }
   };
 
@@ -80,6 +93,14 @@ function AuthForm({ mode, profileTitle, onProfileUpdate }: FormInterface) {
       }, 0);
     }
   }, [isSubmitSuccessful, isSuccess, reset]);
+
+  const emailError = 'email' in errors ? errors.email?.message : undefined;
+  const passwordError =
+    'password' in errors ? errors.password?.message : undefined;
+  const displayNameError =
+    'displayName' in errors ? errors.displayName?.message : undefined;
+  const repeatPasswordError =
+    'repeatPassword' in errors ? errors.repeatPassword?.message : undefined;
 
   return (
     <Container maxWidth="sm">
@@ -101,18 +122,36 @@ function AuthForm({ mode, profileTitle, onProfileUpdate }: FormInterface) {
         <FormLabel sx={{ fontSize: 36, color: 'black', mb: '24px' }}>
           {getTitle({ mode, profileTitle })}
         </FormLabel>
+
         <TextField
-          label={mode === 'PROFILE' ? 'New nickname' : 'Nickname'}
-          placeholder={mode === 'PROFILE' ? 'New nickname' : 'Nickname'}
-          type="text"
+          label={mode === 'PROFILE' ? 'New email' : 'Email'}
+          placeholder={mode === 'PROFILE' ? 'New email' : 'Email'}
+          type="email"
           required
           fullWidth
           variant="outlined"
           sx={{ mb: 2 }}
-          {...register('nickname')}
-          error={!!errors.nickname}
-          helperText={errors.nickname?.message}
+          {...register('email')}
+          error={!!emailError}
+          helperText={emailError}
         />
+
+        {(mode === 'SIGN UP' || mode === 'PROFILE') && (
+          <TextField
+            label={mode === 'PROFILE' ? 'New display name' : 'Display name'}
+            placeholder={
+              mode === 'PROFILE' ? 'New display name' : 'Display name'
+            }
+            type="text"
+            required
+            fullWidth
+            variant="outlined"
+            sx={{ mb: 2 }}
+            {...register('displayName')}
+            error={!!displayNameError}
+            helperText={displayNameError}
+          />
+        )}
 
         <TextField
           key={`password-${String(formKey)}`}
@@ -124,9 +163,10 @@ function AuthForm({ mode, profileTitle, onProfileUpdate }: FormInterface) {
           variant="outlined"
           sx={{ mb: 2 }}
           {...register('password')}
-          error={!!errors.password}
-          helperText={errors.password?.message}
+          error={!!passwordError}
+          helperText={passwordError}
         />
+
         {mode === 'SIGN UP' && (
           <TextField
             key={`repeatPassword-${String(formKey)}`}
@@ -138,12 +178,11 @@ function AuthForm({ mode, profileTitle, onProfileUpdate }: FormInterface) {
             variant="outlined"
             sx={{ mb: 2 }}
             {...register('repeatPassword')}
-            error={!!('repeatPassword' in errors && errors.repeatPassword)}
-            helperText={
-              'repeatPassword' in errors ? errors.repeatPassword?.message : null
-            }
+            error={!!repeatPasswordError}
+            helperText={repeatPasswordError}
           />
         )}
+
         {isLoading ? (
           <Button
             loading
@@ -158,6 +197,7 @@ function AuthForm({ mode, profileTitle, onProfileUpdate }: FormInterface) {
             {mode === 'PROFILE' ? 'SAVE' : mode}
           </Button>
         )}
+
         {mode === 'LOGIN' && (
           <Link
             component={NavLink}
@@ -169,13 +209,15 @@ function AuthForm({ mode, profileTitle, onProfileUpdate }: FormInterface) {
             Registration
           </Link>
         )}
+
         {mode === 'PROFILE' && (
           <Button
-            type="submit"
+            type="button"
             size="small"
             color="error"
             variant="contained"
             sx={{ mt: 2 }}
+            onClick={logout}
           >
             SIGN OUT
           </Button>
