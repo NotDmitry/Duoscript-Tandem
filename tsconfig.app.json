@@ -27,7 +27,20 @@
     /* Aliases */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@api/*": ["src/api/*"],
+      "@mocks/*": ["src/mocks/*"],
+      "@models/*": ["src/shared/models/*"],
+      "@hooks/*": ["src/shared/hooks/*"],
+      "@context/*": ["src/shared/context/*"],
+      "@schemas/*": ["src/shared/schemas/*"],
+      "@shared-types/*": ["src/shared/types/*"],
+      "@utils/*": ["src/shared/utils/*"],
+      "@components/*": ["src/components/*"],
+      "@features/*": ["src/features/*"],
+      "@pages/*": ["src/pages/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@assets/*": ["src/assets/*"]
     }
   },
   "include": ["src", "vitest-setup.ts"]
