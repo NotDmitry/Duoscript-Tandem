@@ -1,24 +1,7 @@
-export type Difficulty = 'easy' | 'medium' | 'hard';
-
-export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
-  easy: 'Basics',
-  medium: 'Intermediate',
-  hard: 'Advanced',
-};
-
-export interface Pair {
-  id: number;
-  left: string;
-  right: string;
-}
-
-export interface MatchingData {
-  title: string;
-  pairs: Pair[];
-}
+import type { MeaningMatcherDifficulty } from '@/shared/models/widgetModel';
 
 export interface CompletedResult {
-  difficulty: Difficulty;
+  difficulty: MeaningMatcherDifficulty;
   score: number;
   total: number;
   skipped: boolean;
@@ -26,6 +9,6 @@ export interface CompletedResult {
 
 export interface MeaningMatcherProps {
   widgetId: string;
-  initialDifficulty?: Difficulty;
+  initialDifficulty?: MeaningMatcherDifficulty;
   onComplete?: (results: CompletedResult[]) => void;
 }

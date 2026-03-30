@@ -2,11 +2,18 @@ import type { DragEndEvent } from '@dnd-kit/core';
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
 import { useState } from 'react';
 import { Box, Button, Paper, Typography } from '@mui/material';
-import type { Difficulty, Pair } from './MeaningMatcher.types';
-import { DIFFICULTY_LABELS } from './MeaningMatcher.types';
+import type {
+  MatcherPair,
+  MeaningMatcherDifficulty,
+} from '@/shared/models/widgetModel';
 
 const OPTIONS_ZONE_ID = 'options';
-const DIFFICULTIES: Difficulty[] = ['easy', 'medium', 'hard'];
+const DIFFICULTIES: MeaningMatcherDifficulty[] = ['easy', 'medium', 'hard'];
+const DIFFICULTY_LABELS: Record<MeaningMatcherDifficulty, string> = {
+  easy: 'Basics',
+  medium: 'Intermediate',
+  hard: 'Advanced',
+};
 
 function getResultColor(checked: boolean, correct: boolean): string {
   if (!checked) return '';
@@ -28,8 +35,8 @@ function ProgressBar({
   difficulty,
   completedLevels,
 }: {
-  difficulty: Difficulty;
-  completedLevels: Difficulty[];
+  difficulty: MeaningMatcherDifficulty;
+  completedLevels: MeaningMatcherDifficulty[];
 }) {
   return (
     <Box display="flex" alignItems="center" mb={3}>
@@ -142,7 +149,7 @@ function Drop({
   checked,
 }: {
   id: number;
-  item: Pair | null;
+  item: MatcherPair | null;
   checked?: boolean;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id });
@@ -275,10 +282,10 @@ export function LevelGame({
   onNext,
   onSkip,
 }: {
-  difficulty: Difficulty;
-  completedLevels: Difficulty[];
+  difficulty: MeaningMatcherDifficulty;
+  completedLevels: MeaningMatcherDifficulty[];
   title: string;
-  pairs: Pair[];
+  pairs: MatcherPair[];
   onSubmit: (score: number, total: number) => void;
   onNext: () => void;
   onSkip: () => void;
@@ -320,7 +327,7 @@ export function LevelGame({
   const options = shuffledIds
     .filter((id) => !usedIds.includes(id))
     .map((id) => pairs.find((p) => p.id === id))
-    .filter((p): p is Pair => p !== undefined);
+    .filter((p): p is MatcherPair => p !== undefined);
 
   const getScore = () => pairs.filter((p) => answers[p.id] === p.id).length;
 

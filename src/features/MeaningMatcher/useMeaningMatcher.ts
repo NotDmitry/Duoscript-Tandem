@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import type {
-  Difficulty,
   CompletedResult,
   MeaningMatcherProps,
 } from '@/features/MeaningMatcher/MeaningMatcher.types';
 import { getMeaningMatcherWidget } from '@/api/meaningMatcher.api';
-import type { MeaningMatcherConfig } from '@/shared/models/widgetModel';
+import type {
+  MeaningMatcherConfig,
+  MeaningMatcherDifficulty,
+} from '@/shared/models/widgetModel';
 
 const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 
@@ -18,8 +20,11 @@ export function useMeaningMatcher({
   initialDifficulty = 'easy',
   onComplete,
 }: MeaningMatcherProps) {
-  const [difficulty, setDifficulty] = useState<Difficulty>(initialDifficulty);
-  const [completedLevels, setCompletedLevels] = useState<Difficulty[]>([]);
+  const [difficulty, setDifficulty] =
+    useState<MeaningMatcherDifficulty>(initialDifficulty);
+  const [completedLevels, setCompletedLevels] = useState<
+    MeaningMatcherDifficulty[]
+  >([]);
   const [results, setResults] = useState<CompletedResult[]>([]);
   const [dataState, setDataState] = useState<DataState>({ status: 'loading' });
 

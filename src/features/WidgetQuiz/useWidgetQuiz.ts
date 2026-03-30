@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import type { QuizQuestion, UserAnswer } from './WidgetQuiz.types';
-import type { QuizConfig } from '@/shared/models/widgetModel';
+import type {
+  QuizConfig,
+  QuizQuestion,
+  UserAnswer,
+} from '@/shared/models/widgetModel';
 import { getQuizWidget } from '@/api/widgetQuiz.api';
 
 export function useWidgetQuiz(widgetId: string) {

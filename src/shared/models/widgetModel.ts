@@ -15,6 +15,8 @@ export type WidgetView<T> = Omit<WidgetDocument<T>, 'createdAt'>;
 
 // Quiz Widget
 
+export type UserAnswer = number | null;
+
 export interface QuizQuestion {
   isText: boolean;
   question: string;
@@ -25,7 +27,7 @@ export interface QuizQuestion {
 export interface QuizConfig {
   quizName: string;
   questions: QuizQuestion[];
-  rightAnswers: (number | null)[];
+  rightAnswers: UserAnswer[];
 }
 
 // Meaning Matcher Widget
