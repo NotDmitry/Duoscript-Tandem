@@ -2,19 +2,19 @@ import { useState, useEffect, useRef } from 'react';
 import type {
   Difficulty,
   CompletedResult,
-  MatchingLevels,
   MeaningMatcherProps,
-} from '@/features/MeaningMatcher/MeaningMatcher.types.ts';
-import getMeaningMatcherData from '@/api/meaningMatcher.api.ts';
+} from '@/features/MeaningMatcher/MeaningMatcher.types';
+import { getMeaningMatcherWidget } from '@/api/meaningMatcher.api';
+import type { MeaningMatcherConfig } from '@/shared/models/widgetModel';
 
 const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 
 type DataState =
   | { status: 'loading' }
-  | { status: 'ready'; data: MatchingLevels };
+  | { status: 'ready'; data: MeaningMatcherConfig };
 
 export function useMeaningMatcher({
-  topic,
+  widgetId,
   initialDifficulty = 'easy',
   onComplete,
 }: MeaningMatcherProps) {
@@ -23,12 +23,16 @@ export function useMeaningMatcher({
   const [results, setResults] = useState<CompletedResult[]>([]);
   const [dataState, setDataState] = useState<DataState>({ status: 'loading' });
 
-  const topicRef = useRef(topic);
+  const widgetIdRef = useRef(widgetId);
 
   useEffect(() => {
-    void getMeaningMatcherData(topicRef.current).then((result) => {
-      setDataState({ status: 'ready', data: result });
-    });
+    void getMeaningMatcherWidget(widgetIdRef.current)
+      .then((widget) => {
+        setDataState({ status: 'ready', data: widget.config });
+      })
+      .catch(() => {
+        console.error('Failed to load meaning matcher widget');
+      });
   }, []);
 
   const goToNext = (skipped: boolean, score = 0, total = 0) => {

@@ -1,19 +1,9 @@
-export type MeaningMatcherType = 'html' | 'css' | 'js' | 'ts' | 'github';
-
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
 export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
   easy: 'Basics',
   medium: 'Intermediate',
   hard: 'Advanced',
-};
-
-export const TOPIC_LABELS: Record<MeaningMatcherType, string> = {
-  html: 'HTML',
-  css: 'CSS',
-  js: 'JavaScript',
-  ts: 'TypeScript',
-  github: 'GitHub',
 };
 
 export interface Pair {
@@ -27,8 +17,6 @@ export interface MatchingData {
   pairs: Pair[];
 }
 
-export type MatchingLevels = Record<Difficulty, MatchingData>;
-
 export interface CompletedResult {
   difficulty: Difficulty;
   score: number;
@@ -37,7 +25,7 @@ export interface CompletedResult {
 }
 
 export interface MeaningMatcherProps {
-  topic: MeaningMatcherType;
+  widgetId: string;
   initialDifficulty?: Difficulty;
   onComplete?: (results: CompletedResult[]) => void;
 }
