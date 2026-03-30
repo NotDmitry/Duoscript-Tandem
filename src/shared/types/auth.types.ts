@@ -25,5 +25,3 @@ export interface AuthContextType {
   logout: () => void;
   updateProfileFunc: (data: UpdateProfileData) => Promise<void>;
 }
-
-export type AuthMode = 'LOGIN' | 'SIGN UP' | 'PROFILE';

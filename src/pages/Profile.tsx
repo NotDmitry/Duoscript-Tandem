@@ -1,20 +1,12 @@
-import AuthForm from '@/components/AuthForm/AuthForm';
 import { useState } from 'react';
 import { useAuth } from '@/shared/hooks/useAuth';
+import { ProfileForm } from '@/components/AuthForm/ProfileForm.tsx';
 
 function Profile() {
   const { user } = useAuth();
   const [displayName, setDisplayName] = useState(user?.displayName ?? '');
 
-  return (
-    <AuthForm
-      mode="PROFILE"
-      profileTitle={displayName}
-      onProfileUpdate={(newDisplayName: string) => {
-        setDisplayName(newDisplayName);
-      }}
-    />
-  );
+  return <ProfileForm displayName={displayName} onUpdate={setDisplayName} />;
 }
 
 export default Profile;

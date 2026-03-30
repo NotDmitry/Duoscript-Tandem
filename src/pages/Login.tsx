@@ -1,7 +1,7 @@
-import AuthForm from '@/components/AuthForm/AuthForm';
+import { LoginForm } from '@/components/AuthForm/LoginForm.tsx';
 
 function Login() {
-  return <AuthForm mode="LOGIN" />;
+  return <LoginForm />;
 }
 
 export default Login;
