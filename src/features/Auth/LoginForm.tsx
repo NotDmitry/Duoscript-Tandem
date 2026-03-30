@@ -1,22 +1,22 @@
-import { Box, Button, Container, FormLabel, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  FormLabel,
+  Link,
+  TextField,
+} from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { useEffect, useState } from 'react';
+import { NavLink } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  type ProfileFields,
-  profileSchema,
-} from '@/shared/schemas/authSchemas';
+import { type LogInFields, logInSchema } from '@/shared/schemas/authSchemas.ts';
 import { useSubmit } from '@/shared/hooks/useSubmit.ts';
-import { useAuth } from '@/shared/hooks/useAuth';
+import { useAuth } from '@/shared/hooks/useAuth.ts';
 
-interface ProfileFormProps {
-  displayName: string;
-  onUpdate: (newDisplayName: string) => void;
-}
-
-export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
-  const { updateProfileFunc, logout } = useAuth();
+export function LoginForm() {
+  const { loginFunc } = useAuth();
   const [formKey, setFormKey] = useState(0);
 
   const {
@@ -24,10 +24,10 @@ export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
     handleSubmit,
     reset,
     formState: { errors, isSubmitSuccessful },
-  } = useForm<ProfileFields>({
-    resolver: zodResolver(profileSchema),
+  } = useForm<LogInFields>({
+    resolver: zodResolver(logInSchema),
     mode: 'onChange',
-    defaultValues: { email: '', displayName: '', password: '' },
+    defaultValues: { email: '', password: '' },
   });
 
   const {
@@ -35,13 +35,12 @@ export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
     isLoading,
     isSuccess,
   } = useSubmit({
-    successMessage: 'You have successfully updated profile data',
-    errorFallback: 'Failed to update profile',
+    successMessage: 'You have successfully logged in',
+    errorFallback: 'Email or password is incorrect',
   });
 
-  const onSubmit = async (data: ProfileFields): Promise<void> => {
-    await handleAuthSubmit(() => updateProfileFunc(data));
-    onUpdate(data.displayName);
+  const onSubmit = async (data: LogInFields): Promise<void> => {
+    await handleAuthSubmit(() => loginFunc(data));
   };
 
   useEffect(() => {
@@ -71,13 +70,12 @@ export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
         }}
       >
         <FormLabel sx={{ fontSize: 36, color: 'black', mb: '24px' }}>
-          {displayName}
+          WELCOME
         </FormLabel>
 
         <TextField
-          key={`email-${String(formKey)}`}
-          label="New email"
-          placeholder="New email"
+          label="Email"
+          placeholder="Email"
           type="email"
           required
           fullWidth
@@ -89,22 +87,9 @@ export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
         />
 
         <TextField
-          label="New display name"
-          placeholder="New display name"
-          type="text"
-          required
-          fullWidth
-          variant="outlined"
-          sx={{ mb: 2 }}
-          {...register('displayName')}
-          error={!!errors.displayName}
-          helperText={errors.displayName?.message}
-        />
-
-        <TextField
           key={`password-${String(formKey)}`}
-          label="New password"
-          placeholder="New password"
+          label="Password"
+          placeholder="Password"
           type="password"
           required
           fullWidth
@@ -122,24 +107,23 @@ export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
             startIcon={<SaveIcon />}
             variant="outlined"
           >
-            SAVE
+            LOGIN
           </Button>
         ) : (
           <Button type="submit" size="large" variant="contained">
-            SAVE
+            LOGIN
           </Button>
         )}
 
-        <Button
-          type="button"
-          size="small"
-          color="error"
-          variant="contained"
-          sx={{ mt: 2 }}
-          onClick={logout}
+        <Link
+          component={NavLink}
+          to="/register"
+          underline="none"
+          variant="body1"
+          sx={{ mt: 3 }}
         >
-          SIGN OUT
-        </Button>
+          Registration
+        </Link>
       </Box>
     </Container>
   );

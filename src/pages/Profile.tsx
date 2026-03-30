@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/shared/hooks/useAuth';
-import { ProfileForm } from '@/components/AuthForm/ProfileForm.tsx';
+import { ProfileForm } from '@/features/Auth/ProfileForm.tsx';
 
 function Profile() {
   const { user } = useAuth();

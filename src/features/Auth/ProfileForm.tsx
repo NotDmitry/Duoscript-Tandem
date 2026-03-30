@@ -3,12 +3,20 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type SignUpFields, signUpSchema } from '@/shared/schemas/authSchemas';
+import {
+  type ProfileFields,
+  profileSchema,
+} from '@/shared/schemas/authSchemas.ts';
 import { useSubmit } from '@/shared/hooks/useSubmit.ts';
-import { useAuth } from '@/shared/hooks/useAuth';
+import { useAuth } from '@/shared/hooks/useAuth.ts';
 
-export function RegisterForm() {
-  const { registerFunc } = useAuth();
+interface ProfileFormProps {
+  displayName: string;
+  onUpdate: (newDisplayName: string) => void;
+}
+
+export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
+  const { updateProfileFunc, logout } = useAuth();
   const [formKey, setFormKey] = useState(0);
 
   const {
@@ -16,15 +24,10 @@ export function RegisterForm() {
     handleSubmit,
     reset,
     formState: { errors, isSubmitSuccessful },
-  } = useForm<SignUpFields>({
-    resolver: zodResolver(signUpSchema),
+  } = useForm<ProfileFields>({
+    resolver: zodResolver(profileSchema),
     mode: 'onChange',
-    defaultValues: {
-      email: '',
-      displayName: '',
-      password: '',
-      repeatPassword: '',
-    },
+    defaultValues: { email: '', displayName: '', password: '' },
   });
 
   const {
@@ -32,12 +35,13 @@ export function RegisterForm() {
     isLoading,
     isSuccess,
   } = useSubmit({
-    successMessage: 'You have successfully registered',
-    errorFallback: 'Registration failed',
+    successMessage: 'You have successfully updated profile data',
+    errorFallback: 'Failed to update profile',
   });
 
-  const onSubmit = async (data: SignUpFields): Promise<void> => {
-    await handleAuthSubmit(() => registerFunc(data));
+  const onSubmit = async (data: ProfileFields): Promise<void> => {
+    await handleAuthSubmit(() => updateProfileFunc(data));
+    onUpdate(data.displayName);
   };
 
   useEffect(() => {
@@ -67,12 +71,13 @@ export function RegisterForm() {
         }}
       >
         <FormLabel sx={{ fontSize: 36, color: 'black', mb: '24px' }}>
-          NEW PROFILE
+          {displayName}
         </FormLabel>
 
         <TextField
-          label="Email"
-          placeholder="Email"
+          key={`email-${String(formKey)}`}
+          label="New email"
+          placeholder="New email"
           type="email"
           required
           fullWidth
@@ -84,8 +89,8 @@ export function RegisterForm() {
         />
 
         <TextField
-          label="Display name"
-          placeholder="Display name"
+          label="New display name"
+          placeholder="New display name"
           type="text"
           required
           fullWidth
@@ -98,8 +103,8 @@ export function RegisterForm() {
 
         <TextField
           key={`password-${String(formKey)}`}
-          label="Password"
-          placeholder="Password"
+          label="New password"
+          placeholder="New password"
           type="password"
           required
           fullWidth
@@ -110,20 +115,6 @@ export function RegisterForm() {
           helperText={errors.password?.message}
         />
 
-        <TextField
-          key={`repeatPassword-${String(formKey)}`}
-          label="Repeat Password"
-          placeholder="Repeat Password"
-          type="password"
-          required
-          fullWidth
-          variant="outlined"
-          sx={{ mb: 2 }}
-          {...register('repeatPassword')}
-          error={!!errors.repeatPassword}
-          helperText={errors.repeatPassword?.message}
-        />
-
         {isLoading ? (
           <Button
             loading
@@ -131,13 +122,24 @@ export function RegisterForm() {
             startIcon={<SaveIcon />}
             variant="outlined"
           >
-            SIGN UP
+            SAVE
           </Button>
         ) : (
           <Button type="submit" size="large" variant="contained">
-            SIGN UP
+            SAVE
           </Button>
         )}
+
+        <Button
+          type="button"
+          size="small"
+          color="error"
+          variant="contained"
+          sx={{ mt: 2 }}
+          onClick={logout}
+        >
+          SIGN OUT
+        </Button>
       </Box>
     </Container>
   );

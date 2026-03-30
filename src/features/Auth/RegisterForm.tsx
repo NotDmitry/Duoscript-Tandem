@@ -1,22 +1,17 @@
-import {
-  Box,
-  Button,
-  Container,
-  FormLabel,
-  Link,
-  TextField,
-} from '@mui/material';
+import { Box, Button, Container, FormLabel, TextField } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type LogInFields, logInSchema } from '@/shared/schemas/authSchemas';
+import {
+  type SignUpFields,
+  signUpSchema,
+} from '@/shared/schemas/authSchemas.ts';
 import { useSubmit } from '@/shared/hooks/useSubmit.ts';
-import { useAuth } from '@/shared/hooks/useAuth';
+import { useAuth } from '@/shared/hooks/useAuth.ts';
 
-export function LoginForm() {
-  const { loginFunc } = useAuth();
+export function RegisterForm() {
+  const { registerFunc } = useAuth();
   const [formKey, setFormKey] = useState(0);
 
   const {
@@ -24,10 +19,15 @@ export function LoginForm() {
     handleSubmit,
     reset,
     formState: { errors, isSubmitSuccessful },
-  } = useForm<LogInFields>({
-    resolver: zodResolver(logInSchema),
+  } = useForm<SignUpFields>({
+    resolver: zodResolver(signUpSchema),
     mode: 'onChange',
-    defaultValues: { email: '', password: '' },
+    defaultValues: {
+      email: '',
+      displayName: '',
+      password: '',
+      repeatPassword: '',
+    },
   });
 
   const {
@@ -35,12 +35,12 @@ export function LoginForm() {
     isLoading,
     isSuccess,
   } = useSubmit({
-    successMessage: 'You have successfully logged in',
-    errorFallback: 'Email or password is incorrect',
+    successMessage: 'You have successfully registered',
+    errorFallback: 'Registration failed',
   });
 
-  const onSubmit = async (data: LogInFields): Promise<void> => {
-    await handleAuthSubmit(() => loginFunc(data));
+  const onSubmit = async (data: SignUpFields): Promise<void> => {
+    await handleAuthSubmit(() => registerFunc(data));
   };
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export function LoginForm() {
         }}
       >
         <FormLabel sx={{ fontSize: 36, color: 'black', mb: '24px' }}>
-          WELCOME
+          NEW PROFILE
         </FormLabel>
 
         <TextField
@@ -87,6 +87,19 @@ export function LoginForm() {
         />
 
         <TextField
+          label="Display name"
+          placeholder="Display name"
+          type="text"
+          required
+          fullWidth
+          variant="outlined"
+          sx={{ mb: 2 }}
+          {...register('displayName')}
+          error={!!errors.displayName}
+          helperText={errors.displayName?.message}
+        />
+
+        <TextField
           key={`password-${String(formKey)}`}
           label="Password"
           placeholder="Password"
@@ -100,6 +113,20 @@ export function LoginForm() {
           helperText={errors.password?.message}
         />
 
+        <TextField
+          key={`repeatPassword-${String(formKey)}`}
+          label="Repeat Password"
+          placeholder="Repeat Password"
+          type="password"
+          required
+          fullWidth
+          variant="outlined"
+          sx={{ mb: 2 }}
+          {...register('repeatPassword')}
+          error={!!errors.repeatPassword}
+          helperText={errors.repeatPassword?.message}
+        />
+
         {isLoading ? (
           <Button
             loading
@@ -107,23 +134,13 @@ export function LoginForm() {
             startIcon={<SaveIcon />}
             variant="outlined"
           >
-            LOGIN
+            SIGN UP
           </Button>
         ) : (
           <Button type="submit" size="large" variant="contained">
-            LOGIN
+            SIGN UP
           </Button>
         )}
-
-        <Link
-          component={NavLink}
-          to="/register"
-          underline="none"
-          variant="body1"
-          sx={{ mt: 3 }}
-        >
-          Registration
-        </Link>
       </Box>
     </Container>
   );

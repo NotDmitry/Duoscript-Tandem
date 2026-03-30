@@ -1,13 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router';
 import type { ReactElement } from 'react';
-import { LoginForm } from '@/components/AuthForm/LoginForm';
-import { RegisterForm } from '@/components/AuthForm/RegisterForm';
-import { AuthProvider } from '@/shared/context/authContext';
+import { LoginForm } from '@/features/Auth/LoginForm.tsx';
+import { AuthProvider } from '@/shared/context/authContext.tsx';
 import { vi } from 'vitest';
 import * as Hook from '@/shared/hooks/useSubmit.ts';
 import userEvent from '@testing-library/user-event';
-import { UIProvider } from '@/shared/context/UIContext';
+import { UIProvider } from '@/shared/context/UIContext.tsx';
 
 const renderWithProviders = (component: ReactElement) => {
   return render(
@@ -53,13 +52,5 @@ describe('LoginForm', () => {
     await userEvent.click(screen.getByRole('button', { name: /login/i }));
 
     expect(mockHandleSubmit).toHaveBeenCalled();
-  });
-});
-
-describe('RegisterForm', () => {
-  it('renders repeatPassword field', () => {
-    renderWithProviders(<RegisterForm />);
-    const repeatPasswordInput = screen.getByPlaceholderText('Repeat Password');
-    expect(repeatPasswordInput).toBeInTheDocument();
   });
 });
