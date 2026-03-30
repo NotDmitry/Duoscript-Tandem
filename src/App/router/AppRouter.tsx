@@ -8,18 +8,26 @@ import Profile from '@pages/Profile';
 import Layout from '@layouts/Layout';
 import Login from '@pages/Login';
 import Register from '@pages/Register';
+import { PublicOnlyRoute } from '@/App/router/PublicOnlyRoute';
+import { PrivateRoute } from '@/App/router/PrivateRoute';
 
 function AppRouter() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path={'dashboard'} element={<Dashboard />} />
         <Route path={'about'} element={<About />} />
-        <Route path={'library'} element={<Library />} />
-        <Route path={'profile'} element={<Profile />} />
-        <Route path={'login'} element={<Login />} />
-        <Route path={'register'} element={<Register />} />
+
+        <Route element={<PublicOnlyRoute />}>
+          <Route path={'login'} element={<Login />} />
+          <Route path={'register'} element={<Register />} />
+        </Route>
+
+        <Route element={<PrivateRoute />}>
+          <Route path={'dashboard'} element={<Dashboard />} />
+          <Route path={'library'} element={<Library />} />
+          <Route path={'profile'} element={<Profile />} />
+        </Route>
       </Route>
 
       <Route path={'*'} element={<NotFound />} />
