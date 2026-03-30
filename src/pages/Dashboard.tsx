@@ -1,16 +1,28 @@
 import { Box, Button, Grid, Typography, Pagination } from '@mui/material';
 import { Link } from 'react-router';
 import { useActivityHistory } from '@/shared/hooks/useActivityHistory';
+import { useAuth } from '@/shared/hooks/useAuth';
+import { useDashboard } from '@/shared/hooks/useDashboard';
 
 import ProgressCard from '@/components/ProgressCard/ProgressCard';
 import StatsGrid from '../features/Dashboard/components/StatsGrid';
 import RecentActivity from '../features/Dashboard/components/RecentActivity';
-import { dashboardMock } from '../features/Dashboard/Dashboard.mock';
 
 function Dashboard() {
+  const { user } = useAuth();
+  const uid = user?.uid ?? '';
+
+  const { dashboardData, loading: dashboardLoading } = useDashboard(uid);
+
   const itemsPerPage = 3;
-  const { activities, page, setPage, totalPages, loading, error } =
-    useActivityHistory(itemsPerPage);
+  const {
+    activities,
+    page,
+    setPage,
+    totalPages,
+    loading: activitiesLoading,
+    error,
+  } = useActivityHistory(uid, itemsPerPage);
 
   const handlePageChange = (
     _: React.ChangeEvent<unknown>,
@@ -41,7 +53,7 @@ function Dashboard() {
             component="span"
             sx={{ color: '#e94f4e', fontWeight: 600 }}
           >
-            {dashboardMock.user.username}.
+            {user?.displayName ?? ''}.
           </Typography>
         </Typography>
       </Box>
@@ -50,8 +62,12 @@ function Dashboard() {
         {/* Left column */}
         <Grid size={{ xs: 12, md: 6 }}>
           <Grid container direction="column" spacing={6}>
-            <ProgressCard progress={dashboardMock.progress} />
-            <StatsGrid data={dashboardMock} />
+            {!dashboardLoading && dashboardData && (
+              <>
+                <ProgressCard progress={dashboardData.progressPercent} />
+                <StatsGrid data={dashboardData} />
+              </>
+            )}
           </Grid>
         </Grid>
 
@@ -63,7 +79,7 @@ function Dashboard() {
             spacing={5}
             sx={{ minHeight: '52vh' }}
           >
-            {loading ? (
+            {activitiesLoading ? (
               <Typography>Loading activities...</Typography>
             ) : error ? (
               <Typography color="error">{error}</Typography>
@@ -76,7 +92,7 @@ function Dashboard() {
                     page={page}
                     onChange={handlePageChange}
                     shape="rounded"
-                    disabled={loading}
+                    disabled={activitiesLoading}
                   />
                 </Box>
               </>
