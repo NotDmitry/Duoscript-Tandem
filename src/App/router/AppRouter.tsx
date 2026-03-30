@@ -8,7 +8,6 @@ import Profile from '@/pages/Profile.tsx';
 import Layout from '@/layouts/Layout.tsx';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register.tsx';
-import AuthLayout from '@/layouts/AuthLayout.tsx';
 
 function AppRouter() {
   return (
@@ -19,11 +18,8 @@ function AppRouter() {
         <Route path={'about'} element={<About />} />
         <Route path={'library'} element={<Library />} />
         <Route path={'profile'} element={<Profile />} />
-
-        <Route element={<AuthLayout />}>
-          <Route path={'login'} element={<Login />} />
-          <Route path={'register'} element={<Register />} />
-        </Route>
+        <Route path={'login'} element={<Login />} />
+        <Route path={'register'} element={<Register />} />
       </Route>
 
       <Route path={'*'} element={<NotFound />} />
