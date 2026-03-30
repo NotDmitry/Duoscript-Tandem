@@ -41,7 +41,7 @@ const mockWidgetData: WidgetView<QuizConfig> = {
   },
 };
 
-vi.mock('@/api/widgetQuiz.api.ts', () => ({
+vi.mock('@api/widgetQuiz.api.ts', () => ({
   getQuizWidget: (): Promise<WidgetView<QuizConfig>> =>
     Promise.resolve(mockWidgetData),
 }));
