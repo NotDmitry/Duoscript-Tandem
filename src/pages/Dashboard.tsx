@@ -1,8 +1,8 @@
 import { Box, Button, Grid, Typography, Pagination } from '@mui/material';
 import { Link } from 'react-router';
-import { useActivityHistory } from '@/shared/hooks/useActivityHistory';
+import { useActivityHistory } from '@/features/Dashboard/useActivityHistory';
 import { useAuth } from '@/shared/hooks/useAuth';
-import { useDashboard } from '@/shared/hooks/useDashboard';
+import { useDashboard } from '@/features/Dashboard/useDashboard';
 
 import ProgressCard from '@/components/ProgressCard/ProgressCard';
 import StatsGrid from '../features/Dashboard/components/StatsGrid';
