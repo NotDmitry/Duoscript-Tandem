@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { getHistory } from '@/api/dashboard.api';
-import type { ActivityItem } from '@/features/Dashboard/Dashboard.types';
+import { getActivityHistory } from '@/api/dashboard.api';
+import type { ActivityView } from '@/shared/models/activityModel';
 
-export function useActivityHistory(itemsPerPage: number) {
-  const [activities, setActivities] = useState<ActivityItem[]>([]);
+export function useActivityHistory(uid: string, itemsPerPage: number) {
+  const [activities, setActivities] = useState<ActivityView[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -14,7 +14,7 @@ export function useActivityHistory(itemsPerPage: number) {
       setLoading(true);
       setError(null);
       try {
-        const data = await getHistory(page, itemsPerPage);
+        const data = await getActivityHistory(uid, page, itemsPerPage);
         setActivities(data.activities);
         setTotalPages(data.totalPages);
       } catch (err: unknown) {
@@ -28,7 +28,7 @@ export function useActivityHistory(itemsPerPage: number) {
       }
     }
     void fetchData();
-  }, [page, itemsPerPage]);
+  }, [uid, page, itemsPerPage]);
 
   return { activities, page, setPage, totalPages, loading, error };
 }
