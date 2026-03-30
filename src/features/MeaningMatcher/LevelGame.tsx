@@ -1,13 +1,9 @@
 import type { DragEndEvent } from '@dnd-kit/core';
-import { useState } from 'react';
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
-import { Box, Paper, Typography, Button } from '@mui/material';
-import type {
-  Difficulty,
-  Pair,
-  MeaningMatcherType,
-} from './MeaningMatcher.types';
-import { DIFFICULTY_LABELS, TOPIC_LABELS } from './MeaningMatcher.types';
+import { useState } from 'react';
+import { Box, Button, Paper, Typography } from '@mui/material';
+import type { Difficulty, Pair } from './MeaningMatcher.types';
+import { DIFFICULTY_LABELS } from './MeaningMatcher.types';
 
 const OPTIONS_ZONE_ID = 'options';
 const DIFFICULTIES: Difficulty[] = ['easy', 'medium', 'hard'];
@@ -115,7 +111,7 @@ function Card({
 }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id });
-  const resultColor = getResultColor(!!checked, !!correct);
+  const resultColor = getResultColor(Boolean(checked), Boolean(correct));
 
   return (
     <Paper
@@ -151,7 +147,7 @@ function Drop({
 }) {
   const { setNodeRef, isOver } = useDroppable({ id });
   const isCorrect = item?.id === id;
-  const resultColor = item ? getResultColor(!!checked, isCorrect) : '';
+  const resultColor = item ? getResultColor(Boolean(checked), isCorrect) : '';
 
   return (
     <Paper
@@ -271,7 +267,6 @@ function ResultBlock({
 }
 
 export function LevelGame({
-  topic,
   difficulty,
   completedLevels,
   title,
@@ -280,7 +275,6 @@ export function LevelGame({
   onNext,
   onSkip,
 }: {
-  topic: MeaningMatcherType;
   difficulty: Difficulty;
   completedLevels: Difficulty[];
   title: string;
@@ -337,7 +331,7 @@ export function LevelGame({
     onSubmit(result, pairs.length);
   };
 
-  const fullTitle = `${TOPIC_LABELS[topic]} — ${DIFFICULTY_LABELS[difficulty]}: ${title}`;
+  const fullTitle = `${DIFFICULTY_LABELS[difficulty]}: ${title}`;
 
   return (
     <>
