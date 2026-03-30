@@ -4,28 +4,41 @@ import { BrowserRouter } from 'react-router';
 import type { ReactElement } from 'react';
 import { Header } from './Header';
 import { AuthProvider } from '@context/authContext';
+import { UIProvider } from '@context/UIContext';
+import { vi } from 'vitest';
+import * as authApi from '@api/auth.api';
+
+const mockUser = {
+  uid: 'test_uid',
+  displayName: 'Test User',
+  email: 'test@example.com',
+};
 
 const renderWithProvidersAuthorized = (component: ReactElement) => {
-  localStorage.setItem('auth_uid', 'user_1');
+  vi.spyOn(authApi, 'getCurrentUser').mockReturnValue(mockUser);
   return render(
     <BrowserRouter>
-      <AuthProvider>{component}</AuthProvider>
+      <UIProvider>
+        <AuthProvider>{component}</AuthProvider>
+      </UIProvider>
     </BrowserRouter>
   );
 };
 
 const renderWithProvidersGuest = (component: ReactElement) => {
-  localStorage.removeItem('auth_uid');
+  vi.spyOn(authApi, 'getCurrentUser').mockReturnValue(null);
   return render(
     <BrowserRouter>
-      <AuthProvider>{component}</AuthProvider>
+      <UIProvider>
+        <AuthProvider>{component}</AuthProvider>
+      </UIProvider>
     </BrowserRouter>
   );
 };
 
 describe('Header', () => {
   afterEach(() => {
-    localStorage.clear();
+    vi.restoreAllMocks();
   });
 
   it('renders header', () => {
