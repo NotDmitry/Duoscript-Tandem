@@ -6,22 +6,16 @@ import { Header } from './Header';
 import { AuthProvider } from '@/shared/context/authContext';
 
 const renderWithProvidersAuthorized = (component: ReactElement) => {
-  localStorage.setItem(
-    'user',
-    JSON.stringify({
-      nickname: 'User',
-      accessToken: '111',
-      refreshToken: '222',
-    })
-  );
+  localStorage.setItem('auth_uid', 'user_1');
   return render(
     <BrowserRouter>
       <AuthProvider>{component}</AuthProvider>
     </BrowserRouter>
   );
 };
+
 const renderWithProvidersGuest = (component: ReactElement) => {
-  localStorage.removeItem('user');
+  localStorage.removeItem('auth_uid');
   return render(
     <BrowserRouter>
       <AuthProvider>{component}</AuthProvider>
@@ -33,6 +27,7 @@ describe('Header', () => {
   afterEach(() => {
     localStorage.clear();
   });
+
   it('renders header', () => {
     renderWithProvidersAuthorized(<Header />);
     const header = screen.getByRole('banner');
@@ -42,7 +37,6 @@ describe('Header', () => {
   it('should render logOut if User is Authorized', async () => {
     renderWithProvidersAuthorized(<Header />);
     const logOutLink = await screen.findByRole('link', { name: /logout/i });
-
     expect(logOutLink).toBeInTheDocument();
   });
 
@@ -51,6 +45,7 @@ describe('Header', () => {
     const loginLink = screen.getByText('Login');
     expect(loginLink).toHaveAttribute('href', '/login');
   });
+
   it('logs out and shows Login link', async () => {
     renderWithProvidersAuthorized(<Header />);
     const user = userEvent.setup();

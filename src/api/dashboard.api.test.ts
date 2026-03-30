@@ -1,16 +1,17 @@
 import { describe, test, expect } from 'vitest';
-import { getStats, getHistory } from './dashboard.api';
+import { getUserDashboard, getActivityHistory } from './dashboard.api';
 
 describe('dashboard API', () => {
-  test('getStats returns dashboard data', async () => {
-    const data = await getStats();
+  test('getUserDashboard returns dashboard data', async () => {
+    const data = await getUserDashboard('user_1');
 
     expect(data).toBeDefined();
-    expect(data.user).toBeDefined();
+    expect(data.displayName).toBeDefined();
+    expect(typeof data.progressPercent).toBe('number');
   });
 
-  test('getHistory returns paginated activities', async () => {
-    const data = await getHistory(1, 3);
+  test('getActivityHistory returns paginated activities', async () => {
+    const data = await getActivityHistory('user_1', 1, 3);
 
     expect(data.activities).toBeInstanceOf(Array);
     expect(data.totalPages).toBeGreaterThan(0);
