@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import type {
   LoginData,
   RegisterData,
@@ -13,7 +13,6 @@ import {
   signOut,
   updateUserProfile,
 } from '@api/auth.api';
-import { useLocation, useNavigate } from 'react-router';
 
 interface AuthContextType {
   user: UserAuthView | null;
@@ -26,17 +25,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [user, setUser] = useState<UserAuthView | null>(() => getCurrentUser());
-
-  useEffect(() => {
-    const isOnAuthPage =
-      location.pathname === '/register' || location.pathname === '/login';
-
-    if (user && isOnAuthPage) navigate('/profile');
-    if (!user && !isOnAuthPage) navigate('/login');
-  }, [user, navigate, location.pathname]);
 
   const loginFunc = async (data: LoginData): Promise<void> => {
     const authUser = await login(data);
