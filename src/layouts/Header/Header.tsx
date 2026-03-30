@@ -47,14 +47,11 @@ export function Header() {
               zIndex: 1000,
             }}
           >
-            <Nav
-              isAuthorized={user ? true : false}
-              closeMobileMenu={closeMobileMenu}
-            />
+            <Nav isAuthorized={!!user} closeMobileMenu={closeMobileMenu} />
           </Box>
         </>
       ) : (
-        <Nav isAuthorized={user ? true : false} />
+        <Nav isAuthorized={!!user} />
       )}
     </Box>
   );
