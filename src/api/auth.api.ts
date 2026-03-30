@@ -12,11 +12,9 @@ import {
   mockUpdateUser,
   mockUserEmailExists,
 } from '@/mocks/auth.mock';
+import { delay } from '@/shared/utils/delay';
 
 const SESSION_KEY = 'auth_id';
-
-const delay = (ms: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
 
 function saveUserSession(uid: string): void {
   localStorage.setItem(SESSION_KEY, uid);

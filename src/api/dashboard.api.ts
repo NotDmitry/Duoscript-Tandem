@@ -2,9 +2,7 @@ import type { UserDashboardView } from '@/shared/models/userModel';
 import type { ActivityView } from '@/shared/models/activityModel';
 import { mockUserDashboard } from '@/mocks/user.mock';
 import { mockActivityLog } from '@/mocks/activity.mock';
-
-const delay = (ms: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+import { delay } from '@/shared/utils/delay';
 
 export async function getUserDashboard(
   uid: string

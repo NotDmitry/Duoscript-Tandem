@@ -1,8 +1,6 @@
 import type { QuizConfig, WidgetView } from '@/shared/models/widgetModel';
-import { quizWidgetMocks } from '@/mocks/widgetQuiz.mock.ts';
-
-const delay = (ms: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+import { quizWidgetMocks } from '@/mocks/widgetQuiz.mock';
+import { delay } from '@/shared/utils/delay';
 
 export async function getQuizWidget(
   widgetId: string

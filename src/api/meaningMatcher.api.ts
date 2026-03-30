@@ -3,9 +3,7 @@ import type {
   WidgetView,
 } from '@/shared/models/widgetModel';
 import { meaningMatcherWidgetMocks } from '@/mocks/widgetMeaningMatcher.mock';
-
-const delay = (ms: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+import { delay } from '@/shared/utils/delay';
 
 export async function getMeaningMatcherWidget(
   widgetId: string
