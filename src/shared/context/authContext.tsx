@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { createContext, useEffect, useState } from 'react';
 import type {
-  AuthContextType,
   LoginData,
   RegisterData,
   UpdateProfileData,
@@ -15,6 +14,14 @@ import {
   updateUserProfile,
 } from '@/api/auth.api';
 import { useLocation, useNavigate } from 'react-router';
+
+interface AuthContextType {
+  user: UserAuthView | null;
+  loginFunc: (data: LoginData) => Promise<void>;
+  registerFunc: (data: RegisterData) => Promise<void>;
+  logout: () => void;
+  updateProfileFunc: (data: UpdateProfileData) => Promise<void>;
+}
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
