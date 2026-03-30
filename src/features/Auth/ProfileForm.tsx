@@ -3,12 +3,9 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  type ProfileFields,
-  profileSchema,
-} from '@/shared/schemas/authSchemas.ts';
-import { useSubmit } from '@/shared/hooks/useSubmit.ts';
-import { useAuth } from '@/shared/hooks/useAuth.ts';
+import { type ProfileFields, profileSchema } from '@schemas/authSchemas';
+import { useSubmit } from '@hooks/useSubmit';
+import { useAuth } from '@hooks/useAuth';
 
 interface ProfileFormProps {
   displayName: string;

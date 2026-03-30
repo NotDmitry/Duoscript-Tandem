@@ -1,4 +1,4 @@
-import type { ActivityView } from '@/shared/models/activityModel';
+import type { ActivityView } from '@models/activityModel';
 
 export const mockActivityLog: ActivityView[] = [
   {

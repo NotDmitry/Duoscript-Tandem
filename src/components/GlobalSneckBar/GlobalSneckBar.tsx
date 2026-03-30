@@ -1,5 +1,4 @@
-// GlobalSnackbar.tsx
-import { useUI } from '@/shared/hooks/useUI';
+import { useUI } from '@hooks/useUI';
 import { Snackbar, Alert } from '@mui/material';
 
 export const GlobalSnackbar = () => {

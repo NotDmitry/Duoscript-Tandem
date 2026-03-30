@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router';
 import type { ReactElement } from 'react';
-import { RegisterForm } from '@/features/Auth/RegisterForm.tsx';
-import { AuthProvider } from '@/shared/context/authContext.tsx';
-import { UIProvider } from '@/shared/context/UIContext.tsx';
+import { RegisterForm } from '@features/Auth/RegisterForm';
+import { AuthProvider } from '@context/authContext';
+import { UIProvider } from '@context/UIContext';
 
 const renderWithProviders = (component: ReactElement) => {
   return render(

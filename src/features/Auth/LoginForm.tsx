@@ -11,9 +11,9 @@ import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type LogInFields, logInSchema } from '@/shared/schemas/authSchemas.ts';
-import { useSubmit } from '@/shared/hooks/useSubmit.ts';
-import { useAuth } from '@/shared/hooks/useAuth.ts';
+import { type LogInFields, logInSchema } from '@schemas/authSchemas';
+import { useSubmit } from '@hooks/useSubmit';
+import { useAuth } from '@hooks/useAuth';
 
 export function LoginForm() {
   const { loginFunc } = useAuth();

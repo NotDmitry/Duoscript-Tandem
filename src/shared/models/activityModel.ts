@@ -1,5 +1,5 @@
 import type { Timestamp } from 'firebase/firestore';
-import type { WidgetType } from '@/shared/models/widgetModel.ts';
+import type { WidgetType } from '@models/widgetModel';
 
 export type ActivityStatus = 'completed' | 'in_progress';
 

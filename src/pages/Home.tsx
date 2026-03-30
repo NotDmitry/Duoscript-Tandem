@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { useAuth } from '@/shared/hooks/useAuth.ts';
+import { useAuth } from '@hooks/useAuth';
 import { Box, Button, Typography } from '@mui/material';
 
 const GREETING = 'Hello dear';

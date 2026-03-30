@@ -2,12 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import type {
   CompletedResult,
   MeaningMatcherProps,
-} from '@/features/MeaningMatcher/MeaningMatcher.types';
-import { getMeaningMatcherWidget } from '@/api/meaningMatcher.api';
+} from '@features/MeaningMatcher/MeaningMatcher.types';
+import { getMeaningMatcherWidget } from '@api/meaningMatcher.api';
 import type {
   MeaningMatcherConfig,
   MeaningMatcherDifficulty,
-} from '@/shared/models/widgetModel';
+} from '@models/widgetModel';
 
 const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 

@@ -1,8 +1,8 @@
 /* @vitest-environment jsdom */
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { describe, beforeEach, it, expect, vi } from 'vitest';
-import { useWidgetQuiz } from './useWidgetQuiz.ts';
-import type { WidgetView, QuizConfig } from '@/shared/models/widgetModel';
+import { useWidgetQuiz } from './useWidgetQuiz';
+import type { WidgetView, QuizConfig } from '@models/widgetModel';
 
 const mockWidgetData: WidgetView<QuizConfig> = {
   widgetId: 'widget_quiz_test',

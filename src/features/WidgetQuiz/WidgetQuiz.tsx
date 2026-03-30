@@ -9,7 +9,7 @@ import {
   Button,
 } from '@mui/material';
 import { blue, grey } from '@mui/material/colors';
-import { useWidgetQuiz } from './useWidgetQuiz.ts';
+import { useWidgetQuiz } from './useWidgetQuiz';
 
 interface WidgetQuizProps {
   widgetId: string;

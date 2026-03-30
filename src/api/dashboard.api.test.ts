@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { getUserDashboard, getActivityHistory } from './dashboard.api';
+import { getUserDashboard, getActivityHistory } from '@api/dashboard.api';
 
 describe('dashboard API', () => {
   test('getUserDashboard returns dashboard data', async () => {

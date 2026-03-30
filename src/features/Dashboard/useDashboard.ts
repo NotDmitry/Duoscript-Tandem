@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getUserDashboard } from '@/api/dashboard.api';
-import type { UserDashboardView } from '@/shared/models/userModel';
+import { getUserDashboard } from '@api/dashboard.api';
+import type { UserDashboardView } from '@models/userModel';
 
 export function useDashboard(uid: string) {
   const [dashboardData, setDashboardData] = useState<UserDashboardView | null>(

@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router';
-import { Footer } from '@/layouts/Footer/Footer.tsx';
+import { Footer } from '@layouts/Footer/Footer';
 import { Header } from './Header/Header';
 import { Box } from '@mui/material';
 

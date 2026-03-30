@@ -1,4 +1,4 @@
-import { LoginForm } from '@/features/Auth/LoginForm.tsx';
+import { LoginForm } from '@features/Auth/LoginForm';
 
 function Login() {
   return <LoginForm />;

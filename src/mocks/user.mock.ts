@@ -1,4 +1,4 @@
-import type { UserDashboardView } from '@/shared/models/userModel';
+import type { UserDashboardView } from '@models/userModel';
 
 export const mockUserDashboard: UserDashboardView = {
   uid: 'user_1',

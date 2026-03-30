@@ -1,8 +1,8 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { useActivityHistory } from './useActivityHistory';
-import * as api from '@/api/dashboard.api';
+import * as api from '@api/dashboard.api';
 import { describe, test, expect, vi } from 'vitest';
-import type { ActivityView } from '@/shared/models/activityModel';
+import type { ActivityView } from '@models/activityModel';
 
 describe('useActivityHistory', () => {
   const mockActivity: ActivityView = {

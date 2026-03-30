@@ -1,5 +1,5 @@
 import { Box, Typography, Stack } from '@mui/material';
-import type { ActivityView } from '@/shared/models/activityModel';
+import type { ActivityView } from '@models/activityModel';
 
 export interface Props {
   activities: ActivityView[];

@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import type {
-  QuizConfig,
-  QuizQuestion,
-  UserAnswer,
-} from '@/shared/models/widgetModel';
-import { getQuizWidget } from '@/api/widgetQuiz.api';
+import type { QuizConfig, QuizQuestion, UserAnswer } from '@models/widgetModel';
+import { getQuizWidget } from '@api/widgetQuiz.api';
 
 export function useWidgetQuiz(widgetId: string) {
   const savedWidgetId = useRef(widgetId);

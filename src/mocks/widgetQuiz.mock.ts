@@ -1,4 +1,4 @@
-import type { WidgetView, QuizConfig } from '@/shared/models/widgetModel';
+import type { WidgetView, QuizConfig } from '@models/widgetModel';
 
 const htmlQuizWidget: WidgetView<QuizConfig> = {
   widgetId: 'widget_quiz_html',

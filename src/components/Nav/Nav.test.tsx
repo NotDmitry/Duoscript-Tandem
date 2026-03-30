@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router';
 import type { ReactElement } from 'react';
 import { Nav } from './Nav';
-import { AuthProvider } from '@/shared/context/authContext';
+import { AuthProvider } from '@context/authContext';
 
 const renderWithProviders = (component: ReactElement) => {
   return render(

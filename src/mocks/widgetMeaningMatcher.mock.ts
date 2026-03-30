@@ -1,7 +1,4 @@
-import type {
-  WidgetView,
-  MeaningMatcherConfig,
-} from '@/shared/models/widgetModel';
+import type { WidgetView, MeaningMatcherConfig } from '@models/widgetModel';
 
 const htmlMatcherWidget: WidgetView<MeaningMatcherConfig> = {
   widgetId: 'widget_matcher_html',

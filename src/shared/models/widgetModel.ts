@@ -1,5 +1,5 @@
 import type { Timestamp } from 'firebase/firestore';
-import type { CourseTag } from '@/shared/models/courseModel.ts';
+import type { CourseTag } from '@models/courseModel';
 
 export type WidgetType = 'quiz' | 'meaningMatcher';
 

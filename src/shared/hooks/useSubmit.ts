@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { useUI } from './useUI';
+import { useUI } from '@hooks/useUI';
 
 interface UseAuthSubmitOptions {
   successMessage: string;

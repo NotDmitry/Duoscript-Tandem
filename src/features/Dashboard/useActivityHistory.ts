@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getActivityHistory } from '@/api/dashboard.api';
-import type { ActivityView } from '@/shared/models/activityModel';
+import { getActivityHistory } from '@api/dashboard.api';
+import type { ActivityView } from '@models/activityModel';
 
 export function useActivityHistory(uid: string, itemsPerPage: number) {
   const [activities, setActivities] = useState<ActivityView[]>([]);

@@ -1,4 +1,4 @@
-import type { MeaningMatcherDifficulty } from '@/shared/models/widgetModel';
+import type { MeaningMatcherDifficulty } from '@models/widgetModel';
 
 export interface CompletedResult {
   difficulty: MeaningMatcherDifficulty;

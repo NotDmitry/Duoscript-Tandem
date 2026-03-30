@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router';
 import type { ReactElement } from 'react';
 import { Header } from './Header';
-import { AuthProvider } from '@/shared/context/authContext';
+import { AuthProvider } from '@context/authContext';
 
 const renderWithProvidersAuthorized = (component: ReactElement) => {
   localStorage.setItem('auth_uid', 'user_1');

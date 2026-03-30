@@ -1,9 +1,9 @@
-import type { UserAuthView } from '@/shared/models/userModel';
+import type { UserAuthView } from '@models/userModel';
 import type {
   LoginData,
   RegisterData,
   UpdateProfileData,
-} from '@/shared/types/auth.types';
+} from '@shared-types/auth.types';
 import {
   mockGetUidByEmail,
   mockGetUserByUid,
@@ -11,8 +11,8 @@ import {
   mockRegisterUser,
   mockUpdateUser,
   mockUserEmailExists,
-} from '@/mocks/auth.mock';
-import { delay } from '@/shared/utils/delay';
+} from '@mocks/auth.mock';
+import { delay } from '@utils/delay';
 
 const SESSION_KEY = 'auth_id';
 

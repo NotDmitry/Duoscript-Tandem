@@ -1,7 +1,7 @@
 import { Box, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { keyframes } from '@emotion/react';
-import spongebobImg from '@/assets/images/Spongebob_1500x1500.png';
+import spongebobImg from '@assets/images/Spongebob_1500x1500.png';
 
 const wobble = keyframes`
   0%, 100% { transform: rotate(-2deg); }

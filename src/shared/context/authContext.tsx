@@ -4,15 +4,15 @@ import type {
   LoginData,
   RegisterData,
   UpdateProfileData,
-} from '@/shared/types/auth.types';
-import type { UserAuthView } from '@/shared/models/userModel';
+} from '@shared-types/auth.types';
+import type { UserAuthView } from '@models/userModel';
 import {
   getCurrentUser,
   login,
   register,
   signOut,
   updateUserProfile,
-} from '@/api/auth.api';
+} from '@api/auth.api';
 import { useLocation, useNavigate } from 'react-router';
 
 interface AuthContextType {

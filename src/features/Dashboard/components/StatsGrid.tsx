@@ -1,6 +1,6 @@
 import { Box, Typography, Grid } from '@mui/material';
-import type { UserDashboardView } from '@/shared/models/userModel';
-import StatCard from '@/components/StatCard/StatCard';
+import type { UserDashboardView } from '@models/userModel';
+import StatCard from '@components/StatCard/StatCard';
 
 export interface Props {
   data: UserDashboardView;

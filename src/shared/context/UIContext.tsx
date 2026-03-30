@@ -1,14 +1,17 @@
 import { createContext, useState } from 'react';
 import type { ReactNode } from 'react';
+
 interface UIContextType {
   toast: ToastType | null;
   showToast: (message: string, type: 'error' | 'success') => void;
   clearToast: () => void;
 }
+
 interface ToastType {
   type: 'error' | 'success';
   message: string;
 }
+
 const UIContext = createContext<UIContextType | null>(null);
 
 export const UIProvider = ({ children }: { children: ReactNode }) => {

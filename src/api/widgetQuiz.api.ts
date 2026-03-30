@@ -1,6 +1,6 @@
-import type { QuizConfig, WidgetView } from '@/shared/models/widgetModel';
-import { quizWidgetMocks } from '@/mocks/widgetQuiz.mock';
-import { delay } from '@/shared/utils/delay';
+import type { QuizConfig, WidgetView } from '@models/widgetModel';
+import { quizWidgetMocks } from '@mocks/widgetQuiz.mock';
+import { delay } from '@utils/delay';
 
 export async function getQuizWidget(
   widgetId: string

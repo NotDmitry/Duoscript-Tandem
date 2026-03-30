@@ -5,7 +5,7 @@ import { Box, Button, Paper, Typography } from '@mui/material';
 import type {
   MatcherPair,
   MeaningMatcherDifficulty,
-} from '@/shared/models/widgetModel';
+} from '@models/widgetModel';
 
 const OPTIONS_ZONE_ID = 'options';
 const DIFFICULTIES: MeaningMatcherDifficulty[] = ['easy', 'medium', 'hard'];

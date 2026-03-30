@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router';
 import type { ReactElement } from 'react';
-import { LoginForm } from '@/features/Auth/LoginForm.tsx';
-import { AuthProvider } from '@/shared/context/authContext.tsx';
+import { LoginForm } from '@features/Auth/LoginForm';
+import { AuthProvider } from '@context/authContext';
 import { vi } from 'vitest';
-import * as Hook from '@/shared/hooks/useSubmit.ts';
+import * as Hook from '@hooks/useSubmit';
 import userEvent from '@testing-library/user-event';
-import { UIProvider } from '@/shared/context/UIContext.tsx';
+import { UIProvider } from '@context/UIContext';
 
 const renderWithProviders = (component: ReactElement) => {
   return render(

@@ -1,12 +1,11 @@
 import { Box, Button, Grid, Typography, Pagination } from '@mui/material';
 import { Link } from 'react-router';
-import { useActivityHistory } from '@/features/Dashboard/useActivityHistory';
-import { useAuth } from '@/shared/hooks/useAuth';
-import { useDashboard } from '@/features/Dashboard/useDashboard';
-
-import ProgressCard from '@/components/ProgressCard/ProgressCard';
-import StatsGrid from '../features/Dashboard/components/StatsGrid';
-import RecentActivity from '../features/Dashboard/components/RecentActivity';
+import { useActivityHistory } from '@features/Dashboard/useActivityHistory';
+import { useAuth } from '@hooks/useAuth';
+import { useDashboard } from '@features/Dashboard/useDashboard';
+import ProgressCard from '@components/ProgressCard/ProgressCard';
+import StatsGrid from '@features/Dashboard/components/StatsGrid';
+import RecentActivity from '@features/Dashboard/components/RecentActivity';
 
 function Dashboard() {
   const { user } = useAuth();
