@@ -84,8 +84,8 @@ export function RegisterForm() {
         />
 
         <TextField
-          label="Display name"
-          placeholder="Display name"
+          label="Username"
+          placeholder="Username"
           type="text"
           required
           fullWidth

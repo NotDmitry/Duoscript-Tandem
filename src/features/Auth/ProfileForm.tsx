@@ -86,8 +86,8 @@ export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
         />
 
         <TextField
-          label="New display name"
-          placeholder="New display name"
+          label="New username"
+          placeholder="New username"
           type="text"
           required
           fullWidth
