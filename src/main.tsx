@@ -1,9 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App/App.tsx';
+import App from './App/App';
 import { BrowserRouter } from 'react-router';
-import { AuthProvider } from './shared/context/authContext.tsx';
-import { UIProvider } from './shared/context/UIContext.tsx';
+import { AuthProvider } from '@context/authContext';
+import { UIProvider } from '@context/UIContext';
 
 const root: HTMLElement | null = document.getElementById('root');
 if (root) {

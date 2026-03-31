@@ -1,23 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
-import type {
-  QuizProps,
-  QuizType,
-  QuizQuestion,
-  UserAnswer,
-} from '@/features/WidgetQuiz/WidgetQuiz.types.ts';
-import getQuizData from '@/api/widgetQuiz.api.ts';
+import { useEffect, useRef, useState } from 'react';
+import type { QuizConfig, QuizQuestion, UserAnswer } from '@models/widgetModel';
+import { getQuizWidget } from '@api/widgetQuiz.api';
 
-export function useWidgetQuiz(quizType: QuizType) {
-  const savedQuizType = useRef(quizType);
+export function useWidgetQuiz(widgetId: string) {
+  const savedWidgetId = useRef(widgetId);
   const [isLoading, setIsLoading] = useState(true);
   const [quizName, setQuizName] = useState<string>('');
   const [quizTask, setQuizTask] = useState<QuizQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswerIndex, setSelectedAnswer] = useState<UserAnswer>(null);
+  const [selectedAnswerIndex, setSelectedAnswerIndex] =
+    useState<UserAnswer>(null);
   const [quizAnswers, setQuizAnswers] = useState<UserAnswer[]>([]);
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
   const [failedQuiz, setFailedQuiz] = useState<QuizQuestion[]>([]);
-  const [isFinish, setFinish] = useState<boolean>(false);
+  const [isFinish, setIsFinish] = useState<boolean>(false);
 
   const questionsCount = quizTask.length;
   const currentQuestion = quizTask[currentQuestionIndex];
@@ -25,12 +21,13 @@ export function useWidgetQuiz(quizType: QuizType) {
   useEffect(() => {
     const loadQuizData = async () => {
       try {
-        const quizData: QuizProps = await getQuizData(savedQuizType.current);
-        setQuizName(quizData.quizName);
-        setQuizTask(quizData.questions);
-        setQuizAnswers(quizData.rightAnswers);
+        const widget = await getQuizWidget(savedWidgetId.current);
+        const config: QuizConfig = widget.config;
+        setQuizName(config.quizName);
+        setQuizTask(config.questions);
+        setQuizAnswers(config.rightAnswers);
       } catch {
-        console.error('Failed to load data');
+        console.error('Failed to load quiz widget');
       } finally {
         setIsLoading(false);
       }
@@ -39,7 +36,7 @@ export function useWidgetQuiz(quizType: QuizType) {
   }, []);
 
   function handleAnswerSelect(answerIndex: UserAnswer) {
-    setSelectedAnswer(answerIndex);
+    setSelectedAnswerIndex(answerIndex);
   }
 
   function handleNext() {
@@ -60,11 +57,11 @@ export function useWidgetQuiz(quizType: QuizType) {
       setUserAnswers((prevAnswers) => [...prevAnswers, currentQuestionIndex]);
     }
 
-    setSelectedAnswer(null);
+    setSelectedAnswerIndex(null);
     if (currentQuestionIndex < questionsCount - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      setFinish(true);
+      setIsFinish(true);
       console.log(updatedAnswers);
     }
   }

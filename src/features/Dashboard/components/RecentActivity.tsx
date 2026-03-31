@@ -1,8 +1,8 @@
 import { Box, Typography, Stack } from '@mui/material';
-import type { ActivityItem } from '../Dashboard.types';
+import type { ActivityView } from '@models/activityModel';
 
 export interface Props {
-  activities: ActivityItem[];
+  activities: ActivityView[];
 }
 
 export default function RecentActivity({ activities }: Props) {
@@ -35,15 +35,14 @@ export default function RecentActivity({ activities }: Props) {
               }}
             >
               <Typography variant="subtitle2" fontWeight={600}>
-                {item.course}
+                {item.courseTitle}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {item.widget} ({item.type})
+                {item.lessonTitle} ({item.widgetType})
               </Typography>
               <Typography variant="body2">
                 Score: {item.score}/{item.maxScore}
               </Typography>
-
               <Typography variant="caption" color="text.secondary">
                 {new Date(item.createdAt).toLocaleString()} • {item.status}
               </Typography>

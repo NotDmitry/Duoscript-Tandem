@@ -1,19 +1,12 @@
-import { getUserNameFromLS } from '@/api/auth.api';
-import AuthForm from '@/components/AuthForm/AuthForm';
 import { useState } from 'react';
+import { useAuth } from '@hooks/useAuth';
+import { ProfileForm } from '@features/Auth/ProfileForm';
 
 function Profile() {
-  const [name, setName] = useState(getUserNameFromLS());
+  const { user } = useAuth();
+  const [displayName, setDisplayName] = useState(user?.displayName ?? '');
 
-  return (
-    <AuthForm
-      mode="PROFILE"
-      profileTitle={name}
-      onProfileUpdate={(newName: string) => {
-        setName(newName);
-      }}
-    />
-  );
+  return <ProfileForm displayName={displayName} onUpdate={setDisplayName} />;
 }
 
 export default Profile;

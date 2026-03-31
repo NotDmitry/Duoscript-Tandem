@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router';
-import { useAuth } from '@/shared/hooks/useAuth.ts';
-import { getUserNameFromLS } from '@/api/auth.api.ts';
-import { Box, Typography, Button } from '@mui/material';
+import { useAuth } from '@hooks/useAuth';
+import { Box, Button, Typography } from '@mui/material';
 
 const GREETING = 'Hello dear';
 const DEFAULT_USERNAME = 'developer';
@@ -25,8 +24,8 @@ const images = [
 function Home() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const userName: string =
-    user !== null ? getUserNameFromLS() : DEFAULT_USERNAME;
+  const displayName: string = user?.displayName ?? DEFAULT_USERNAME;
+
   return (
     <Box
       sx={{
@@ -46,7 +45,7 @@ function Home() {
           textTransform: 'uppercase',
         }}
       >
-        {GREETING} {userName}
+        {GREETING} {displayName}
       </Typography>
       <Typography
         textAlign="center"

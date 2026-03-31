@@ -1,10 +1,10 @@
-import { Logo } from '@/components/Logo/Logo';
-import { Nav } from '@/components/Nav/Nav';
+import { Logo } from '@components/Logo/Logo';
+import { Nav } from '@components/Nav/Nav';
 import { useState } from 'react';
 import { Box, useMediaQuery } from '@mui/material';
 import DragHandleTwoToneIcon from '@mui/icons-material/DragHandleTwoTone';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
-import { useAuth } from '@/shared/hooks/useAuth';
+import { useAuth } from '@hooks/useAuth';
 
 export function Header() {
   const { user } = useAuth();
@@ -47,14 +47,11 @@ export function Header() {
               zIndex: 1000,
             }}
           >
-            <Nav
-              isAuthorized={user ? true : false}
-              closeMobileMenu={closeMobileMenu}
-            />
+            <Nav isAuthorized={!!user} closeMobileMenu={closeMobileMenu} />
           </Box>
         </>
       ) : (
-        <Nav isAuthorized={user ? true : false} />
+        <Nav isAuthorized={!!user} />
       )}
     </Box>
   );

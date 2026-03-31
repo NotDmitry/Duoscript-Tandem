@@ -1,63 +1,28 @@
-import type {
-  DashboardData,
-  ActivityItem,
-} from '@/features/Dashboard/Dashboard.types';
-import { dashboardMock } from '@/features/Dashboard/Dashboard.mock';
+import type { UserDashboardView } from '@models/userModel';
+import type { ActivityView } from '@models/activityModel';
+import { mockUserDashboard } from '@mocks/user.mock';
+import { mockActivityLog } from '@mocks/activity.mock';
+import { delay } from '@utils/delay';
 
-let USE_MOCK = true;
+export async function getUserDashboard(
+  uid: string
+): Promise<UserDashboardView> {
+  await delay(300);
+  void uid;
+  return mockUserDashboard;
+}
 
-export const setUseMock = (value: boolean): void => {
-  USE_MOCK = value;
-};
-
-const asyncMock = <T>(data: T, delayMs = 300): Promise<T> =>
-  new Promise((resolve) => {
-    setTimeout((): void => {
-      resolve(data);
-    }, delayMs);
-  });
-
-export const getStats = async (): Promise<DashboardData> => {
-  if (USE_MOCK) {
-    return asyncMock(dashboardMock);
-  }
-
-  return fetch('/api/dashboard/stats').then((res): Promise<DashboardData> => {
-    if (!res.ok) {
-      throw new Error('Failed to fetch stats');
-    }
-
-    return res.json();
-  });
-};
-
-export const getHistory = async (
+export async function getActivityHistory(
+  uid: string,
   page: number,
   itemsPerPage: number
-): Promise<{ activities: ActivityItem[]; totalPages: number }> => {
-  if (USE_MOCK) {
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+): Promise<{ activities: ActivityView[]; totalPages: number }> {
+  await delay(300);
+  void uid;
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
 
-    const paginatedActivities = dashboardMock.recentActivity.slice(
-      startIndex,
-      endIndex
-    );
-
-    const totalPages = Math.ceil(
-      dashboardMock.recentActivity.length / itemsPerPage
-    );
-
-    return asyncMock({ activities: paginatedActivities, totalPages });
-  }
-
-  return fetch(
-    `/api/dashboard/history?page=${page.toString()}&limit=${itemsPerPage.toString()}`
-  ).then((res): Promise<{ activities: ActivityItem[]; totalPages: number }> => {
-    if (!res.ok) {
-      throw new Error('Failed to fetch history');
-    }
-
-    return res.json();
-  });
-};
+  const activities = mockActivityLog.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(mockActivityLog.length / itemsPerPage);
+  return { activities, totalPages };
+}

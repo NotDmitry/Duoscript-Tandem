@@ -9,10 +9,13 @@ import {
   Button,
 } from '@mui/material';
 import { blue, grey } from '@mui/material/colors';
-import type { QuizType } from './WidgetQuiz.types.ts';
-import { useWidgetQuiz } from '@/shared/hooks/useWidgetQuiz.ts';
+import { useWidgetQuiz } from './useWidgetQuiz';
 
-function WidgetQuiz(quizType: QuizType) {
+interface WidgetQuizProps {
+  widgetId: string;
+}
+
+function WidgetQuiz({ widgetId }: WidgetQuizProps) {
   const {
     isLoading,
     isFinish,
@@ -25,7 +28,7 @@ function WidgetQuiz(quizType: QuizType) {
     handleAnswerSelect,
     handleNext,
     handleSkip,
-  } = useWidgetQuiz(quizType);
+  } = useWidgetQuiz(widgetId);
   if (isLoading) {
     return (
       <Container

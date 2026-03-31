@@ -1,9 +1,9 @@
 import { Box, Typography, Grid } from '@mui/material';
-import type { DashboardData } from '@/features/Dashboard/Dashboard.types';
-import StatCard from '@/components/StatCard/StatCard';
+import type { UserDashboardView } from '@models/userModel';
+import StatCard from '@components/StatCard/StatCard';
 
 export interface Props {
-  data: DashboardData;
+  data: UserDashboardView;
 }
 
 export default function StatsGrid({ data }: Props) {
@@ -14,16 +14,13 @@ export default function StatsGrid({ data }: Props) {
       </Typography>
       <Grid container spacing={2}>
         <Grid size={{ xs: 4 }}>
-          <StatCard title=" ⏱ Minutes" value={data.learningToday.minutes} />
+          <StatCard title=" ⏱ Minutes" value={data.minutesSpent} />
         </Grid>
         <Grid size={{ xs: 4 }}>
-          <StatCard
-            title="✔ Activities"
-            value={data.learningToday.activities}
-          />
+          <StatCard title="✔ Activities" value={data.activitiesCompleted} />
         </Grid>
         <Grid size={{ xs: 4 }}>
-          <StatCard title="🔥 Streak" value={data.learningToday.streak} />
+          <StatCard title="🔥 Streak" value={data.currentStreak} />
         </Grid>
       </Grid>
     </Box>

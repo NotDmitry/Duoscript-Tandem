@@ -3,36 +3,44 @@ import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router';
 import type { ReactElement } from 'react';
 import { Header } from './Header';
-import { AuthProvider } from '@/shared/context/authContext';
+import { AuthProvider } from '@context/authContext';
+import { UIProvider } from '@context/UIContext';
+import { vi } from 'vitest';
+import * as authApi from '@api/auth.api';
+
+const mockUser = {
+  uid: 'test_uid',
+  displayName: 'Test User',
+  email: 'test@example.com',
+};
 
 const renderWithProvidersAuthorized = (component: ReactElement) => {
-  localStorage.setItem(
-    'user',
-    JSON.stringify({
-      nickname: 'User',
-      accessToken: '111',
-      refreshToken: '222',
-    })
-  );
+  vi.spyOn(authApi, 'getCurrentUser').mockReturnValue(mockUser);
   return render(
     <BrowserRouter>
-      <AuthProvider>{component}</AuthProvider>
+      <UIProvider>
+        <AuthProvider>{component}</AuthProvider>
+      </UIProvider>
     </BrowserRouter>
   );
 };
+
 const renderWithProvidersGuest = (component: ReactElement) => {
-  localStorage.removeItem('user');
+  vi.spyOn(authApi, 'getCurrentUser').mockReturnValue(null);
   return render(
     <BrowserRouter>
-      <AuthProvider>{component}</AuthProvider>
+      <UIProvider>
+        <AuthProvider>{component}</AuthProvider>
+      </UIProvider>
     </BrowserRouter>
   );
 };
 
 describe('Header', () => {
   afterEach(() => {
-    localStorage.clear();
+    vi.restoreAllMocks();
   });
+
   it('renders header', () => {
     renderWithProvidersAuthorized(<Header />);
     const header = screen.getByRole('banner');
@@ -42,7 +50,6 @@ describe('Header', () => {
   it('should render logOut if User is Authorized', async () => {
     renderWithProvidersAuthorized(<Header />);
     const logOutLink = await screen.findByRole('link', { name: /logout/i });
-
     expect(logOutLink).toBeInTheDocument();
   });
 
@@ -51,6 +58,7 @@ describe('Header', () => {
     const loginLink = screen.getByText('Login');
     expect(loginLink).toHaveAttribute('href', '/login');
   });
+
   it('logs out and shows Login link', async () => {
     renderWithProvidersAuthorized(<Header />);
     const user = userEvent.setup();

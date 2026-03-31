@@ -1,10 +1,12 @@
 import { Box, useMediaQuery } from '@mui/material';
-import { AppLink } from '../AppLink/AppLink';
-import { useAuth } from '@/shared/hooks/useAuth';
+import { AppLink } from '@components/AppLink/AppLink';
+import { useAuth } from '@hooks/useAuth';
+
 interface NavItem {
   label: string;
   href: string;
 }
+
 interface NavProps {
   isAuthorized: boolean;
   closeMobileMenu?: () => void;

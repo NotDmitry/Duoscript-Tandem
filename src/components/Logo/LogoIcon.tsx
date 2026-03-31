@@ -1,4 +1,5 @@
 import { SvgIcon } from '@mui/material';
+
 export function LogoIcon() {
   return (
     <SvgIcon viewBox="0 0 24 24">

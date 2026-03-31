@@ -1,5 +1,5 @@
 import { Box, Container } from '@mui/material';
-import { AppLink } from '@/components/AppLink/AppLink';
+import { AppLink } from '@components/AppLink/AppLink';
 
 export function Footer() {
   return (
