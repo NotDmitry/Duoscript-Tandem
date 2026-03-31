@@ -137,9 +137,28 @@ export default function AsyncSorter() {
           </Stack>
         </Paper>
       </Container>
-      <Typography gutterBottom sx={{ textAlign: 'center', m: 2 }}>
+      <Typography
+        id="async-sorter-dnd-title"
+        gutterBottom
+        sx={{ textAlign: 'center', m: 2 }}
+      >
         Drag the blocks into the correct queues:
       </Typography>
+      <Box
+        id="async-sorter-dnd-instructions"
+        sx={{
+          position: 'absolute',
+          width: 1,
+          height: 1,
+          overflow: 'hidden',
+          clip: 'rect(0 0 0 0)',
+        }}
+      >
+        Use left/right arrow keys to move between zones and blocks, ud/down
+        arrow to get into/out zone. Press Enter to select a block, then move to
+        a queue and press Enter to drop it. Use tab to move to submit button,
+        when all the blocks are placed in queues
+      </Box>
       <Source
         onSourceContainerRef={setSourceContainerRef}
         handleZoneKeyDown={handleZoneKeyDown}
@@ -175,12 +194,14 @@ export default function AsyncSorter() {
               return item + '  ';
             })}
         </Paper>
-        {isCorrectSolved && (
-          <Typography color="success">Your answer is correct</Typography>
-        )}
-        {isIncorrectSolved && (
-          <Typography color="error">Your answer is incorrect</Typography>
-        )}
+        <Box role="status" aria-live="polite" aria-atomic="true">
+          {isCorrectSolved && (
+            <Typography color="success">Your answer is correct</Typography>
+          )}
+          {isIncorrectSolved && (
+            <Typography color="error">Your answer is incorrect</Typography>
+          )}
+        </Box>
       </Container>
       <ButtonsBox
         isSubmitClicked={isSubmitClicked}

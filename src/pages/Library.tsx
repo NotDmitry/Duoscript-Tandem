@@ -1,5 +1,7 @@
+import AsyncSorter from '@/features/Async-sorter/AsyncSorter';
+
 function Library() {
-  return <div>Library Page</div>;
+  return <AsyncSorter></AsyncSorter>;
 }
 
 export default Library;

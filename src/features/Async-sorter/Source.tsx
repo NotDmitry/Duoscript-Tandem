@@ -36,6 +36,9 @@ export default function Source({
     <Container>
       <Paper
         ref={onSourceContainerRef}
+        role="region"
+        aria-labelledby="async-sorter-dnd-title"
+        aria-describedby="async-sorter-dnd-instructions"
         tabIndex={0}
         onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>): void => {
           handleZoneKeyDown(e, 'source', 0, 0);
@@ -52,6 +55,9 @@ export default function Source({
                   onSourceItemRef(index, el);
                 }}
                 tabIndex={0}
+                role="button"
+                aria-pressed={isDragging}
+                aria-describedby="async-sorter-dnd-instructions"
                 onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>): void => {
                   handleItemKeyDown(e, item, 'source', index);
                 }}

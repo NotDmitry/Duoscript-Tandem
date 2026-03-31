@@ -49,6 +49,10 @@ export const useAsyncA11y = (
     e.preventDefault();
     e.stopPropagation();
     switch (e.key) {
+      case 'Escape':
+        setSelectedItem(null);
+        setDraggedItem(null);
+        break;
       case 'Enter':
         setSelectedItem(item);
         setDraggedItem(item);
@@ -70,6 +74,13 @@ export const useAsyncA11y = (
     insertBefore: number,
     index: number
   ) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
+      setSelectedItem(null);
+      setDraggedItem(null);
+      return;
+    }
     const zoneIndex = focusZones.indexOf(zone);
 
     if (e.key === 'ArrowLeft') {
