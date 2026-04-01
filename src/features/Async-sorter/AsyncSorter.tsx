@@ -126,7 +126,7 @@ export default function AsyncSorter() {
   return (
     <AsyncSorterContainer>
       <Typography gutterBottom sx={{ textAlign: 'center', m: 2 }}>
-        In what order will 'console.log' be output?
+        What is the order of the console output?
       </Typography>
       <Container>
         <Paper square={false} sx={{ p: 3, backgroundColor: '#f0f0f0' }}>
