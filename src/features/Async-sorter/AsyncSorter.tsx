@@ -16,7 +16,7 @@ import {
   type Zone,
 } from './types';
 import AsyncSorterContainer from './AsyncSorterContainer';
-import { useDragAndDrop } from '@/shared/hooks/useDragAndDrop';
+import { useDragAndDrop } from './useDragAndDrop';
 import { AsyncSorterResults } from './AsyncSorterResults';
 import { useAsyncA11y } from './useAsyncA11y';
 import { useAsyncSorterApi } from './useAsynsSorterApi';
