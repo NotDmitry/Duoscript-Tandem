@@ -8,11 +8,14 @@ import {
   Select,
   Typography,
 } from '@mui/material';
-import type { QuizType } from './WidgetBugHunter.types.ts';
 import { blue, grey } from '@mui/material/colors';
-import { useWidgetBugHunter } from '@/shared/hooks/useWidgetBugHunter.ts';
+import { useWidgetBugHunter } from '@features/WidgetBugHunter/useWidgetBugHunter.ts';
 
-function WidgetBugHunter(quizType: QuizType) {
+interface WidgetBugHunterProps {
+  widgetId: string;
+}
+
+function WidgetBugHunter({ widgetId }: WidgetBugHunterProps) {
   const {
     isLoading,
     quizName,
@@ -26,7 +29,7 @@ function WidgetBugHunter(quizType: QuizType) {
     handleSelect,
     handleNext,
     handleSkip,
-  } = useWidgetBugHunter(quizType);
+  } = useWidgetBugHunter(widgetId);
 
   if (isLoading) {
     return (
