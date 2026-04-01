@@ -1,7 +1,7 @@
 import type { Timestamp } from 'firebase/firestore';
 import type { CourseTag } from '@models/courseModel';
 
-export type WidgetType = 'quiz' | 'meaningMatcher';
+export type WidgetType = 'quiz' | 'meaningMatcher' | 'bugHunter';
 
 export interface WidgetDocument<T> {
   widgetId: string;
@@ -28,6 +28,19 @@ export interface QuizConfig {
   quizName: string;
   questions: QuizQuestion[];
   rightAnswers: UserAnswer[];
+}
+
+// Bug Hunter Widget
+
+export interface BugHunterTask {
+  code: string;
+  answers: string[][];
+}
+
+export interface BugHunterConfig {
+  quizName: string;
+  questions: BugHunterTask[];
+  rightAnswers: string[];
 }
 
 // Meaning Matcher Widget
