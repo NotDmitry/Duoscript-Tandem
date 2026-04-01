@@ -52,7 +52,6 @@ export function AsyncSorterResults({
 
       <Paper>
         <Typography color="error" sx={{ textAlign: 'center', m: 2, pt: 2 }}>
-          {' '}
           Incorrect solved or skipped tasks
         </Typography>
         {Array.from(unsolvedTasks).map((item) => {
