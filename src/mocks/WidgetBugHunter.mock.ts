@@ -263,7 +263,10 @@ const gitHubBugHunterWidget: WidgetView<BugHunterConfig> = {
   },
 };
 
-export const quizWidgetMocks: Record<string, WidgetView<BugHunterConfig>> = {
+export const bugHunterWidgetMocks: Record<
+  string,
+  WidgetView<BugHunterConfig>
+> = {
   widget_quiz_html: htmlBugHunterWidget,
   widget_quiz_css: cssBugHunterWidget,
   widget_quiz_js: jsBugHunterWidget,
