@@ -58,13 +58,17 @@ export default function Queues({
   setQueuesContainerRef,
 }: QueuesProps) {
   return (
-    <Box sx={{ m: 3, width: '90%' }}>
-      <Grid container spacing={2}>
+    <Box sx={{ mt: 3, mb: 3, width: '90%' }}>
+      <Stack
+        direction={{ sx: 'column', sm: 'row' }}
+        spacing={2}
+        sx={{ justifyContent: 'center' }}
+      >
         {dropZones.map(({ zone, title, items, answerColors }, index) => {
           const zoneId = zone.replace(/\s+/g, '-').toLowerCase();
           const titleId = `async-sorter-zone-title-${zoneId}`;
           return (
-            <Grid size={{ xs: 4 }} key={zone}>
+            <Grid sx={{ width: '100%', mt: 2 }} key={zone}>
               <Paper
                 tabIndex={0}
                 role="region"
@@ -88,7 +92,7 @@ export default function Queues({
                 </Typography>
                 <Stack
                   direction="row"
-                  spacing={items.length < 4 ? 1 : 0}
+                  spacing={{ xs: 1, sm: items.length < 4 ? 1 : 0 }}
                   onDragOver={(e) => {
                     handleDragOver(e);
                     if (
@@ -175,7 +179,7 @@ export default function Queues({
             </Grid>
           );
         })}
-      </Grid>
+      </Stack>
     </Box>
   );
 }
