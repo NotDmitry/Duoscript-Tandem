@@ -2,7 +2,7 @@ import type { WidgetView, BugHunterConfig } from '@models/widgetModel.ts';
 
 const htmlBugHunterWidget: WidgetView<BugHunterConfig> = {
   widgetId: 'widget_bug_hunter_html',
-  type: 'quiz',
+  type: 'bugHunter',
   topic: 'html',
   config: {
     quizName: 'HTML Bug Hunter',
@@ -51,7 +51,7 @@ const htmlBugHunterWidget: WidgetView<BugHunterConfig> = {
 
 const cssBugHunterWidget: WidgetView<BugHunterConfig> = {
   widgetId: 'widget_bug_hunter_css',
-  type: 'quiz',
+  type: 'bugHunter',
   topic: 'css',
   config: {
     quizName: 'CSS Bug Hunter',
@@ -111,7 +111,7 @@ const cssBugHunterWidget: WidgetView<BugHunterConfig> = {
 
 const jsBugHunterWidget: WidgetView<BugHunterConfig> = {
   widgetId: 'widget_bug_hunter_js',
-  type: 'quiz',
+  type: 'bugHunter',
   topic: 'js',
   config: {
     quizName: 'JavaScript Bug Hunter',
@@ -174,7 +174,7 @@ const jsBugHunterWidget: WidgetView<BugHunterConfig> = {
 
 const tsBugHunterWidget: WidgetView<BugHunterConfig> = {
   widgetId: 'widget_bug_hunter_ts',
-  type: 'quiz',
+  type: 'bugHunter',
   topic: 'ts',
   config: {
     quizName: 'TypeScript Bug Hunter',
@@ -230,7 +230,7 @@ const tsBugHunterWidget: WidgetView<BugHunterConfig> = {
 
 const gitHubBugHunterWidget: WidgetView<BugHunterConfig> = {
   widgetId: 'widget_bug_hunter_github',
-  type: 'quiz',
+  type: 'bugHunter',
   topic: 'github',
   config: {
     quizName: 'GitHub Bug Hunter',
