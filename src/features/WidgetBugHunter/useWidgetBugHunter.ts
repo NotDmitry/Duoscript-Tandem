@@ -1,16 +1,13 @@
-import getQuizData from '@/api/widgetBugHunter.api.ts';
 import { useState, useEffect, useRef } from 'react';
-import type {
-  QuizType,
-  QuizTask,
-} from '@/features/WidgetBugHunter/WidgetBugHunter.types.ts';
+import type { BugHunterConfig, BugHunterTask } from '@models/widgetModel';
+import { getBugHunterWidget } from '@api/widgetBugHunter.api.ts';
 
-export function useWidgetBugHunter(quizType: QuizType) {
-  const savedQuizType = useRef(quizType);
+export function useWidgetBugHunter(widgetId: string) {
+  const savedQuizType = useRef(widgetId);
   const rightAnswers = useRef<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [quizName, setQuizName] = useState('');
-  const [tasks, setTasks] = useState<QuizTask[]>([]);
+  const [tasks, setTasks] = useState<BugHunterTask[]>([]);
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<string[][]>([]);
   const [failedTasks, setFailedTasks] = useState<string[]>([]);
@@ -23,12 +20,13 @@ export function useWidgetBugHunter(quizType: QuizType) {
   useEffect(() => {
     const loadQuizData = async () => {
       try {
-        const quizData = await getQuizData(savedQuizType.current);
-        setQuizName(quizData.quizName);
-        setTasks(quizData.tasks);
-        rightAnswers.current = quizData.rightAnswers;
+        const widget = await getBugHunterWidget(savedQuizType.current);
+        const config: BugHunterConfig = widget.config;
+        setQuizName(config.quizName);
+        setTasks(config.questions);
+        rightAnswers.current = config.rightAnswers;
         setUserAnswers(
-          quizData.tasks.map((task) =>
+          config.questions.map((task) =>
             task.answers.map((options) => options[0])
           )
         );
