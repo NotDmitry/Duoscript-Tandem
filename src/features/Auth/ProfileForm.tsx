@@ -1,4 +1,11 @@
-import { Box, Button, Container, FormLabel, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  FormLabel,
+  TextField,
+  useMediaQuery,
+} from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -15,6 +22,7 @@ interface ProfileFormProps {
 export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
   const { updateProfileFunc, logout } = useAuth();
   const [formKey, setFormKey] = useState(0);
+  const isMobile = useMediaQuery('(max-width:768px)');
 
   const {
     register,
@@ -57,7 +65,7 @@ export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
         role="form"
         noValidate
         sx={{
-          p: '0 40px',
+          p: isMobile ? 0 : '0 40px',
           m: '60px',
           display: 'flex',
           flexDirection: 'column',
@@ -67,7 +75,9 @@ export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
           void handleSubmit(onSubmit)(event);
         }}
       >
-        <FormLabel sx={{ fontSize: 36, color: 'black', mb: '24px' }}>
+        <FormLabel
+          sx={{ fontSize: isMobile ? 30 : 36, color: 'black', mb: '24px' }}
+        >
           {displayName}
         </FormLabel>
 

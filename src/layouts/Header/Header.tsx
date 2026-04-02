@@ -27,9 +27,9 @@ export function Header() {
       {isMobile ? (
         <>
           {mobileMenuOpen ? (
-            <CloseTwoToneIcon sx={{ p: 1 }} onClick={toggleMobileMenu} />
+            <CloseTwoToneIcon onClick={toggleMobileMenu} />
           ) : (
-            <DragHandleTwoToneIcon sx={{ p: 1 }} onClick={toggleMobileMenu} />
+            <DragHandleTwoToneIcon onClick={toggleMobileMenu} />
           )}
           <Box
             sx={{
