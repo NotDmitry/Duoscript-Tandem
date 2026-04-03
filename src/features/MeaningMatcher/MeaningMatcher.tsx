@@ -23,11 +23,23 @@ export function MeaningMatcher({
     );
   }
 
+  if (dataState.status === 'error') {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 6 }}>
+        <Typography color="error">Failed to load widget</Typography>
+      </Box>
+    );
+  }
+
   const levelData = dataState.data[difficulty];
 
   return (
-    <Box sx={{ maxWidth: 900, mx: 'auto', p: 3 }}>
-      <Typography variant="h5" fontWeight={600}>
+    <Box sx={{ maxWidth: 900, mx: 'auto', p: { xs: 1.5, sm: 2, md: 3 } }}>
+      <Typography
+        variant="h5"
+        fontWeight={600}
+        sx={{ fontSize: { xs: '1.1rem', sm: '1.5rem' } }}
+      >
         Meaning Matcher
       </Typography>
 

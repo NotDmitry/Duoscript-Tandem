@@ -13,7 +13,8 @@ const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 
 type DataState =
   | { status: 'loading' }
-  | { status: 'ready'; data: MeaningMatcherConfig };
+  | { status: 'ready'; data: MeaningMatcherConfig }
+  | { status: 'error' };
 
 export function useMeaningMatcher({
   widgetId,
@@ -36,7 +37,7 @@ export function useMeaningMatcher({
         setDataState({ status: 'ready', data: widget.config });
       })
       .catch(() => {
-        console.error('Failed to load meaning matcher widget');
+        setDataState({ status: 'error' });
       });
   }, []);
 
