@@ -20,6 +20,7 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 interface AuthContextType {
   user: UserAuthView | null;
+  isAuthReady: boolean;
   loginFunc: (data: LoginData) => Promise<void>;
   registerFunc: (data: RegisterData) => Promise<void>;
   logout: () => void;
@@ -32,6 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserAuthView | null>(
     USE_MOCK ? getCurrentUser() : null
   );
+  const [isAuthReady, setIsAuthReady] = useState<boolean>(USE_MOCK);
 
   useEffect(() => {
     if (USE_MOCK) return;
@@ -46,6 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else {
         setUser(null);
       }
+      setIsAuthReady(true);
     });
   }, []);
 
@@ -72,7 +75,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, loginFunc, registerFunc, logout, updateProfileFunc }}
+      value={{
+        user,
+        isAuthReady,
+        loginFunc,
+        registerFunc,
+        logout,
+        updateProfileFunc,
+      }}
     >
       {children}
     </AuthContext.Provider>
