@@ -9,7 +9,7 @@
 <span style="color:steelblue">Role:</span> <span>Front-End Developer/ Designer</span><br>
 <span style="color:steelblue">Discord:</span> Aleksei (@ngInit)<span></span><br>
 <span style="color:steelblue"></span><span></span><br>
-<span style="color:steelblue">Link to PR for questions:</span> <a target="_blank" href="https://github.com/NotDmitry/Duoscript-Tandem/tree/main">Open PR Link</a><br>
+<span style="color:steelblue">Link to PR for questions:</span> <a target="_blank" href="https://github.com/NotDmitry/Duoscript-Tandem/pull/91">Open PR Link</a><br>
 </div>
 
 <br>
