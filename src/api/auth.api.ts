@@ -28,6 +28,7 @@ import {
 } from 'firebase/auth';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { auth, db } from '@/firebase';
+import { throwFirebaseError } from '@utils/firebaseError';
 
 // Switch
 
@@ -105,35 +106,43 @@ async function mockSignOut(): Promise<void> {
 // Firebase Implementation
 
 async function fbRegister(data: RegisterData): Promise<UserAuthView> {
-  const credential = await createUserWithEmailAndPassword(
-    auth,
-    data.email,
-    data.password
-  );
-  await updateProfile(credential.user, { displayName: data.displayName });
+  try {
+    const credential = await createUserWithEmailAndPassword(
+      auth,
+      data.email,
+      data.password
+    );
+    await updateProfile(credential.user, { displayName: data.displayName });
 
-  const newUserDoc: NewUserDocument = {
-    uid: credential.user.uid,
-    displayName: data.displayName,
-    email: data.email,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-    overallProgress: { progressPercent: 0, updatedAt: serverTimestamp() },
-    streak: { currentStreak: 0, longestStreak: 0, lastActiveDate: '' },
-    dailyStats: { date: '', minutesSpent: 0, activitiesCompleted: 0 },
-  };
-  await setDoc(doc(db, 'users', credential.user.uid), newUserDoc);
+    const newUserDoc: NewUserDocument = {
+      uid: credential.user.uid,
+      displayName: data.displayName,
+      email: data.email,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      overallProgress: { progressPercent: 0, updatedAt: serverTimestamp() },
+      streak: { currentStreak: 0, longestStreak: 0, lastActiveDate: '' },
+      dailyStats: { date: '', minutesSpent: 0, activitiesCompleted: 0 },
+    };
+    await setDoc(doc(db, 'users', credential.user.uid), newUserDoc);
 
-  return toUserAuthView(credential.user);
+    return toUserAuthView(credential.user);
+  } catch (error) {
+    throwFirebaseError(error);
+  }
 }
 
 async function fbLogin(data: LoginData): Promise<UserAuthView> {
-  const credential = await signInWithEmailAndPassword(
-    auth,
-    data.email,
-    data.password
-  );
-  return toUserAuthView(credential.user);
+  try {
+    const credential = await signInWithEmailAndPassword(
+      auth,
+      data.email,
+      data.password
+    );
+    return toUserAuthView(credential.user);
+  } catch (error) {
+    throwFirebaseError(error);
+  }
 }
 
 async function fbUpdateUserProfile(
@@ -144,14 +153,22 @@ async function fbUpdateUserProfile(
   if (currentUser?.uid !== uid) {
     throw new Error('User not authenticated');
   }
-  await updateProfile(currentUser, { displayName: newData.displayName });
-  await updateEmail(currentUser, newData.email);
-  await updatePassword(currentUser, newData.password);
-  return toUserAuthView(currentUser);
+  try {
+    await updateProfile(currentUser, { displayName: newData.displayName });
+    await updateEmail(currentUser, newData.email);
+    await updatePassword(currentUser, newData.password);
+    return toUserAuthView(currentUser);
+  } catch (error) {
+    throwFirebaseError(error);
+  }
 }
 
 async function fbSignOut(): Promise<void> {
-  await firebaseSignOut(auth);
+  try {
+    await firebaseSignOut(auth);
+  } catch (error) {
+    throwFirebaseError(error);
+  }
 }
 
 // Export Switch

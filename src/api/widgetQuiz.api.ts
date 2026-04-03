@@ -7,6 +7,7 @@ import { delay } from '@utils/delay';
 // Firebase Imports
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
+import { throwFirebaseError } from '@utils/firebaseError';
 
 // Switch
 
@@ -26,7 +27,12 @@ async function mockGetQuizWidget(
 async function fbGetQuizWidget(
   widgetId: string
 ): Promise<WidgetView<QuizConfig>> {
-  const snap = await getDoc(doc(db, 'widgets', widgetId));
+  let snap;
+  try {
+    snap = await getDoc(doc(db, 'widgets', widgetId));
+  } catch (error) {
+    throwFirebaseError(error);
+  }
   if (!snap.exists()) throw new Error(`Quiz widget not found: ${widgetId}`);
   return snap.data() as WidgetView<QuizConfig>;
 }

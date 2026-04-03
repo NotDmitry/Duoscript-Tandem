@@ -22,6 +22,7 @@ import {
   startAfter,
 } from 'firebase/firestore';
 import { db } from '@/firebase';
+import { throwFirebaseError } from '@utils/firebaseError';
 
 // Switch
 
@@ -55,7 +56,12 @@ async function mockGetActivityHistory(
 const pageCursors = new Map<number, QueryDocumentSnapshot>();
 
 async function fbGetUserDashboard(uid: string): Promise<UserDashboardView> {
-  const snap = await getDoc(doc(db, 'users', uid));
+  let snap;
+  try {
+    snap = await getDoc(doc(db, 'users', uid));
+  } catch (error) {
+    throwFirebaseError(error);
+  }
   if (!snap.exists()) throw new Error('User document not found');
   return toUserDashboardView(snap.data() as UserDocument);
 }
@@ -65,20 +71,25 @@ async function fbGetActivityHistory(
   page: number,
   itemsPerPage: number
 ): Promise<{ activities: ActivityView[]; totalPages: number }> {
-  const logRef = collection(db, 'users', uid, 'activityLog');
+  let snap;
+  let totalPages;
+  try {
+    const logRef = collection(db, 'users', uid, 'activityLog');
+    const countSnap = await getCountFromServer(logRef);
+    totalPages = Math.ceil(countSnap.data().count / itemsPerPage);
 
-  const countSnap = await getCountFromServer(logRef);
-  const totalPages = Math.ceil(countSnap.data().count / itemsPerPage);
+    const baseQuery = query(
+      logRef,
+      orderBy('createdAt', 'desc'),
+      limit(itemsPerPage)
+    );
+    const cursor = page > 1 ? pageCursors.get(page - 1) : undefined;
+    const pageQuery = cursor ? query(baseQuery, startAfter(cursor)) : baseQuery;
 
-  const baseQuery = query(
-    logRef,
-    orderBy('createdAt', 'desc'),
-    limit(itemsPerPage)
-  );
-  const cursor = page > 1 ? pageCursors.get(page - 1) : undefined;
-  const pageQuery = cursor ? query(baseQuery, startAfter(cursor)) : baseQuery;
-
-  const snap = await getDocs(pageQuery);
+    snap = await getDocs(pageQuery);
+  } catch (error) {
+    throwFirebaseError(error);
+  }
 
   const lastDoc = snap.docs.at(-1);
   if (lastDoc) pageCursors.set(page, lastDoc);
