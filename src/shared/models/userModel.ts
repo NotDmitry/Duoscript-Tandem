@@ -1,4 +1,4 @@
-import type { Timestamp } from 'firebase/firestore';
+import type { Timestamp, FieldValue } from 'firebase/firestore';
 
 export interface UserOverallProgress {
   progressPercent: number;
@@ -28,6 +28,17 @@ export interface UserDocument {
   streak: UserStreak;
   dailyStats: UserDailyStats;
 }
+
+export type NewUserDocument = Omit<
+  UserDocument,
+  'createdAt' | 'updatedAt' | 'overallProgress'
+> & {
+  createdAt: FieldValue;
+  updatedAt: FieldValue;
+  overallProgress: Omit<UserOverallProgress, 'updatedAt'> & {
+    updatedAt: FieldValue;
+  };
+};
 
 // Map Document to Views
 

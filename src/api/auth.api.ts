@@ -1,9 +1,12 @@
-import type { UserAuthView } from '@models/userModel';
+import type { NewUserDocument, UserAuthView } from '@models/userModel';
+import { toUserAuthView } from '@models/userModel';
 import type {
   LoginData,
   RegisterData,
   UpdateProfileData,
 } from '@shared-types/auth.types';
+
+// Mock Imports
 import {
   mockGetUidByEmail,
   mockGetUserByUid,
@@ -13,6 +16,24 @@ import {
   mockUserEmailExists,
 } from '@mocks/auth.mock';
 import { delay } from '@utils/delay';
+
+// Firebase Imports
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut as firebaseSignOut,
+  updateEmail,
+  updatePassword,
+  updateProfile,
+} from 'firebase/auth';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { auth, db } from '@/firebase';
+
+// Switch
+
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
+
+// Mock Implementation
 
 const SESSION_KEY = 'auth_id';
 
@@ -25,6 +46,7 @@ function clearUserSession(): void {
 }
 
 export function getCurrentUser(): UserAuthView | null {
+  if (!USE_MOCK) return null;
   const uid = localStorage.getItem(SESSION_KEY);
   if (!uid) return null;
   try {
@@ -35,7 +57,7 @@ export function getCurrentUser(): UserAuthView | null {
   }
 }
 
-export async function register(data: RegisterData): Promise<UserAuthView> {
+async function mockRegister(data: RegisterData): Promise<UserAuthView> {
   await delay(1000);
   if (mockUserEmailExists(data.email)) {
     throw new Error(`A user with email ${data.email} is already registered`);
@@ -45,7 +67,7 @@ export async function register(data: RegisterData): Promise<UserAuthView> {
   return newUser;
 }
 
-export async function login(data: LoginData): Promise<UserAuthView> {
+async function mockLogin(data: LoginData): Promise<UserAuthView> {
   await delay(1000);
   if (!mockUserEmailExists(data.email)) {
     throw new Error(`No user found with email ${data.email}`);
@@ -58,7 +80,7 @@ export async function login(data: LoginData): Promise<UserAuthView> {
   return mockGetUserByUid(uid);
 }
 
-export async function updateUserProfile(
+async function mockUpdateUserProfile(
   uid: string,
   newData: UpdateProfileData
 ): Promise<UserAuthView> {
@@ -75,7 +97,68 @@ export async function updateUserProfile(
   return updatedUser;
 }
 
-export async function signOut(): Promise<void> {
+async function mockSignOut(): Promise<void> {
   await delay(1000);
   clearUserSession();
 }
+
+// Firebase Implementation
+
+async function fbRegister(data: RegisterData): Promise<UserAuthView> {
+  const credential = await createUserWithEmailAndPassword(
+    auth,
+    data.email,
+    data.password
+  );
+  await updateProfile(credential.user, { displayName: data.displayName });
+
+  const newUserDoc: NewUserDocument = {
+    uid: credential.user.uid,
+    displayName: data.displayName,
+    email: data.email,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+    overallProgress: { progressPercent: 0, updatedAt: serverTimestamp() },
+    streak: { currentStreak: 0, longestStreak: 0, lastActiveDate: '' },
+    dailyStats: { date: '', minutesSpent: 0, activitiesCompleted: 0 },
+  };
+  await setDoc(doc(db, 'users', credential.user.uid), newUserDoc);
+
+  return toUserAuthView(credential.user);
+}
+
+async function fbLogin(data: LoginData): Promise<UserAuthView> {
+  const credential = await signInWithEmailAndPassword(
+    auth,
+    data.email,
+    data.password
+  );
+  return toUserAuthView(credential.user);
+}
+
+async function fbUpdateUserProfile(
+  uid: string,
+  newData: UpdateProfileData
+): Promise<UserAuthView> {
+  const currentUser = auth.currentUser;
+  if (currentUser?.uid !== uid) {
+    throw new Error('User not authenticated');
+  }
+  await updateProfile(currentUser, { displayName: newData.displayName });
+  await updateEmail(currentUser, newData.email);
+  await updatePassword(currentUser, newData.password);
+  return toUserAuthView(currentUser);
+}
+
+async function fbSignOut(): Promise<void> {
+  await firebaseSignOut(auth);
+}
+
+// Export Switch
+
+export const register = USE_MOCK ? mockRegister : fbRegister;
+export const login = USE_MOCK ? mockLogin : fbLogin;
+export const updateUserProfile = USE_MOCK
+  ? mockUpdateUserProfile
+  : fbUpdateUserProfile;
+export const signOut = USE_MOCK ? mockSignOut : fbSignOut;
