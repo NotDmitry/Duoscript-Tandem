@@ -1,5 +1,5 @@
 import { type AsyncSorterAnswer } from '@features/Async-sorter/types';
-import { asyncSorterWidgetMocks } from '@mocks/widgetAsyncSorter.mock';
+import { asyncSorterWidgetMock } from '@mocks/widgetAsyncSorter.mock';
 import type {
   AsyncSorterConfig,
   WidgetView,
@@ -11,7 +11,7 @@ export async function getAsyncSorterWidget(): Promise<
   WidgetView<AsyncSorterConfig>
 > {
   await delay(300);
-  return asyncSorterWidgetMocks;
+  return asyncSorterWidgetMock;
 }
 export async function getAsyncSortTaskById(
   id: number
