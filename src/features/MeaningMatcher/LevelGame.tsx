@@ -1,5 +1,13 @@
 import type { DragEndEvent } from '@dnd-kit/core';
-import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
+import {
+  DndContext,
+  useDraggable,
+  useDroppable,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import { useState } from 'react';
 import { Box, Button, Paper, Typography } from '@mui/material';
 import type {
@@ -128,6 +136,7 @@ function Card({
       sx={{
         p: 1.5,
         cursor: 'grab',
+        touchAction: 'none',
         transform: transform
           ? `translate3d(${String(transform.x)}px,${String(transform.y)}px,0)`
           : undefined,
@@ -301,6 +310,13 @@ export function LevelGame({
     [...pairs].sort(() => Math.random() - 0.5).map((p) => p.id)
   );
 
+  const sensors = useSensors(
+    useSensor(MouseSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 250, tolerance: 5 },
+    })
+  );
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
@@ -342,13 +358,21 @@ export function LevelGame({
 
   return (
     <>
-      <Typography variant="h6" sx={{ color: 'text.secondary', mt: 0.5, mb: 3 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          color: 'text.secondary',
+          mt: 0.5,
+          mb: 3,
+          fontSize: { xs: '1rem', sm: '1.25rem' },
+        }}
+      >
         {fullTitle}
       </Typography>
 
       <ProgressBar difficulty={difficulty} completedLevels={completedLevels} />
 
-      <DndContext onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <Box
           sx={{
             display: 'grid',
@@ -380,7 +404,7 @@ export function LevelGame({
               );
             })}
 
-            <Box mt={2} display="flex" gap={2}>
+            <Box mt={{ xs: 4, sm: 3 }} display="flex" gap={2}>
               <Button
                 variant="contained"
                 onClick={() => {
@@ -408,12 +432,13 @@ export function LevelGame({
               />
             )}
           </Box>
-
-          <OptionsZone>
-            {options.map((o) => (
-              <Card key={o.id} id={o.id} text={o.right} />
-            ))}
-          </OptionsZone>
+          <Box sx={{ mt: { xs: 4, md: 0 } }}>
+            <OptionsZone>
+              {options.map((o) => (
+                <Card key={o.id} id={o.id} text={o.right} />
+              ))}
+            </OptionsZone>
+          </Box>
         </Box>
       </DndContext>
     </>
