@@ -5,7 +5,7 @@ import { quizWidgetMocks } from '@mocks/widgetQuiz.mock';
 import { delay } from '@utils/delay';
 
 // Firebase Imports
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, type DocumentSnapshot } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { throwFirebaseError } from '@utils/firebaseError';
 
@@ -27,7 +27,7 @@ async function mockGetQuizWidget(
 async function fbGetQuizWidget(
   widgetId: string
 ): Promise<WidgetView<QuizConfig>> {
-  let snap;
+  let snap: DocumentSnapshot;
   try {
     snap = await getDoc(doc(db, 'widgets', widgetId));
   } catch (error) {

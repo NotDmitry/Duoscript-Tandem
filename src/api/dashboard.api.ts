@@ -1,4 +1,4 @@
-import type { UserDashboardView } from '@models/userModel';
+import type { UserDashboardView, UserDocument } from '@models/userModel';
 import { toUserDashboardView, userConverter } from '@models/userModel';
 import type { ActivityLogDocument, ActivityView } from '@models/activityModel';
 import { toActivityView } from '@models/activityModel';
@@ -18,8 +18,10 @@ import {
   limit,
   orderBy,
   query,
-  type QueryDocumentSnapshot,
   startAfter,
+  type QueryDocumentSnapshot,
+  type DocumentSnapshot,
+  type QuerySnapshot,
 } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { throwFirebaseError } from '@utils/firebaseError';
@@ -56,7 +58,7 @@ async function mockGetActivityHistory(
 const pageCursors = new Map<number, QueryDocumentSnapshot>();
 
 async function fbGetUserDashboard(uid: string): Promise<UserDashboardView> {
-  let snap;
+  let snap: DocumentSnapshot<UserDocument>;
   try {
     snap = await getDoc(doc(db, 'users', uid).withConverter(userConverter));
   } catch (error) {
@@ -71,8 +73,8 @@ async function fbGetActivityHistory(
   page: number,
   itemsPerPage: number
 ): Promise<{ activities: ActivityView[]; totalPages: number }> {
-  let snap;
-  let totalPages;
+  let snap: QuerySnapshot;
+  let totalPages: number;
   try {
     const logRef = collection(db, 'users', uid, 'activityLog');
     const countSnap = await getCountFromServer(logRef);
