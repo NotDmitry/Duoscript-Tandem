@@ -1,18 +1,41 @@
-import type { UserDashboardView } from '@models/userModel';
-import type { ActivityView } from '@models/activityModel';
+import type { UserDocument } from '@models/userModel';
+import { toUserDashboardView, type UserDashboardView } from '@models/userModel';
+import type { ActivityLogDocument, ActivityView } from '@models/activityModel';
+import { toActivityView } from '@models/activityModel';
+
+// Mock Imports
 import { mockUserDashboard } from '@mocks/user.mock';
 import { mockActivityLog } from '@mocks/activity.mock';
 import { delay } from '@utils/delay';
 
-export async function getUserDashboard(
-  uid: string
-): Promise<UserDashboardView> {
+// Firebase Imports
+import {
+  collection,
+  doc,
+  getCountFromServer,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  type QueryDocumentSnapshot,
+  startAfter,
+} from 'firebase/firestore';
+import { db } from '@/firebase';
+
+// Switch
+
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
+
+// Mock Implementation
+
+async function mockGetUserDashboard(uid: string): Promise<UserDashboardView> {
   await delay(300);
   void uid;
   return mockUserDashboard;
 }
 
-export async function getActivityHistory(
+async function mockGetActivityHistory(
   uid: string,
   page: number,
   itemsPerPage: number
@@ -26,3 +49,52 @@ export async function getActivityHistory(
   const totalPages = Math.ceil(mockActivityLog.length / itemsPerPage);
   return { activities, totalPages };
 }
+
+// Firebase Implementation
+
+const pageCursors = new Map<number, QueryDocumentSnapshot>();
+
+async function fbGetUserDashboard(uid: string): Promise<UserDashboardView> {
+  const snap = await getDoc(doc(db, 'users', uid));
+  if (!snap.exists()) throw new Error('User document not found');
+  return toUserDashboardView(snap.data() as UserDocument);
+}
+
+async function fbGetActivityHistory(
+  uid: string,
+  page: number,
+  itemsPerPage: number
+): Promise<{ activities: ActivityView[]; totalPages: number }> {
+  const logRef = collection(db, 'users', uid, 'activityLog');
+
+  const countSnap = await getCountFromServer(logRef);
+  const totalPages = Math.ceil(countSnap.data().count / itemsPerPage);
+
+  const baseQuery = query(
+    logRef,
+    orderBy('createdAt', 'desc'),
+    limit(itemsPerPage)
+  );
+  const cursor = page > 1 ? pageCursors.get(page - 1) : undefined;
+  const pageQuery = cursor ? query(baseQuery, startAfter(cursor)) : baseQuery;
+
+  const snap = await getDocs(pageQuery);
+
+  const lastDoc = snap.docs.at(-1);
+  if (lastDoc) pageCursors.set(page, lastDoc);
+
+  const activities = snap.docs.map((doc) =>
+    toActivityView(doc.data() as ActivityLogDocument)
+  );
+
+  return { activities, totalPages };
+}
+
+// Export Switch
+
+export const getUserDashboard = USE_MOCK
+  ? mockGetUserDashboard
+  : fbGetUserDashboard;
+export const getActivityHistory = USE_MOCK
+  ? mockGetActivityHistory
+  : fbGetActivityHistory;
