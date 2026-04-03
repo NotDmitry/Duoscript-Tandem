@@ -1,7 +1,7 @@
 import type { UserDashboardView, UserDocument } from '@models/userModel';
 import { toUserDashboardView, userConverter } from '@models/userModel';
 import type { ActivityLogDocument, ActivityView } from '@models/activityModel';
-import { toActivityView } from '@models/activityModel';
+import { toActivityView, activityConverter } from '@models/activityModel';
 
 // Mock Imports
 import { mockUserDashboard } from '@mocks/user.mock';
@@ -73,7 +73,7 @@ async function fbGetActivityHistory(
   page: number,
   itemsPerPage: number
 ): Promise<{ activities: ActivityView[]; totalPages: number }> {
-  let snap: QuerySnapshot;
+  let snap: QuerySnapshot<ActivityLogDocument>;
   let totalPages: number;
   try {
     const logRef = collection(db, 'users', uid, 'activityLog');
@@ -81,7 +81,7 @@ async function fbGetActivityHistory(
     totalPages = Math.ceil(countSnap.data().count / itemsPerPage);
 
     const baseQuery = query(
-      logRef,
+      logRef.withConverter(activityConverter),
       orderBy('createdAt', 'desc'),
       limit(itemsPerPage)
     );
@@ -96,9 +96,7 @@ async function fbGetActivityHistory(
   const lastDoc = snap.docs.at(-1);
   if (lastDoc) pageCursors.set(page, lastDoc);
 
-  const activities = snap.docs.map((doc) =>
-    toActivityView(doc.data() as ActivityLogDocument)
-  );
+  const activities = snap.docs.map((doc) => toActivityView(doc.data()));
 
   return { activities, totalPages };
 }
