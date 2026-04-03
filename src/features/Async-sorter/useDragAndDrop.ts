@@ -1,11 +1,11 @@
 import type {
   AsyncSorterAnswer,
   AsyncSorterBlock,
-  AsyncSorterTask,
   Zone,
-} from '@/features/Async-sorter/types';
+} from '@features/Async-sorter/types';
 import { useState } from 'react';
 import { useAsyncSorter } from './useAsyncSorter';
+import type { AsyncSorterTask } from '@models/widgetModel';
 
 function insertInto(
   baseItems: AsyncSorterBlock[],

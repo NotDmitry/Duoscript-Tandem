@@ -1,13 +1,13 @@
-import { submitAnswer } from '@/api/asyncSort.api';
+import { submitAnswer } from '@api/asyncSort.api';
 import { useState } from 'react';
 
 import type {
   AnswerColor,
   AsyncSorterAnswer,
   AsyncSorterBlock,
-  AsyncSorterTask,
   DropZones,
-} from '@/features/Async-sorter/types';
+} from '@features/Async-sorter/types';
+import type { AsyncSorterTask } from '@models/widgetModel';
 
 export const useAsyncSorter = (
   task: null | AsyncSorterTask,

@@ -3,7 +3,7 @@ import type {
   AsyncSorterConfig,
 } from '@/shared/models/widgetModel';
 
-export const asyncSorterWidget: WidgetView<AsyncSorterConfig> = {
+export const asyncSorterWidgetMocks: WidgetView<AsyncSorterConfig> = {
   widgetId: 'widget_async_sorter',
   type: 'asyncSorter',
   topic: 'js',

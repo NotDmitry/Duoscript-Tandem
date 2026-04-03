@@ -10,7 +10,6 @@ import { useState, useRef, useCallback } from 'react';
 import {
   type AsyncSorterAnswer,
   type AsyncSorterBlock,
-  type AsyncSorterTask,
   type DropIndicator,
   type FocusZone,
   type Zone,
@@ -23,6 +22,7 @@ import { useAsyncSorterApi } from './useAsynsSorterApi';
 import Source from './Source';
 import ButtonsBox from './ButtonsBox';
 import Queues from './Queues';
+import type { AsyncSorterTask } from '@models/widgetModel';
 
 export default function AsyncSorter() {
   const [selectedItem, setSelectedItem] = useState<AsyncSorterBlock | null>(
@@ -118,7 +118,7 @@ export default function AsyncSorter() {
     return (
       <AsyncSorterContainer>
         <Typography gutterBottom sx={{ textAlign: 'center', m: 2 }}>
-          The task can't be shown
+          The task soon will be shown
         </Typography>
       </AsyncSorterContainer>
     );

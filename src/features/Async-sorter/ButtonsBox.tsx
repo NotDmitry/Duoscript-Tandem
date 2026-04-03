@@ -1,5 +1,6 @@
 import { Box, Container, Button } from '@mui/material';
-import type { AsyncSorterBlock, AsyncSorterTask } from './types';
+import type { AsyncSorterBlock } from './types';
+import type { AsyncSorterTask } from '@models/widgetModel';
 interface ButtonBoxProps {
   isSubmitClicked: boolean;
   clearZones: () => void;

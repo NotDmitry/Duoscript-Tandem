@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { AsyncSorterAnswer, AsyncSorterTask } from './types';
-import { getAsyncSortTaskByIndex } from '@/api/asyncSort.api';
-import { useUI } from '@/shared/hooks/useUI';
-import { getAsyncSortTasksNumber } from '@/api/asyncSort.api';
+import type { AsyncSorterAnswer } from './types';
+import { getAsyncSortTaskByIndex } from '@api/asyncSort.api';
+import { useUI } from '@hooks/useUI';
+import { getAsyncSortTasksNumber } from '@api/asyncSort.api';
+import type { AsyncSorterTask } from '@models/widgetModel';
 
 export const useAsyncSorterApi = (
   setAnswer: React.Dispatch<
