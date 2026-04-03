@@ -1,4 +1,11 @@
-import { Box, Button, Container, FormLabel, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  FormLabel,
+  TextField,
+  useMediaQuery,
+} from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,6 +17,7 @@ import { useAuth } from '@hooks/useAuth';
 export function RegisterForm() {
   const { registerFunc } = useAuth();
   const [formKey, setFormKey] = useState(0);
+  const isMobile = useMediaQuery('(max-width:768px)');
 
   const {
     register,
@@ -56,7 +64,7 @@ export function RegisterForm() {
         role="form"
         noValidate
         sx={{
-          p: '0 40px',
+          p: isMobile ? 0 : '0 40px',
           m: '60px',
           display: 'flex',
           flexDirection: 'column',
@@ -66,7 +74,9 @@ export function RegisterForm() {
           void handleSubmit(onSubmit)(event);
         }}
       >
-        <FormLabel sx={{ fontSize: 36, color: 'black', mb: '24px' }}>
+        <FormLabel
+          sx={{ fontSize: isMobile ? 30 : 36, color: 'black', mb: '24px' }}
+        >
           NEW PROFILE
         </FormLabel>
 
