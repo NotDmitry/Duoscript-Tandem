@@ -1,5 +1,5 @@
-import type { NewUserDocument, UserAuthView } from '@models/userModel';
-import { toUserAuthView } from '@models/userModel';
+import type { UserAuthView } from '@models/userModel';
+import { toUserAuthView, userConverter } from '@models/userModel';
 import type {
   LoginData,
   RegisterData,
@@ -114,17 +114,19 @@ async function fbRegister(data: RegisterData): Promise<UserAuthView> {
     );
     await updateProfile(credential.user, { displayName: data.displayName });
 
-    const newUserDoc: NewUserDocument = {
-      uid: credential.user.uid,
-      displayName: data.displayName,
-      email: data.email,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-      overallProgress: { progressPercent: 0, updatedAt: serverTimestamp() },
-      streak: { currentStreak: 0, longestStreak: 0, lastActiveDate: '' },
-      dailyStats: { date: '', minutesSpent: 0, activitiesCompleted: 0 },
-    };
-    await setDoc(doc(db, 'users', credential.user.uid), newUserDoc);
+    await setDoc(
+      doc(db, 'users', credential.user.uid).withConverter(userConverter),
+      {
+        uid: credential.user.uid,
+        displayName: data.displayName,
+        email: data.email,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        overallProgress: { progressPercent: 0, updatedAt: serverTimestamp() },
+        streak: { currentStreak: 0, longestStreak: 0, lastActiveDate: '' },
+        dailyStats: { date: '', minutesSpent: 0, activitiesCompleted: 0 },
+      }
+    );
 
     return toUserAuthView(credential.user);
   } catch (error) {

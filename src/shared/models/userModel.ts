@@ -1,4 +1,8 @@
-import type { Timestamp, FieldValue } from 'firebase/firestore';
+import type {
+  Timestamp,
+  FirestoreDataConverter,
+  WithFieldValue,
+} from 'firebase/firestore';
 
 export interface UserOverallProgress {
   progressPercent: number;
@@ -29,15 +33,16 @@ export interface UserDocument {
   dailyStats: UserDailyStats;
 }
 
-export type NewUserDocument = Omit<
+export const userConverter: FirestoreDataConverter<
   UserDocument,
-  'createdAt' | 'updatedAt' | 'overallProgress'
-> & {
-  createdAt: FieldValue;
-  updatedAt: FieldValue;
-  overallProgress: Omit<UserOverallProgress, 'updatedAt'> & {
-    updatedAt: FieldValue;
-  };
+  WithFieldValue<UserDocument>
+> = {
+  toFirestore(user: WithFieldValue<UserDocument>) {
+    return user;
+  },
+  fromFirestore(snap) {
+    return snap.data() as UserDocument;
+  },
 };
 
 // Map Document to Views

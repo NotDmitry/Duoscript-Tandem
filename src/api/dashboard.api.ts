@@ -1,5 +1,5 @@
-import type { UserDocument } from '@models/userModel';
-import { toUserDashboardView, type UserDashboardView } from '@models/userModel';
+import type { UserDashboardView } from '@models/userModel';
+import { toUserDashboardView, userConverter } from '@models/userModel';
 import type { ActivityLogDocument, ActivityView } from '@models/activityModel';
 import { toActivityView } from '@models/activityModel';
 
@@ -58,12 +58,12 @@ const pageCursors = new Map<number, QueryDocumentSnapshot>();
 async function fbGetUserDashboard(uid: string): Promise<UserDashboardView> {
   let snap;
   try {
-    snap = await getDoc(doc(db, 'users', uid));
+    snap = await getDoc(doc(db, 'users', uid).withConverter(userConverter));
   } catch (error) {
     throwFirebaseError(error);
   }
   if (!snap.exists()) throw new Error('User document not found');
-  return toUserDashboardView(snap.data() as UserDocument);
+  return toUserDashboardView(snap.data());
 }
 
 async function fbGetActivityHistory(
