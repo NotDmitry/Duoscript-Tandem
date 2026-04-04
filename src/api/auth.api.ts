@@ -26,7 +26,7 @@ import {
   updatePassword,
   updateProfile,
 } from 'firebase/auth';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '@/firebase';
 import { throwFirebaseError } from '@utils/firebaseError';
 
@@ -159,6 +159,14 @@ async function fbUpdateUserProfile(
     await updateProfile(currentUser, { displayName: newData.displayName });
     await updateEmail(currentUser, newData.email);
     await updatePassword(currentUser, newData.password);
+    await updateDoc(
+      doc(db, 'users', currentUser.uid).withConverter(userConverter),
+      {
+        displayName: newData.displayName,
+        email: newData.email,
+        updatedAt: serverTimestamp(),
+      }
+    );
     return toUserAuthView(currentUser);
   } catch (error) {
     throwFirebaseError(error);
