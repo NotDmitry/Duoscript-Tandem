@@ -45,8 +45,10 @@ export const signUpSchema = baseAuthSchema
     path: ['repeatPassword'],
   });
 
-export const profileSchema = baseAuthSchema.extend({
-  displayName: displayNameSchema,
+export const profileSchema = z.object({
+  email: z.union([z.literal(''), emailSchema]),
+  displayName: z.union([z.literal(''), displayNameSchema]),
+  password: z.union([z.literal(''), passwordSchema]),
 });
 
 export type LogInFields = z.infer<typeof logInSchema>;

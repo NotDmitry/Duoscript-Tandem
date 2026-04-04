@@ -1,4 +1,8 @@
-import type { Timestamp } from 'firebase/firestore';
+import type {
+  Timestamp,
+  FirestoreDataConverter,
+  WithFieldValue,
+} from 'firebase/firestore';
 
 export interface UserOverallProgress {
   progressPercent: number;
@@ -28,6 +32,18 @@ export interface UserDocument {
   streak: UserStreak;
   dailyStats: UserDailyStats;
 }
+
+export const userConverter: FirestoreDataConverter<
+  UserDocument,
+  WithFieldValue<UserDocument>
+> = {
+  toFirestore(user: WithFieldValue<UserDocument>) {
+    return user;
+  },
+  fromFirestore(snap) {
+    return snap.data() as UserDocument;
+  },
+};
 
 // Map Document to Views
 

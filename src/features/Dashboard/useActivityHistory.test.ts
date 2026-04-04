@@ -20,6 +20,7 @@ describe('useActivityHistory', () => {
     vi.spyOn(api, 'getActivityHistory').mockResolvedValue({
       activities: [mockActivity],
       totalPages: 1,
+      cursor: undefined,
     });
 
     const { result } = renderHook(() => useActivityHistory('user_1', 5));
@@ -39,12 +40,13 @@ describe('useActivityHistory', () => {
     const spy = vi.spyOn(api, 'getActivityHistory').mockResolvedValue({
       activities: [],
       totalPages: 1,
+      cursor: undefined,
     });
 
     renderHook(() => useActivityHistory('user_1', 10));
 
     await waitFor(() => {
-      expect(spy).toHaveBeenCalledWith('user_1', 1, 10);
+      expect(spy).toHaveBeenCalledWith('user_1', 1, 10, undefined);
     });
   });
 
@@ -52,11 +54,13 @@ describe('useActivityHistory', () => {
     let resolver!: (value: {
       activities: ActivityView[];
       totalPages: number;
+      cursor: undefined;
     }) => void;
 
     const promise = new Promise<{
       activities: ActivityView[];
       totalPages: number;
+      cursor: undefined;
     }>((resolve) => {
       resolver = resolve;
     });
@@ -67,7 +71,11 @@ describe('useActivityHistory', () => {
 
     expect(result.current.loading).toBe(true);
 
-    resolver({ activities: [{ ...mockActivity }], totalPages: 1 });
+    resolver({
+      activities: [{ ...mockActivity }],
+      totalPages: 1,
+      cursor: undefined,
+    });
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);

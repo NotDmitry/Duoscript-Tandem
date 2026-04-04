@@ -1,4 +1,8 @@
-import type { Timestamp } from 'firebase/firestore';
+import type {
+  Timestamp,
+  FirestoreDataConverter,
+  WithFieldValue,
+} from 'firebase/firestore';
 import type { WidgetType } from '@models/widgetModel';
 
 export type ActivityStatus = 'completed' | 'in_progress';
@@ -16,6 +20,18 @@ export interface ActivityLogDocument {
   status: ActivityStatus;
   createdAt: Timestamp;
 }
+
+export const activityConverter: FirestoreDataConverter<
+  ActivityLogDocument,
+  WithFieldValue<ActivityLogDocument>
+> = {
+  toFirestore(activityLog: WithFieldValue<ActivityLogDocument>) {
+    return activityLog;
+  },
+  fromFirestore(snap) {
+    return snap.data() as ActivityLogDocument;
+  },
+};
 
 export interface ActivityView {
   id: string;
