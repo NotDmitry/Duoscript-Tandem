@@ -10,17 +10,31 @@ export default function StatCard({ title, value }: StatCardProps) {
     <Card
       variant="outlined"
       sx={{
-        minWidth: 120,
+        minWidth: { xs: 0, sm: 120 },
         borderRadius: 4,
         borderColor: '#dcdcdc',
         backgroundColor: '#fafafa',
       }}
     >
-      <CardContent sx={{ textAlign: 'center' }}>
-        <Typography variant="subtitle2" color="text.secondary">
+      <CardContent
+        sx={{
+          textAlign: 'center',
+          padding: { xs: '8px 4px !important', sm: '16px !important' },
+        }}
+      >
+        <Typography
+          variant="subtitle2"
+          color="text.secondary"
+          sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
+        >
           {title}
         </Typography>
-        <Typography variant="h6">{value}</Typography>
+        <Typography
+          variant="h6"
+          sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}
+        >
+          {value}
+        </Typography>
       </CardContent>
     </Card>
   );
