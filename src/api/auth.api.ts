@@ -119,6 +119,7 @@ async function fbRegister(data: RegisterData): Promise<UserAuthView> {
       data.password
     );
     await updateProfile(credential.user, { displayName: data.displayName });
+    await credential.user.reload();
 
     await setDoc(
       doc(db, 'users', credential.user.uid).withConverter(userConverter),
@@ -195,6 +196,7 @@ async function fbUpdateUserProfile(
       doc(db, 'users', currentUser.uid).withConverter(userConverter),
       firestoreUpdates
     );
+    await currentUser.reload();
     return toUserAuthView(currentUser);
   } catch (error) {
     throwFirebaseError(error);

@@ -21,6 +21,7 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 interface AuthContextType {
   user: UserAuthView | null;
   isAuthReady: boolean;
+  isUserLoading: boolean;
   loginFunc: (data: LoginData) => Promise<void>;
   registerFunc: (data: RegisterData) => Promise<void>;
   logout: () => void;
@@ -34,6 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     USE_MOCK ? getCurrentUser() : null
   );
   const [isAuthReady, setIsAuthReady] = useState<boolean>(USE_MOCK);
+  const [isUserLoading, setIsUserLoading] = useState(false);
 
   useEffect(() => {
     if (USE_MOCK) return;
@@ -58,8 +60,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const registerFunc = async (data: RegisterData): Promise<void> => {
-    const authUser = await register(data);
-    if (USE_MOCK) setUser(authUser);
+    setIsUserLoading(true);
+    try {
+      const authUser = await register(data);
+      setUser(authUser);
+    } finally {
+      setIsUserLoading(false);
+    }
   };
 
   const logout = (): void => {
@@ -70,7 +77,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateProfileFunc = async (data: UpdateProfileData): Promise<void> => {
     if (!user) throw new Error('User not authenticated');
     const updatedUser = await updateUserProfile(user.uid, data);
-    if (USE_MOCK) setUser(updatedUser);
+    setUser(updatedUser);
   };
 
   return (
@@ -78,6 +85,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user,
         isAuthReady,
+        isUserLoading,
         loginFunc,
         registerFunc,
         logout,

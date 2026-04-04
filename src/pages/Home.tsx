@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 import { useAuth } from '@hooks/useAuth';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 
 const GREETING = 'Hello dear';
 const DEFAULT_USERNAME = 'developer';
@@ -23,8 +23,16 @@ const images = [
 
 function Home() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isUserLoading } = useAuth();
   const displayName: string = user?.displayName ?? DEFAULT_USERNAME;
+
+  if (isUserLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 6 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box

@@ -1,6 +1,6 @@
 import type { UserDashboardView, UserDocument } from '@models/userModel';
 import { toUserDashboardView, userConverter } from '@models/userModel';
-import type { ActivityLogDocument, ActivityView } from '@models/activityModel';
+import type { ActivityView } from '@models/activityModel';
 import { toActivityView, activityConverter } from '@models/activityModel';
 
 // Mock Imports
@@ -21,7 +21,6 @@ import {
   startAfter,
   type QueryDocumentSnapshot,
   type DocumentSnapshot,
-  type QuerySnapshot,
 } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { throwFirebaseError } from '@utils/firebaseError';
@@ -42,20 +41,22 @@ async function mockGetActivityHistory(
   uid: string,
   page: number,
   itemsPerPage: number
-): Promise<{ activities: ActivityView[]; totalPages: number }> {
+): Promise<{
+  activities: ActivityView[];
+  totalPages: number;
+  cursor: undefined;
+}> {
   await delay(300);
   void uid;
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
   const activities = mockActivityLog.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(mockActivityLog.length / itemsPerPage);
-  return { activities, totalPages };
+  const totalPages = Math.ceil(mockActivityLog.length / itemsPerPage) || 1;
+  return { activities, totalPages, cursor: undefined };
 }
 
 // Firebase Implementation
-
-const pageCursors = new Map<number, QueryDocumentSnapshot>();
 
 async function fbGetUserDashboard(uid: string): Promise<UserDashboardView> {
   let snap: DocumentSnapshot<UserDocument>;
@@ -70,35 +71,35 @@ async function fbGetUserDashboard(uid: string): Promise<UserDashboardView> {
 
 async function fbGetActivityHistory(
   uid: string,
-  page: number,
-  itemsPerPage: number
-): Promise<{ activities: ActivityView[]; totalPages: number }> {
-  let snap: QuerySnapshot<ActivityLogDocument>;
-  let totalPages: number;
+  _page: number,
+  itemsPerPage: number,
+  cursor?: QueryDocumentSnapshot
+): Promise<{
+  activities: ActivityView[];
+  totalPages: number;
+  cursor: QueryDocumentSnapshot | undefined;
+}> {
   try {
     const logRef = collection(db, 'users', uid, 'activityLog');
     const countSnap = await getCountFromServer(logRef);
-    totalPages = Math.ceil(countSnap.data().count / itemsPerPage);
+    const totalPages = Math.ceil(countSnap.data().count / itemsPerPage) || 1;
 
     const baseQuery = query(
       logRef.withConverter(activityConverter),
       orderBy('createdAt', 'desc'),
       limit(itemsPerPage)
     );
-    const cursor = page > 1 ? pageCursors.get(page - 1) : undefined;
     const pageQuery = cursor ? query(baseQuery, startAfter(cursor)) : baseQuery;
+    const snap = await getDocs(pageQuery);
 
-    snap = await getDocs(pageQuery);
+    return {
+      activities: snap.docs.map((d) => toActivityView(d.data())),
+      totalPages,
+      cursor: snap.docs.at(-1),
+    };
   } catch (error) {
     throwFirebaseError(error);
   }
-
-  const lastDoc = snap.docs.at(-1);
-  if (lastDoc) pageCursors.set(page, lastDoc);
-
-  const activities = snap.docs.map((doc) => toActivityView(doc.data()));
-
-  return { activities, totalPages };
 }
 
 // Export Switch

@@ -86,13 +86,15 @@ function Dashboard() {
               <>
                 <RecentActivity activities={activities} />
                 <Box display="flex" justifyContent="center">
-                  <Pagination
-                    count={totalPages}
-                    page={page}
-                    onChange={handlePageChange}
-                    shape="rounded"
-                    disabled={activitiesLoading}
-                  />
+                  {totalPages > 1 && (
+                    <Pagination
+                      count={totalPages}
+                      page={page}
+                      onChange={handlePageChange}
+                      shape="rounded"
+                      disabled={activitiesLoading}
+                    />
+                  )}
                 </Box>
               </>
             )}
