@@ -1,3 +1,5 @@
+[Pull Request](https://github.com/NotDmitry/Duoscript-Tandem/pull/93)
+
 # Personal Features
 
 | Категория            | Фича                                                                    | Баллы   |
@@ -21,6 +23,9 @@
 
 ### Layout компаненты
 
+[Pull Request](https://github.com/NotDmitry/Duoscript-Tandem/pull/32)
+[Pull Request](https://github.com/NotDmitry/Duoscript-Tandem/pull/29)
+
 В качестве UI библиотеки была выбрана Material UI и моей зоной ответственности было создать компоненты, повторяемые на каждой странице это:
 
 - Nav
@@ -29,6 +34,10 @@
   Разрабатывая эти компоненты я освоила базу синтаксиса Material UI. Nav Header имеют соответственно 2 представления: гость или авторизованный пользователь, на уровне контекста
 
 ### Страницы Login, Register, Profile
+
+[Pull Request](https://github.com/NotDmitry/Duoscript-Tandem/pull/43)
+[Pull Request](https://github.com/NotDmitry/Duoscript-Tandem/pull/52)
+[Pull Request](https://github.com/NotDmitry/Duoscript-Tandem/pull/66)
 
 - все 3 страницы реализованы на базе одного основного ключевого компонента формы
 - для валидации я использовала React Hook Form и схемы zod
@@ -39,6 +48,8 @@
 - также для оповещения пользователя о загрузке реализован спиннер(на кнопке и на странице)
 
 ### Разработка Async Sorter Widget (Drag & Drop)
+
+[Pull Request](https://github.com/NotDmitry/Duoscript-Tandem/pull/81)
 
 - Drag & Drop реализовала чере HTML5;
 - реализовала:
