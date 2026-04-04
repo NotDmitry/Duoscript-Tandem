@@ -1,7 +1,11 @@
 import type { Timestamp } from 'firebase/firestore';
 import type { CourseTag } from '@models/courseModel';
 
-export type WidgetType = 'quiz' | 'meaningMatcher' | 'bugHunter';
+export type WidgetType =
+  | 'quiz'
+  | 'meaningMatcher'
+  | 'bugHunter'
+  | 'asyncSorter';
 
 export interface WidgetDocument<T> {
   widgetId: string;
@@ -62,3 +66,23 @@ export type MeaningMatcherConfig = Record<
   MeaningMatcherDifficulty,
   MatcherLevelData
 >;
+
+// Async Sorter
+export interface AsyncSorterTask {
+  id: number;
+  codeSnippet: string[];
+  blocks: {
+    id: string;
+    code: string;
+    label: string;
+  }[];
+  answer: {
+    callStack: string[];
+    microtasks: string[];
+    macrotasks: string[];
+    outputOrder: string[];
+  };
+}
+export interface AsyncSorterConfig {
+  tasks: AsyncSorterTask[];
+}

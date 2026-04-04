@@ -1,29 +1,24 @@
-import { asyncSorterTasks } from '@/features/Async-sorter/mock';
-import {
-  asyncSorterTaskSchema,
-  asyncSorterTasksArraySchema,
-  type AsyncSorterAnswer,
-  type AsyncSorterTask,
-} from '@/features/Async-sorter/types';
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { type AsyncSorterAnswer } from '@features/Async-sorter/types';
+import { asyncSorterWidgetMock } from '@mocks/widgetAsyncSorter.mock';
+import type {
+  AsyncSorterConfig,
+  WidgetView,
+  AsyncSorterTask,
+} from '@models/widgetModel';
+import { delay } from '@utils/delay';
 
-let USE_MOCK_DATA = true;
+export async function getAsyncSorterWidget(): Promise<
+  WidgetView<AsyncSorterConfig>
+> {
+  await delay(300);
+  return asyncSorterWidgetMock;
+}
 export async function getAsyncSortTaskById(
   id: number
 ): Promise<AsyncSorterTask | undefined> {
   try {
-    if (USE_MOCK_DATA) {
-      await delay(1000);
-      const user = asyncSorterTasks.find((item) => item.id === id);
-      if (!user) throw new Error("The task doesn't exist");
-      return user;
-    }
-    const res = await fetch(`https://api.async-sorter.com/tasks/${String(id)}`);
-    if (!res.ok) {
-      throw new Error('Failed to fetch new task');
-    }
-    const task = asyncSorterTaskSchema.parse(await res.json());
-
+    const widget = await getAsyncSorterWidget();
+    const task = widget.config.tasks.find((item) => item.id === id);
     return task;
   } catch {
     throw new Error("The task doesn't exist");
@@ -34,19 +29,8 @@ export async function getAsyncSortTaskByIndex(
   index: number
 ): Promise<AsyncSorterTask | undefined> {
   try {
-    if (USE_MOCK_DATA) {
-      await delay(1000);
-      if (index <= asyncSorterTasks.length - 1) {
-        return asyncSorterTasks[index];
-      }
-      return undefined;
-    }
-    const res = await fetch(`https://api.async-sorter.com/tasks`);
-    if (!res.ok) {
-      throw new Error('Failed to fetch tasks array');
-    }
-    const tasks = asyncSorterTasksArraySchema.parse(await res.json());
-    const task = tasks[index];
+    const widget = await getAsyncSorterWidget();
+    const task = widget.config.tasks[index];
     return task;
   } catch {
     throw Error("The task doesn't exist");
@@ -54,18 +38,8 @@ export async function getAsyncSortTaskByIndex(
 }
 export async function getAsyncSortTasksNumber(): Promise<number> {
   try {
-    if (USE_MOCK_DATA) {
-      await delay(0);
-
-      return asyncSorterTasks.length;
-    }
-    const res = await fetch(`https://api.async-sorter.com/tasks`);
-    if (!res.ok) {
-      throw new Error('Failed to fetch tasks array');
-    }
-    const tasks = asyncSorterTasksArraySchema.parse(await res.json());
-
-    return tasks.length;
+    const widget = await getAsyncSorterWidget();
+    return widget.config.tasks.length;
   } catch {
     throw Error("The tasks array doesn't exist");
   }
@@ -95,7 +69,3 @@ export async function submitAnswer(
     throw Error("The tasks array doesn't exist");
   }
 }
-
-export const setUseMockData = (value: boolean): void => {
-  USE_MOCK_DATA = value;
-};

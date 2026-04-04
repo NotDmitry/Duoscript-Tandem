@@ -9,7 +9,7 @@ import {
   AccordionDetails,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import type { AsyncSorterTask } from './types';
+import type { AsyncSorterTask } from '@models/widgetModel';
 
 interface AsyncSorterResultsProps {
   solvedTasks: Map<number, AsyncSorterTask>;
