@@ -21,7 +21,7 @@
 
 Проект разрабатывался в рамках финального задания RS School TANDEM. Для управления проектами и задачами я создала Trello доску, которая позволяла визуализировать рабочий процесс, распределять задачи, соблюдать дедлайны и организовывать командную работу в виде карточек, перемещаемых между списками.
 
-### Layout компаненты
+### Layout компоненты
 
 [Pull Request](https://github.com/NotDmitry/Duoscript-Tandem/pull/32)
 [Pull Request](https://github.com/NotDmitry/Duoscript-Tandem/pull/29)
