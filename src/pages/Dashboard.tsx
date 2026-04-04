@@ -1,4 +1,11 @@
-import { Box, Button, Grid, Typography, Pagination } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  Typography,
+  Pagination,
+} from '@mui/material';
 import { Link } from 'react-router';
 import { useActivityHistory } from '@features/Dashboard/useActivityHistory';
 import { useAuth } from '@hooks/useAuth';
@@ -11,7 +18,11 @@ function Dashboard() {
   const { user } = useAuth();
   const uid = user?.uid ?? '';
 
-  const { dashboardData, loading: dashboardLoading } = useDashboard(uid);
+  const {
+    dashboardData,
+    loading: dashboardLoading,
+    error: dashboardError,
+  } = useDashboard(uid);
 
   const itemsPerPage = 3;
   const {
@@ -61,11 +72,34 @@ function Dashboard() {
         {/* Left column */}
         <Grid size={{ xs: 12, md: 6 }}>
           <Grid container direction="column" spacing={6}>
-            {!dashboardLoading && dashboardData && (
-              <>
-                <ProgressCard progress={dashboardData.progressPercent} />
-                <StatsGrid data={dashboardData} />
-              </>
+            {dashboardLoading ? (
+              <Box display="flex" justifyContent="center" p={4}>
+                <CircularProgress />
+              </Box>
+            ) : dashboardError ? (
+              <Typography color="error">{dashboardError}</Typography>
+            ) : (
+              dashboardData && (
+                <>
+                  <ProgressCard progress={dashboardData.progressPercent} />
+                  <StatsGrid data={dashboardData} />
+                  <Box>
+                    <Button
+                      component={Link}
+                      to="/library"
+                      variant="contained"
+                      sx={{
+                        color: '#ffffff',
+                        '&:hover': {
+                          backgroundColor: '#4287ec',
+                        },
+                      }}
+                    >
+                      Start Practice
+                    </Button>
+                  </Box>
+                </>
+              )
             )}
           </Grid>
         </Grid>
@@ -79,7 +113,9 @@ function Dashboard() {
             sx={{ minHeight: '52vh' }}
           >
             {activitiesLoading ? (
-              <Typography>Loading activities...</Typography>
+              <Box display="flex" justifyContent="center" p={4}>
+                <CircularProgress />
+              </Box>
             ) : error ? (
               <Typography color="error">{error}</Typography>
             ) : (
@@ -99,24 +135,6 @@ function Dashboard() {
           </Grid>
         </Grid>
       </Grid>
-
-      <Box mt={4} display="flex" justifyContent="flex-start">
-        <Button
-          component={Link}
-          to="/library"
-          variant="contained"
-          sx={{
-            backgroundColor: '#377732',
-            color: '#ffffff',
-            borderRadius: '10px',
-            '&:hover': {
-              backgroundColor: '#2e642a',
-            },
-          }}
-        >
-          Start Practice
-        </Button>
-      </Box>
     </Box>
   );
 }
