@@ -11,7 +11,7 @@ export interface RegisterData {
 }
 
 export interface UpdateProfileData {
-  email: string;
-  displayName: string;
-  password: string;
+  email?: string;
+  displayName?: string;
+  password?: string;
 }

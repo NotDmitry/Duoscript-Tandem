@@ -1,30 +1,28 @@
 import { Box, Button, Container, FormLabel, TextField } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type ProfileFields, profileSchema } from '@schemas/authSchemas';
 import { useSubmit } from '@hooks/useSubmit';
 import { useAuth } from '@hooks/useAuth';
 
-interface ProfileFormProps {
-  displayName: string;
-  onUpdate: (newDisplayName: string) => void;
-}
-
-export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
-  const { updateProfileFunc, logout } = useAuth();
+export function ProfileForm() {
+  const { user, updateProfileFunc, logout } = useAuth();
+  const displayName = user?.displayName ?? '';
+  const email = user?.email ?? '';
   const [formKey, setFormKey] = useState(0);
 
   const {
     register,
     handleSubmit,
+    control,
     reset,
     formState: { errors, isSubmitSuccessful },
   } = useForm<ProfileFields>({
     resolver: zodResolver(profileSchema),
     mode: 'onChange',
-    defaultValues: { email: '', displayName: '', password: '' },
+    defaultValues: { email, displayName, password: '' },
   });
 
   const {
@@ -32,23 +30,47 @@ export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
     isLoading,
     isSuccess,
   } = useSubmit({
-    successMessage: 'You have successfully updated profile data',
+    successMessage: 'Profile updated successfully',
     errorFallback: 'Failed to update profile',
   });
 
+  const watched = useWatch({ control });
+  const hasChanges =
+    (watched.email !== '' && watched.email !== email) ||
+    (watched.displayName !== '' && watched.displayName !== displayName) ||
+    watched.password !== '';
+
   const onSubmit = async (data: ProfileFields): Promise<void> => {
-    await handleAuthSubmit(() => updateProfileFunc(data));
-    onUpdate(data.displayName);
+    const updates = {
+      ...(data.email !== email ? { email: data.email } : {}),
+      ...(data.displayName !== displayName
+        ? { displayName: data.displayName }
+        : {}),
+      ...(data.password ? { password: data.password } : {}),
+    };
+    await handleAuthSubmit(() => updateProfileFunc(updates));
   };
 
   useEffect(() => {
     if (isSubmitSuccessful && isSuccess) {
-      reset();
+      reset({
+        email: watched.email ?? email,
+        displayName: watched.displayName ?? displayName,
+        password: '',
+      });
       setTimeout(() => {
         setFormKey((prev) => prev + 1);
       }, 0);
     }
-  }, [isSubmitSuccessful, isSuccess, reset]);
+  }, [
+    isSubmitSuccessful,
+    isSuccess,
+    reset,
+    email,
+    displayName,
+    watched.email,
+    watched.displayName,
+  ]);
 
   return (
     <Container maxWidth="sm">
@@ -73,10 +95,9 @@ export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
 
         <TextField
           key={`email-${String(formKey)}`}
-          label="New email"
-          placeholder="New email"
+          label="Email"
+          placeholder="Email"
           type="email"
-          required
           fullWidth
           variant="outlined"
           sx={{ mb: 2 }}
@@ -86,10 +107,9 @@ export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
         />
 
         <TextField
-          label="New username"
-          placeholder="New username"
+          label="Username"
+          placeholder="Username"
           type="text"
-          required
           fullWidth
           variant="outlined"
           sx={{ mb: 2 }}
@@ -103,7 +123,6 @@ export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
           label="New password"
           placeholder="New password"
           type="password"
-          required
           fullWidth
           variant="outlined"
           sx={{ mb: 2 }}
@@ -122,7 +141,12 @@ export function ProfileForm({ displayName, onUpdate }: ProfileFormProps) {
             SAVE
           </Button>
         ) : (
-          <Button type="submit" size="large" variant="contained">
+          <Button
+            type="submit"
+            size="large"
+            variant="contained"
+            disabled={!hasChanges}
+          >
             SAVE
           </Button>
         )}

@@ -85,14 +85,20 @@ async function mockUpdateUserProfile(
   uid: string,
   newData: UpdateProfileData
 ): Promise<UserAuthView> {
+  if (!newData.email && !newData.displayName && !newData.password) {
+    throw new Error('No changes to update');
+  }
+
   await delay(1000);
-  if (mockUserEmailExists(newData.email)) {
+
+  if (newData.email && mockUserEmailExists(newData.email)) {
     throw new Error(`User with email ${newData.email} already exists`);
   }
+
   const updatedUser = mockUpdateUser(uid, {
-    email: newData.email,
-    displayName: newData.displayName,
-    password: newData.password,
+    ...(newData.email && { email: newData.email }),
+    ...(newData.displayName && { displayName: newData.displayName }),
+    ...(newData.password && { password: newData.password }),
   });
   saveUserSession(updatedUser.uid);
   return updatedUser;
@@ -155,17 +161,39 @@ async function fbUpdateUserProfile(
   if (currentUser?.uid !== uid) {
     throw new Error('User not authenticated');
   }
+
+  const emailChanged =
+    Boolean(newData.email) && newData.email !== currentUser.email;
+  const displayNameChanged =
+    Boolean(newData.displayName) &&
+    newData.displayName !== currentUser.displayName;
+
+  if (!emailChanged && !displayNameChanged && !newData.password) {
+    throw new Error('No changes to update');
+  }
+
   try {
-    await updateProfile(currentUser, { displayName: newData.displayName });
-    await updateEmail(currentUser, newData.email);
-    await updatePassword(currentUser, newData.password);
+    const firestoreUpdates: Record<string, unknown> = {
+      updatedAt: serverTimestamp(),
+    };
+
+    if (displayNameChanged && newData.displayName) {
+      await updateProfile(currentUser, { displayName: newData.displayName });
+      firestoreUpdates.displayName = newData.displayName;
+    }
+
+    if (emailChanged && newData.email) {
+      await updateEmail(currentUser, newData.email);
+      firestoreUpdates.email = newData.email;
+    }
+
+    if (newData.password) {
+      await updatePassword(currentUser, newData.password);
+    }
+
     await updateDoc(
       doc(db, 'users', currentUser.uid).withConverter(userConverter),
-      {
-        displayName: newData.displayName,
-        email: newData.email,
-        updatedAt: serverTimestamp(),
-      }
+      firestoreUpdates
     );
     return toUserAuthView(currentUser);
   } catch (error) {
