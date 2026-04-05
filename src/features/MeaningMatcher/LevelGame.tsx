@@ -47,13 +47,25 @@ function ProgressBar({
   completedLevels: MeaningMatcherDifficulty[];
 }) {
   return (
-    <Box display="flex" alignItems="center" mb={3}>
+    <Box
+      display="flex"
+      alignItems="center"
+      mb={3}
+      role="list"
+      aria-label="Progress levels"
+    >
       {DIFFICULTIES.map((level, index) => {
         const isDone = completedLevels.includes(level);
         const isActive = level === difficulty;
 
         return (
-          <Box key={level} display="flex" alignItems="center">
+          <Box
+            key={level}
+            display="flex"
+            alignItems="center"
+            role="listitem"
+            aria-label={`${DIFFICULTY_LABELS[level]}: ${isDone ? 'completed' : isActive ? 'current' : 'upcoming'}`}
+          >
             <Box
               display="flex"
               flexDirection="column"
@@ -133,6 +145,8 @@ function Card({
       ref={setNodeRef}
       {...attributes}
       {...listeners}
+      aria-label={`Drag card: ${text}`}
+      role="button"
       sx={{
         p: 1.5,
         cursor: 'grab',
@@ -168,6 +182,7 @@ function Drop({
   return (
     <Paper
       ref={setNodeRef}
+      aria-label="Drop zone"
       sx={{
         p: 1.5,
         minHeight: 60,
@@ -200,6 +215,8 @@ function OptionsZone({ children }: { children: React.ReactNode }) {
   return (
     <Box
       ref={setNodeRef}
+      role="region"
+      aria-label="Options"
       sx={{
         border: '1px dashed #ccc',
         borderRadius: 1,
@@ -243,6 +260,8 @@ function ResultBlock({
     <Box
       mt={3}
       p={2.5}
+      role="status"
+      aria-live="polite"
       sx={{
         backgroundColor: 'grey.50',
         borderRadius: 2,

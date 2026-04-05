@@ -9,6 +9,7 @@ export default function StatCard({ title, value }: StatCardProps) {
   return (
     <Card
       variant="outlined"
+      aria-label={`${title}: ${String(value)}`}
       sx={{
         minWidth: { xs: 0, sm: 120 },
         borderRadius: 4,

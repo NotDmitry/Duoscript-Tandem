@@ -19,6 +19,7 @@ export default function RecentActivity({ activities }: Props) {
           {activities.map((item) => (
             <Box
               key={item.id}
+              aria-label={`${item.courseTitle}, ${item.lessonTitle}, score ${String(item.score)} out of ${String(item.maxScore)}, ${item.status}`}
               sx={{
                 border: '1px solid #e0e0e0',
                 borderRadius: 3,

@@ -29,6 +29,7 @@ export default function ProgressCard({ progress }: ProgressCardProps) {
             <LinearProgress
               variant="determinate"
               value={progress}
+              aria-label={`Progress: ${String(progress)}%`}
               sx={{
                 flex: 1,
                 height: 12,
