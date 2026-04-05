@@ -8,7 +8,7 @@ export interface Props {
 
 export default function StatsGrid({ data }: Props) {
   return (
-    <Box>
+    <Box role="region" aria-label="Learning Today statistics">
       <Typography variant="h6" gutterBottom>
         Learning Today
       </Typography>

@@ -74,7 +74,7 @@ function Dashboard() {
           <Grid container direction="column" spacing={6}>
             {dashboardLoading ? (
               <Box display="flex" justifyContent="center" p={4}>
-                <CircularProgress />
+                <CircularProgress aria-label="Loading dashboard" />
               </Box>
             ) : dashboardError ? (
               <Typography color="error">{dashboardError}</Typography>
@@ -114,7 +114,7 @@ function Dashboard() {
           >
             {activitiesLoading ? (
               <Box display="flex" justifyContent="center" p={4}>
-                <CircularProgress />
+                <CircularProgress aria-label="Loading activities" />
               </Box>
             ) : error ? (
               <Typography color="error">{error}</Typography>
