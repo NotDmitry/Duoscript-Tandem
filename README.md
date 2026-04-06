@@ -44,6 +44,10 @@ Available at:
 
 - [Meeting Notes](https://github.com/NotDmitry/Duoscript-Tandem/tree/main/development-notes/Meeting%20notes)
 
+### Demo-video
+
+- [Demo-video](https://www.youtube.com/watch?v=SJzWnkMsTlE)
+
 ### Week 5 Checkpoint
 
 [video](https://youtu.be/Ntsj5kxZHLo)
