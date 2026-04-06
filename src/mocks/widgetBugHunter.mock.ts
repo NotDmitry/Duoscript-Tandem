@@ -1,6 +1,6 @@
-import type { WidgetView, BugHunterConfig } from '@models/widgetModel.ts';
+import type { WidgetView } from '@models/widgetModel.ts';
 
-const htmlBugHunterWidget: WidgetView<BugHunterConfig> = {
+const htmlBugHunterWidget: WidgetView<'bugHunter'> = {
   widgetId: 'widget_bug_hunter_html',
   type: 'bugHunter',
   topic: 'html',
@@ -49,7 +49,7 @@ const htmlBugHunterWidget: WidgetView<BugHunterConfig> = {
   },
 };
 
-const cssBugHunterWidget: WidgetView<BugHunterConfig> = {
+const cssBugHunterWidget: WidgetView<'bugHunter'> = {
   widgetId: 'widget_bug_hunter_css',
   type: 'bugHunter',
   topic: 'css',
@@ -109,7 +109,7 @@ const cssBugHunterWidget: WidgetView<BugHunterConfig> = {
   },
 };
 
-const jsBugHunterWidget: WidgetView<BugHunterConfig> = {
+const jsBugHunterWidget: WidgetView<'bugHunter'> = {
   widgetId: 'widget_bug_hunter_js',
   type: 'bugHunter',
   topic: 'js',
@@ -172,7 +172,7 @@ const jsBugHunterWidget: WidgetView<BugHunterConfig> = {
   },
 };
 
-const tsBugHunterWidget: WidgetView<BugHunterConfig> = {
+const tsBugHunterWidget: WidgetView<'bugHunter'> = {
   widgetId: 'widget_bug_hunter_ts',
   type: 'bugHunter',
   topic: 'ts',
@@ -228,7 +228,7 @@ const tsBugHunterWidget: WidgetView<BugHunterConfig> = {
   },
 };
 
-const gitHubBugHunterWidget: WidgetView<BugHunterConfig> = {
+const gitHubBugHunterWidget: WidgetView<'bugHunter'> = {
   widgetId: 'widget_bug_hunter_github',
   type: 'bugHunter',
   topic: 'github',
@@ -263,10 +263,7 @@ const gitHubBugHunterWidget: WidgetView<BugHunterConfig> = {
   },
 };
 
-export const bugHunterWidgetMocks: Record<
-  string,
-  WidgetView<BugHunterConfig>
-> = {
+export const bugHunterWidgetMocks: Record<string, WidgetView<'bugHunter'>> = {
   widget_quiz_html: htmlBugHunterWidget,
   widget_quiz_css: cssBugHunterWidget,
   widget_quiz_js: jsBugHunterWidget,

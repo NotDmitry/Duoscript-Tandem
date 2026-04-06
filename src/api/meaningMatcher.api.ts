@@ -1,4 +1,4 @@
-import type { MeaningMatcherConfig, WidgetView } from '@models/widgetModel';
+import type { WidgetView } from '@models/widgetModel';
 
 // Mock Imports
 import { meaningMatcherWidgetMocks } from '@mocks/widgetMeaningMatcher.mock';
@@ -17,7 +17,7 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 export async function mockGetMeaningMatcherWidget(
   widgetId: string
-): Promise<WidgetView<MeaningMatcherConfig>> {
+): Promise<WidgetView<'meaningMatcher'>> {
   await delay(300);
   return meaningMatcherWidgetMocks[widgetId];
 }
@@ -26,7 +26,7 @@ export async function mockGetMeaningMatcherWidget(
 
 async function fbGetMeaningMatcherWidget(
   widgetId: string
-): Promise<WidgetView<MeaningMatcherConfig>> {
+): Promise<WidgetView<'meaningMatcher'>> {
   let snap: DocumentSnapshot;
   try {
     snap = await getDoc(doc(db, 'widgets', widgetId));
@@ -35,7 +35,7 @@ async function fbGetMeaningMatcherWidget(
   }
   if (!snap.exists())
     throw new Error(`MeaningMatcher widget not found: ${widgetId}`);
-  return snap.data() as WidgetView<MeaningMatcherConfig>;
+  return snap.data() as WidgetView<'meaningMatcher'>;
 }
 
 // Export Switch

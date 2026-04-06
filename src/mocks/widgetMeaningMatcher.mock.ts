@@ -1,6 +1,6 @@
-import type { WidgetView, MeaningMatcherConfig } from '@models/widgetModel';
+import type { WidgetView } from '@models/widgetModel';
 
-const htmlMatcherWidget: WidgetView<MeaningMatcherConfig> = {
+const htmlMatcherWidget: WidgetView<'meaningMatcher'> = {
   widgetId: 'widget_matcher_html',
   type: 'meaningMatcher',
   topic: 'html',
@@ -41,7 +41,7 @@ const htmlMatcherWidget: WidgetView<MeaningMatcherConfig> = {
   },
 };
 
-const cssMatcherWidget: WidgetView<MeaningMatcherConfig> = {
+const cssMatcherWidget: WidgetView<'meaningMatcher'> = {
   widgetId: 'widget_matcher_css',
   type: 'meaningMatcher',
   topic: 'css',
@@ -82,7 +82,7 @@ const cssMatcherWidget: WidgetView<MeaningMatcherConfig> = {
   },
 };
 
-const jsMatcherWidget: WidgetView<MeaningMatcherConfig> = {
+const jsMatcherWidget: WidgetView<'meaningMatcher'> = {
   widgetId: 'widget_matcher_js',
   type: 'meaningMatcher',
   topic: 'js',
@@ -123,7 +123,7 @@ const jsMatcherWidget: WidgetView<MeaningMatcherConfig> = {
   },
 };
 
-const tsMatcherWidget: WidgetView<MeaningMatcherConfig> = {
+const tsMatcherWidget: WidgetView<'meaningMatcher'> = {
   widgetId: 'widget_matcher_ts',
   type: 'meaningMatcher',
   topic: 'ts',
@@ -164,7 +164,7 @@ const tsMatcherWidget: WidgetView<MeaningMatcherConfig> = {
   },
 };
 
-const githubMatcherWidget: WidgetView<MeaningMatcherConfig> = {
+const githubMatcherWidget: WidgetView<'meaningMatcher'> = {
   widgetId: 'widget_matcher_github',
   type: 'meaningMatcher',
   topic: 'github',
@@ -207,7 +207,7 @@ const githubMatcherWidget: WidgetView<MeaningMatcherConfig> = {
 
 export const meaningMatcherWidgetMocks: Record<
   string,
-  WidgetView<MeaningMatcherConfig>
+  WidgetView<'meaningMatcher'>
 > = {
   widget_matcher_html: htmlMatcherWidget,
   widget_matcher_css: cssMatcherWidget,

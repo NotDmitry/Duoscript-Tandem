@@ -1,4 +1,4 @@
-import type { QuizConfig, WidgetView } from '@models/widgetModel';
+import type { WidgetView } from '@models/widgetModel';
 
 // Mock Imports
 import { quizWidgetMocks } from '@mocks/widgetQuiz.mock';
@@ -17,16 +17,14 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 async function mockGetQuizWidget(
   widgetId: string
-): Promise<WidgetView<QuizConfig>> {
+): Promise<WidgetView<'quiz'>> {
   await delay(300);
   return quizWidgetMocks[widgetId];
 }
 
 // Firebase Implementation
 
-async function fbGetQuizWidget(
-  widgetId: string
-): Promise<WidgetView<QuizConfig>> {
+async function fbGetQuizWidget(widgetId: string): Promise<WidgetView<'quiz'>> {
   let snap: DocumentSnapshot;
   try {
     snap = await getDoc(doc(db, 'widgets', widgetId));
@@ -34,7 +32,7 @@ async function fbGetQuizWidget(
     throwFirebaseError(error);
   }
   if (!snap.exists()) throw new Error(`Quiz widget not found: ${widgetId}`);
-  return snap.data() as WidgetView<QuizConfig>;
+  return snap.data() as WidgetView<'quiz'>;
 }
 
 // Export Switch
