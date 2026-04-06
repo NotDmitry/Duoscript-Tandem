@@ -3,6 +3,7 @@ import Dashboard from '@pages/Dashboard';
 import Home from '@pages/Home';
 import About from '@pages/About';
 import Library from '@pages/Library';
+import CourseLessons from '@pages/CourseLessons';
 import NotFound from '@pages/NotFound';
 import Profile from '@pages/Profile';
 import Layout from '@layouts/Layout';
@@ -26,6 +27,7 @@ function AppRouter() {
         <Route element={<PrivateRoute />}>
           <Route path={'dashboard'} element={<Dashboard />} />
           <Route path={'library'} element={<Library />} />
+          <Route path={'library/:courseId'} element={<CourseLessons />} />
           <Route path={'profile'} element={<Profile />} />
         </Route>
       </Route>

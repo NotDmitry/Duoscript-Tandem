@@ -5,6 +5,7 @@ import {
   LinearProgress,
   Typography,
 } from '@mui/material';
+import { useNavigate } from 'react-router';
 import type { CourseView, CourseTag } from '@models/courseModel';
 
 const TAG_COLORS: Record<CourseTag, string> = {
@@ -21,11 +22,17 @@ interface CourseCardProps {
 }
 
 export function CourseCard({ course }: CourseCardProps) {
+  const navigate = useNavigate();
   const tagColor = TAG_COLORS[course.tag];
   const progress = course.progressPercent ?? 0;
 
+  const handleClick = () => {
+    navigate(`/library/${course.courseId}`);
+  };
+
   return (
     <Card
+      onClick={handleClick}
       variant="outlined"
       sx={{
         borderRadius: 4,
