@@ -8,6 +8,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'JS Quiz',
       description: 'Test your core JavaScript knowledge.',
       widgetId: 'widget_quiz_js',
+      widgetType: 'quiz',
     },
     {
       lessonId: 'lesson_js_2',
@@ -15,6 +16,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'Array & Object Methods',
       description: 'Match array and object methods to their descriptions.',
       widgetId: 'widget_matcher_js',
+      widgetType: 'meaningMatcher',
     },
     {
       lessonId: 'lesson_js_3',
@@ -22,6 +24,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'JS Bug Hunter',
       description: 'Find and fix bugs in JavaScript code snippets.',
       widgetId: 'widget_bug_hunter_js',
+      widgetType: 'bugHunter',
     },
     {
       lessonId: 'lesson_js_4',
@@ -29,6 +32,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'Async Event Loop',
       description: 'Sort async operations into the correct execution queues.',
       widgetId: 'widget_async_sorter',
+      widgetType: 'asyncSorter',
     },
   ],
   course_ts: [
@@ -38,6 +42,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'TS Quiz',
       description: 'Test your TypeScript type system knowledge.',
       widgetId: 'widget_quiz_ts',
+      widgetType: 'quiz',
     },
     {
       lessonId: 'lesson_ts_2',
@@ -45,6 +50,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'Types & Utilities',
       description: 'Match TypeScript keywords and utility types.',
       widgetId: 'widget_matcher_ts',
+      widgetType: 'meaningMatcher',
     },
     {
       lessonId: 'lesson_ts_3',
@@ -52,6 +58,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'TS Bug Hunter',
       description: 'Fix type errors in TypeScript snippets.',
       widgetId: 'widget_bug_hunter_ts',
+      widgetType: 'bugHunter',
     },
   ],
   course_css: [
@@ -61,6 +68,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'CSS Quiz',
       description: 'Test your CSS properties and layout knowledge.',
       widgetId: 'widget_quiz_css',
+      widgetType: 'quiz',
     },
     {
       lessonId: 'lesson_css_2',
@@ -68,6 +76,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'CSS Properties',
       description: 'Match CSS properties to their effects.',
       widgetId: 'widget_matcher_css',
+      widgetType: 'meaningMatcher',
     },
     {
       lessonId: 'lesson_css_3',
@@ -75,6 +84,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'CSS Bug Hunter',
       description: 'Spot missing or incorrect CSS declarations.',
       widgetId: 'widget_bug_hunter_css',
+      widgetType: 'bugHunter',
     },
   ],
   course_html: [
@@ -84,6 +94,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'HTML Quiz',
       description: 'Test your HTML tags and attributes knowledge.',
       widgetId: 'widget_quiz_html',
+      widgetType: 'quiz',
     },
     {
       lessonId: 'lesson_html_2',
@@ -91,6 +102,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'Semantic Tags',
       description: 'Match HTML tags to their semantic meaning.',
       widgetId: 'widget_matcher_html',
+      widgetType: 'meaningMatcher',
     },
     {
       lessonId: 'lesson_html_3',
@@ -98,6 +110,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'HTML Bug Hunter',
       description: 'Fix broken HTML markup.',
       widgetId: 'widget_bug_hunter_html',
+      widgetType: 'bugHunter',
     },
   ],
   course_github: [
@@ -107,6 +120,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'GitHub Quiz',
       description: 'Test your Git and GitHub workflow knowledge.',
       widgetId: 'widget_quiz_github',
+      widgetType: 'quiz',
     },
     {
       lessonId: 'lesson_github_2',
@@ -114,6 +128,7 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'Git Commands',
       description: 'Match Git commands to their descriptions.',
       widgetId: 'widget_matcher_github',
+      widgetType: 'meaningMatcher',
     },
     {
       lessonId: 'lesson_github_3',
@@ -121,15 +136,17 @@ export const mockLessons: Record<string, LessonView[]> = {
       title: 'GitHub Bug Hunter',
       description: 'Fix incorrect Git commands.',
       widgetId: 'widget_bug_hunter_github',
+      widgetType: 'bugHunter',
     },
   ],
   course_algorithms: [
     {
       lessonId: 'lesson_algo_1',
       courseId: 'course_algorithms',
-      title: 'Async Sorter',
+      title: 'Async Event Loop',
       description: 'Sort async operations into the correct execution queues.',
       widgetId: 'widget_async_sorter',
+      widgetType: 'asyncSorter',
     },
   ],
 };
