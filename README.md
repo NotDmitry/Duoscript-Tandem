@@ -46,7 +46,7 @@ Available at:
 
 ### Demo-video
 
-- [Demo-video](https://www.youtube.com/watch?v=SJzWnkMsTlE)
+- [Demo-video](https://www.youtube.com/watch?v=UX0T9aYoHwM)
 
 ### Week 5 Checkpoint
 
