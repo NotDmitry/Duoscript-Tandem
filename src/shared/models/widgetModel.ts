@@ -1,21 +1,27 @@
 import type { Timestamp } from 'firebase/firestore';
 import type { CourseTag } from '@models/courseModel';
 
-export type WidgetType =
-  | 'quiz'
-  | 'meaningMatcher'
-  | 'bugHunter'
-  | 'asyncSorter';
+export interface WidgetConfigMap {
+  quiz: QuizConfig;
+  meaningMatcher: MeaningMatcherConfig;
+  bugHunter: BugHunterConfig;
+  asyncSorter: AsyncSorterConfig;
+}
 
-export interface WidgetDocument<T> {
+export type WidgetType = keyof WidgetConfigMap;
+
+export interface WidgetDocument<T extends WidgetType> {
   widgetId: string;
-  type: WidgetType;
+  type: T;
   topic: CourseTag;
-  config: T;
+  config: WidgetConfigMap[T];
   createdAt: Timestamp;
 }
 
-export type WidgetView<T> = Omit<WidgetDocument<T>, 'createdAt'>;
+export type WidgetView<T extends WidgetType> = Omit<
+  WidgetDocument<T>,
+  'createdAt'
+>;
 
 // Quiz Widget
 

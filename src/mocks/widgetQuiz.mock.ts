@@ -1,6 +1,6 @@
-import type { WidgetView, QuizConfig } from '@models/widgetModel';
+import type { WidgetView } from '@models/widgetModel';
 
-const htmlQuizWidget: WidgetView<QuizConfig> = {
+const htmlQuizWidget: WidgetView<'quiz'> = {
   widgetId: 'widget_quiz_html',
   type: 'quiz',
   topic: 'html',
@@ -61,7 +61,7 @@ const htmlQuizWidget: WidgetView<QuizConfig> = {
   },
 };
 
-const cssQuizWidget: WidgetView<QuizConfig> = {
+const cssQuizWidget: WidgetView<'quiz'> = {
   widgetId: 'widget_quiz_css',
   type: 'quiz',
   topic: 'css',
@@ -129,7 +129,7 @@ const cssQuizWidget: WidgetView<QuizConfig> = {
   },
 };
 
-const jsQuizWidget: WidgetView<QuizConfig> = {
+const jsQuizWidget: WidgetView<'quiz'> = {
   widgetId: 'widget_quiz_js',
   type: 'quiz',
   topic: 'js',
@@ -190,7 +190,7 @@ const jsQuizWidget: WidgetView<QuizConfig> = {
   },
 };
 
-const tsQuizWidget: WidgetView<QuizConfig> = {
+const tsQuizWidget: WidgetView<'quiz'> = {
   widgetId: 'widget_quiz_ts',
   type: 'quiz',
   topic: 'ts',
@@ -252,7 +252,7 @@ const tsQuizWidget: WidgetView<QuizConfig> = {
   },
 };
 
-const githubQuizWidget: WidgetView<QuizConfig> = {
+const githubQuizWidget: WidgetView<'quiz'> = {
   widgetId: 'widget_quiz_github',
   type: 'quiz',
   topic: 'github',
@@ -314,7 +314,7 @@ const githubQuizWidget: WidgetView<QuizConfig> = {
   },
 };
 
-export const quizWidgetMocks: Record<string, WidgetView<QuizConfig>> = {
+export const quizWidgetMocks: Record<string, WidgetView<'quiz'>> = {
   widget_quiz_html: htmlQuizWidget,
   widget_quiz_css: cssQuizWidget,
   widget_quiz_js: jsQuizWidget,

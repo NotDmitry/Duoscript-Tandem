@@ -6,13 +6,13 @@ export function useDashboard(uid: string) {
   const [dashboardData, setDashboardData] = useState<UserDashboardView | null>(
     null
   );
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect((): void => {
     if (!uid) return;
     async function fetchData() {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
       try {
         const data = await getUserDashboard(uid);
@@ -24,11 +24,11 @@ export function useDashboard(uid: string) {
           setError('Failed to load dashboard');
         }
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     }
     void fetchData();
   }, [uid]);
 
-  return { dashboardData, loading, error };
+  return { dashboardData, isLoading, error };
 }

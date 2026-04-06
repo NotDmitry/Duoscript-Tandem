@@ -1,9 +1,6 @@
-import type {
-  WidgetView,
-  AsyncSorterConfig,
-} from '@/shared/models/widgetModel';
+import type { WidgetView } from '@/shared/models/widgetModel';
 
-export const asyncSorterWidgetMock: WidgetView<AsyncSorterConfig> = {
+export const asyncSorterWidgetMock: WidgetView<'asyncSorter'> = {
   widgetId: 'widget_async_sorter',
   type: 'asyncSorter',
   topic: 'js',

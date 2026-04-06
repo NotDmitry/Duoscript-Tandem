@@ -1,14 +1,10 @@
 import { type AsyncSorterAnswer } from '@features/Async-sorter/types';
 import { asyncSorterWidgetMock } from '@mocks/widgetAsyncSorter.mock';
-import type {
-  AsyncSorterConfig,
-  WidgetView,
-  AsyncSorterTask,
-} from '@models/widgetModel';
+import type { WidgetView, AsyncSorterTask } from '@models/widgetModel';
 import { delay } from '@utils/delay';
 
 export async function getAsyncSorterWidget(): Promise<
-  WidgetView<AsyncSorterConfig>
+  WidgetView<'asyncSorter'>
 > {
   await delay(300);
   return asyncSorterWidgetMock;
@@ -18,8 +14,7 @@ export async function getAsyncSortTaskById(
 ): Promise<AsyncSorterTask | undefined> {
   try {
     const widget = await getAsyncSorterWidget();
-    const task = widget.config.tasks.find((item) => item.id === id);
-    return task;
+    return widget.config.tasks.find((item) => item.id === id);
   } catch {
     throw new Error("The task doesn't exist");
   }
@@ -30,8 +25,7 @@ export async function getAsyncSortTaskByIndex(
 ): Promise<AsyncSorterTask | undefined> {
   try {
     const widget = await getAsyncSorterWidget();
-    const task = widget.config.tasks[index];
-    return task;
+    return widget.config.tasks[index];
   } catch {
     throw Error("The task doesn't exist");
   }
