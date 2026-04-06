@@ -4,6 +4,7 @@ import Home from '@pages/Home';
 import About from '@pages/About';
 import Library from '@pages/Library';
 import CourseLessons from '@pages/CourseLessons';
+import Lesson from '@pages/Lesson';
 import NotFound from '@pages/NotFound';
 import Profile from '@pages/Profile';
 import Layout from '@layouts/Layout';
@@ -28,6 +29,10 @@ function AppRouter() {
           <Route path={'dashboard'} element={<Dashboard />} />
           <Route path={'library'} element={<Library />} />
           <Route path={'library/:courseId'} element={<CourseLessons />} />
+          <Route
+            path={'library/:courseId/lessons/:lessonId'}
+            element={<Lesson />}
+          />
           <Route path={'profile'} element={<Profile />} />
         </Route>
       </Route>
