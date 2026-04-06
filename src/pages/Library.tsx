@@ -1,6 +1,7 @@
-import { Box, CircularProgress, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { useCourses } from '@features/Library/useCourses';
 import { CourseCard } from '@features/Library/components/CourseCard';
+import { Loader } from '@components/Loader/Loader';
 
 function Library() {
   const { courses, isLoading, error } = useCourses();
@@ -18,11 +19,7 @@ function Library() {
         Library
       </Typography>
 
-      {isLoading && (
-        <Box display="flex" justifyContent="center" p={6}>
-          <CircularProgress />
-        </Box>
-      )}
+      {isLoading && <Loader />}
 
       {error && <Typography color="error">{error}</Typography>}
 

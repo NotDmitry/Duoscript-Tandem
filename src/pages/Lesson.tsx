@@ -1,9 +1,10 @@
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useParams } from 'react-router';
 import { useLesson } from '@features/Library/useLesson';
 import { WidgetRenderer } from '@features/Library/components/WidgetRenderer';
 import { AppLink } from '@components/AppLink/AppLink';
+import { Loader } from '@components/Loader/Loader';
 
 function Lesson() {
   const { courseId, lessonId } = useParams<{
@@ -33,11 +34,7 @@ function Lesson() {
         />
       </Box>
 
-      {isLoading && (
-        <Box display="flex" justifyContent="center" p={6}>
-          <CircularProgress />
-        </Box>
-      )}
+      {isLoading && <Loader />}
 
       {error && <Typography color="error">{error}</Typography>}
 

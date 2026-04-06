@@ -1,7 +1,8 @@
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import type { MeaningMatcherProps } from './MeaningMatcher.types';
 import { useMeaningMatcher } from './useMeaningMatcher';
 import { LevelGame } from './LevelGame';
+import { Loader } from '@/components/Loader/Loader';
 
 export function MeaningMatcher({
   widgetId,
@@ -15,13 +16,8 @@ export function MeaningMatcher({
       onComplete,
     });
 
-  if (dataState.status === 'loading') {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 6 }}>
-        <CircularProgress aria-label="Loading widget" />
-      </Box>
-    );
-  }
+  if (dataState.status === 'loading')
+    return <Loader ariaLabel="Loading widget" />;
 
   if (dataState.status === 'error') {
     return (

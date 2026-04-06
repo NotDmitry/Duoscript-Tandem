@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router';
 import { useAuth } from '@hooks/useAuth';
-import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import landingExample1 from '@assets/images/Landing_Example_1.jpg';
 import landingExample2 from '@assets/images/Landing_Example_2.jpg';
+import { Loader } from '@components/Loader/Loader.tsx';
 
 const GREETING = 'Hello dear';
 const DEFAULT_USERNAME = 'developer';
@@ -28,13 +29,7 @@ function Home() {
   const { user, isUserLoading } = useAuth();
   const displayName: string = user?.displayName ?? DEFAULT_USERNAME;
 
-  if (isUserLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 6 }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
+  if (isUserLoading) return <Loader />;
 
   return (
     <Box
