@@ -12,7 +12,9 @@ function CourseLessons() {
   const { lessons, isLoading, error } = useLessons(courseId ?? '');
 
   const handleLessonClick = (lesson: LessonView): void => {
-    navigate(`/library/${courseId ?? ''}/lessons/${lesson.lessonId}`);
+    navigate(`/library/${courseId ?? ''}/lessons/${lesson.lessonId}`, {
+      state: { lesson },
+    });
   };
 
   return (
