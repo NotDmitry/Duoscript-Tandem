@@ -2,9 +2,9 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { describe, beforeEach, it, expect, vi } from 'vitest';
 import { useWidgetQuiz } from './useWidgetQuiz';
-import type { WidgetView, QuizConfig } from '@models/widgetModel';
+import type { WidgetView } from '@models/widgetModel';
 
-const mockWidgetData: WidgetView<QuizConfig> = {
+const mockWidgetData: WidgetView<'quiz'> = {
   widgetId: 'widget_quiz_test',
   type: 'quiz',
   topic: 'js',
@@ -42,7 +42,7 @@ const mockWidgetData: WidgetView<QuizConfig> = {
 };
 
 vi.mock('@api/widgetQuiz.api.ts', () => ({
-  getQuizWidget: (): Promise<WidgetView<QuizConfig>> =>
+  getQuizWidget: (): Promise<WidgetView<'quiz'>> =>
     Promise.resolve(mockWidgetData),
 }));
 
