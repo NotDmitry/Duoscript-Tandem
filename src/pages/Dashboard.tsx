@@ -20,7 +20,7 @@ function Dashboard() {
 
   const {
     dashboardData,
-    loading: dashboardLoading,
+    isLoading: dashboardLoading,
     error: dashboardError,
   } = useDashboard(uid);
 
@@ -30,7 +30,7 @@ function Dashboard() {
     page,
     setPage,
     totalPages,
-    loading: activitiesLoading,
+    isLoading: activitiesLoading,
     error,
   } = useActivityHistory(uid, itemsPerPage);
 

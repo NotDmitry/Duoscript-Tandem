@@ -69,7 +69,7 @@ describe('useActivityHistory', () => {
 
     const { result } = renderHook(() => useActivityHistory('user_1', 5));
 
-    expect(result.current.loading).toBe(true);
+    expect(result.current.isLoading).toBe(true);
 
     resolver({
       activities: [{ ...mockActivity }],
@@ -78,7 +78,7 @@ describe('useActivityHistory', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.loading).toBe(false);
+      expect(result.current.isLoading).toBe(false);
     });
   });
 });
