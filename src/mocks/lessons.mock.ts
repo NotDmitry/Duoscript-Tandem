@@ -1,0 +1,135 @@
+import type { LessonView } from '@models/lessonModel';
+
+export const mockLessons: Record<string, LessonView[]> = {
+  course_js: [
+    {
+      lessonId: 'lesson_js_1',
+      courseId: 'course_js',
+      title: 'JS Quiz',
+      description: 'Test your core JavaScript knowledge.',
+      widgetId: 'widget_quiz_js',
+    },
+    {
+      lessonId: 'lesson_js_2',
+      courseId: 'course_js',
+      title: 'Array & Object Methods',
+      description: 'Match array and object methods to their descriptions.',
+      widgetId: 'widget_matcher_js',
+    },
+    {
+      lessonId: 'lesson_js_3',
+      courseId: 'course_js',
+      title: 'JS Bug Hunter',
+      description: 'Find and fix bugs in JavaScript code snippets.',
+      widgetId: 'widget_bug_hunter_js',
+    },
+    {
+      lessonId: 'lesson_js_4',
+      courseId: 'course_js',
+      title: 'Async Event Loop',
+      description: 'Sort async operations into the correct execution queues.',
+      widgetId: 'widget_async_sorter',
+    },
+  ],
+  course_ts: [
+    {
+      lessonId: 'lesson_ts_1',
+      courseId: 'course_ts',
+      title: 'TS Quiz',
+      description: 'Test your TypeScript type system knowledge.',
+      widgetId: 'widget_quiz_ts',
+    },
+    {
+      lessonId: 'lesson_ts_2',
+      courseId: 'course_ts',
+      title: 'Types & Utilities',
+      description: 'Match TypeScript keywords and utility types.',
+      widgetId: 'widget_matcher_ts',
+    },
+    {
+      lessonId: 'lesson_ts_3',
+      courseId: 'course_ts',
+      title: 'TS Bug Hunter',
+      description: 'Fix type errors in TypeScript snippets.',
+      widgetId: 'widget_bug_hunter_ts',
+    },
+  ],
+  course_css: [
+    {
+      lessonId: 'lesson_css_1',
+      courseId: 'course_css',
+      title: 'CSS Quiz',
+      description: 'Test your CSS properties and layout knowledge.',
+      widgetId: 'widget_quiz_css',
+    },
+    {
+      lessonId: 'lesson_css_2',
+      courseId: 'course_css',
+      title: 'CSS Properties',
+      description: 'Match CSS properties to their effects.',
+      widgetId: 'widget_matcher_css',
+    },
+    {
+      lessonId: 'lesson_css_3',
+      courseId: 'course_css',
+      title: 'CSS Bug Hunter',
+      description: 'Spot missing or incorrect CSS declarations.',
+      widgetId: 'widget_bug_hunter_css',
+    },
+  ],
+  course_html: [
+    {
+      lessonId: 'lesson_html_1',
+      courseId: 'course_html',
+      title: 'HTML Quiz',
+      description: 'Test your HTML tags and attributes knowledge.',
+      widgetId: 'widget_quiz_html',
+    },
+    {
+      lessonId: 'lesson_html_2',
+      courseId: 'course_html',
+      title: 'Semantic Tags',
+      description: 'Match HTML tags to their semantic meaning.',
+      widgetId: 'widget_matcher_html',
+    },
+    {
+      lessonId: 'lesson_html_3',
+      courseId: 'course_html',
+      title: 'HTML Bug Hunter',
+      description: 'Fix broken HTML markup.',
+      widgetId: 'widget_bug_hunter_html',
+    },
+  ],
+  course_github: [
+    {
+      lessonId: 'lesson_github_1',
+      courseId: 'course_github',
+      title: 'GitHub Quiz',
+      description: 'Test your Git and GitHub workflow knowledge.',
+      widgetId: 'widget_quiz_github',
+    },
+    {
+      lessonId: 'lesson_github_2',
+      courseId: 'course_github',
+      title: 'Git Commands',
+      description: 'Match Git commands to their descriptions.',
+      widgetId: 'widget_matcher_github',
+    },
+    {
+      lessonId: 'lesson_github_3',
+      courseId: 'course_github',
+      title: 'GitHub Bug Hunter',
+      description: 'Fix incorrect Git commands.',
+      widgetId: 'widget_bug_hunter_github',
+    },
+  ],
+  course_algorithms: [
+    {
+      lessonId: 'lesson_algo_1',
+      courseId: 'course_algorithms',
+      title: 'Async Sorter',
+      description: 'Sort async operations into the correct execution queues.',
+      widgetId: 'widget_async_sorter',
+    },
+  ],
+};
