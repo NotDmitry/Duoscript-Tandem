@@ -264,9 +264,9 @@ const gitHubBugHunterWidget: WidgetView<'bugHunter'> = {
 };
 
 export const bugHunterWidgetMocks: Record<string, WidgetView<'bugHunter'>> = {
-  widget_quiz_html: htmlBugHunterWidget,
-  widget_quiz_css: cssBugHunterWidget,
-  widget_quiz_js: jsBugHunterWidget,
-  widget_quiz_ts: tsBugHunterWidget,
-  widget_quiz_github: gitHubBugHunterWidget,
+  widget_bug_hunter_html: htmlBugHunterWidget,
+  widget_bug_hunter_css: cssBugHunterWidget,
+  widget_bug_hunter_js: jsBugHunterWidget,
+  widget_bug_hunter_ts: tsBugHunterWidget,
+  widget_bug_hunter_github: gitHubBugHunterWidget,
 };
