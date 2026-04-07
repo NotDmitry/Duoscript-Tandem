@@ -22,8 +22,8 @@ describe('Logo', () => {
   });
 
   it('should render LogoIcon component', () => {
-    const svgElement = document.querySelector('svg');
-    expect(svgElement).toBeInTheDocument();
+    const logoImage = screen.getByRole('img', { name: /logo/i });
+    expect(logoImage).toBeInTheDocument();
   });
 
   it('should render NavLink with correct "to"', () => {
