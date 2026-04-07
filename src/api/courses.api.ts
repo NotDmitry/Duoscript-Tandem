@@ -31,6 +31,11 @@ async function mockGetCourses(): Promise<CourseView[]> {
   return mockCourses;
 }
 
+async function mockGetCourseProgressList(): Promise<CourseProgressView[]> {
+  await delay(300);
+  return mockCourseProgressList;
+}
+
 async function mockGetCoursesWithProgress(
   uid: string
 ): Promise<CourseWithProgressView[]> {
@@ -118,3 +123,6 @@ export const getCourses = USE_MOCK ? mockGetCourses : fbGetCourses;
 export const getCoursesWithProgress = USE_MOCK
   ? mockGetCoursesWithProgress
   : fbGetCoursesWithProgress;
+export const getCourseProgressList = USE_MOCK
+  ? mockGetCourseProgressList
+  : fbGetCourseProgressList;
