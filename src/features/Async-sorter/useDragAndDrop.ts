@@ -29,7 +29,12 @@ export const useDragAndDrop = (
   tasksNumber: number,
 
   setTaskIndex: React.Dispatch<React.SetStateAction<number>>,
-  answer: AsyncSorterAnswer | undefined
+  answer: AsyncSorterAnswer | undefined,
+  getAsyncSortTaskById: (
+    id: number,
+    tasks: AsyncSorterTask[]
+  ) => AsyncSorterTask | undefined,
+  widgetTasks: AsyncSorterTask[]
 ) => {
   const [draggedItem, setDraggedItem] = useState<AsyncSorterBlock | null>(null);
   const [allDragged, setAllDragged] = useState(false);
@@ -41,7 +46,6 @@ export const useDragAndDrop = (
     macrotasksItems,
     setMacrotasksItems,
     output,
-    setOutput,
     updateOutput,
     isCorrectSolved,
     isIncorrectSolved,
@@ -56,14 +60,18 @@ export const useDragAndDrop = (
     setIsCompleted,
     sourceItems,
     dropZones,
+    clearZones,
   } = useAsyncSorter(
+    selectedItemSetter,
     task,
     taskIndex,
     tasksNumber,
     setTaskIndex,
     answer,
     setDraggedItem,
-    setAllDragged
+    setAllDragged,
+    getAsyncSortTaskById,
+    widgetTasks
   );
 
   const handleDragStart = (item: AsyncSorterBlock) => {
@@ -107,17 +115,6 @@ export const useDragAndDrop = (
 
     updateOutput(nextCall, nextMicro, nextMacro);
   };
-  const clearZones = () => {
-    setCallStackItems([]);
-    setMicrotasksItems([]);
-    setMacrotasksItems([]);
-    selectedItemSetter(null);
-    setOutput([]);
-  };
-  const onNextTaskClickExtended = () => {
-    onNextTaskClick();
-    clearZones();
-  };
 
   return {
     handleDragStart,
@@ -135,7 +132,7 @@ export const useDragAndDrop = (
     handleDragEnd,
     isCorrectSolved,
     isIncorrectSolved,
-    onNextTaskClick: onNextTaskClickExtended,
+    onNextTaskClick,
     onSubmitClick,
     successfulTasks,
     failedTasks,

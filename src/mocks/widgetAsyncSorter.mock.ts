@@ -115,3 +115,10 @@ export const asyncSorterWidgetMock: WidgetView<'asyncSorter'> = {
     ],
   },
 };
+export const asyncSorterWidgetMocks: Record<
+  string,
+  WidgetView<'asyncSorter'>
+> = {
+  widget_async_sorter_js: asyncSorterWidgetMock,
+  widget_async_sorter_algo: asyncSorterWidgetMock,
+};

@@ -1,4 +1,4 @@
-import { submitAnswer } from '@api/asyncSort.api';
+//import { submitAnswer } from '@api/asyncSort.api';
 import { useState } from 'react';
 
 import type {
@@ -10,13 +10,21 @@ import type {
 import type { AsyncSorterTask } from '@models/widgetModel';
 
 export const useAsyncSorter = (
+  selectedItemSetter: React.Dispatch<
+    React.SetStateAction<AsyncSorterBlock | null>
+  >,
   task: null | AsyncSorterTask,
   taskIndex: number,
   tasksNumber: number,
   setTaskIndex: React.Dispatch<React.SetStateAction<number>>,
   answer: AsyncSorterAnswer | undefined,
   setDraggedItem: React.Dispatch<React.SetStateAction<AsyncSorterBlock | null>>,
-  setAllDragged: React.Dispatch<React.SetStateAction<boolean>>
+  setAllDragged: React.Dispatch<React.SetStateAction<boolean>>,
+  getAsyncSortTaskById: (
+    id: number,
+    tasks: AsyncSorterTask[]
+  ) => AsyncSorterTask | undefined,
+  widgetTasks: AsyncSorterTask[]
 ) => {
   const [callStackItems, setCallStackItems] = useState<AsyncSorterBlock[]>([]);
   const [microtasksItems, setMicrotasksItems] = useState<AsyncSorterBlock[]>(
@@ -98,19 +106,19 @@ export const useAsyncSorter = (
       macroBlock: macroAnswers,
     };
   };
-  const isCorrectAnswer = async (id: number) => {
+  const isCorrectAnswer = (id: number) => {
     const userAnswer = {
       callStack: callStackItems.map((item) => item.label),
       microtasks: microtasksItems.map((item) => item.label),
       macrotasks: macrotasksItems.map((item) => item.label),
       outputOrder: output,
     };
-    return await submitAnswer(userAnswer, id);
+    return submitAnswer(userAnswer, id);
   };
-  const onSubmitClick = async () => {
+  const onSubmitClick = () => {
     if (!task) return;
     try {
-      const result = await isCorrectAnswer(task.id);
+      const result = isCorrectAnswer(task.id);
       setIsCorrectSolved(result);
       if (result) {
         setAnswersColorSchema(determineAnswerColor());
@@ -134,6 +142,13 @@ export const useAsyncSorter = (
       setIsCompleted(true);
     }
   };
+  const clearZones = () => {
+    setCallStackItems([]);
+    setMicrotasksItems([]);
+    setMacrotasksItems([]);
+    selectedItemSetter(null);
+    setOutput([]);
+  };
   const onNextTaskClick = () => {
     checkIsCompleted(successfulTasks.size, failedTasks.size);
     setDraggedItem(null);
@@ -141,8 +156,28 @@ export const useAsyncSorter = (
     setIsSubmitClicked(false);
     setIsCorrectSolved(false);
     setIsIncorrectSolved(false);
+    clearZones();
     if (tasksNumber > taskIndex + 1) setTaskIndex(taskIndex + 1);
   };
+  const ifAnswersEqual = (
+    userAnswer: AsyncSorterAnswer,
+    serverAnswer: AsyncSorterAnswer
+  ): boolean => {
+    return (
+      JSON.stringify(userAnswer.callStack) ===
+        JSON.stringify(serverAnswer.callStack) &&
+      JSON.stringify(userAnswer.microtasks) ===
+        JSON.stringify(serverAnswer.microtasks) &&
+      JSON.stringify(userAnswer.macrotasks) ===
+        JSON.stringify(serverAnswer.macrotasks)
+    );
+  };
+  function submitAnswer(userAnswer: AsyncSorterAnswer, id: number): boolean {
+    const task = getAsyncSortTaskById(id, widgetTasks);
+    if (!task) throw new Error('Failed to fetch task');
+    return ifAnswersEqual(userAnswer, task.answer);
+  }
+
   return {
     callStackItems,
     setCallStackItems,
@@ -167,5 +202,6 @@ export const useAsyncSorter = (
     setIsCompleted,
     sourceItems,
     dropZones,
+    clearZones,
   };
 };

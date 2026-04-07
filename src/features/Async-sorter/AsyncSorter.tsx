@@ -23,8 +23,11 @@ import Source from './Source';
 import ButtonsBox from './ButtonsBox';
 import Queues from './Queues';
 import type { AsyncSorterTask } from '@models/widgetModel';
+interface AsyncSorterProps {
+  widgetId: string;
+}
 
-export default function AsyncSorter() {
+export default function AsyncSorter({ widgetId }: AsyncSorterProps) {
   const [selectedItem, setSelectedItem] = useState<AsyncSorterBlock | null>(
     null
   );
@@ -47,8 +50,15 @@ export default function AsyncSorter() {
     },
     []
   );
-  const { task, taskIndex, setTaskIndex, tasksNumber, isLoading } =
-    useAsyncSorterApi(setAnswer, setCurrentTask);
+  const {
+    task,
+    taskIndex,
+    setTaskIndex,
+    tasksNumber,
+    isLoading,
+    getAsyncSortTaskById,
+    widgetTasks,
+  } = useAsyncSorterApi(setAnswer, setCurrentTask, widgetId);
 
   const {
     handleDragStart,
@@ -81,7 +91,9 @@ export default function AsyncSorter() {
     taskIndex,
     tasksNumber,
     setTaskIndex,
-    answer
+    answer,
+    getAsyncSortTaskById,
+    widgetTasks
   );
 
   const {

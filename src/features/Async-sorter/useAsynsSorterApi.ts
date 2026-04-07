@@ -1,53 +1,58 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { AsyncSorterAnswer } from './types';
-import { getAsyncSortTaskByIndex } from '@api/asyncSort.api';
+import { getAsyncSorterWidget } from '@api/asyncSort.api';
 import { useUI } from '@hooks/useUI';
-import { getAsyncSortTasksNumber } from '@api/asyncSort.api';
 import type { AsyncSorterTask } from '@models/widgetModel';
 
 export const useAsyncSorterApi = (
   setAnswer: React.Dispatch<
     React.SetStateAction<AsyncSorterAnswer | undefined>
   >,
-  setCurrentTask: React.Dispatch<React.SetStateAction<AsyncSorterTask | null>>
+  setCurrentTask: React.Dispatch<React.SetStateAction<AsyncSorterTask | null>>,
+  widgetId: string
 ) => {
   const [task, setTask] = useState<null | AsyncSorterTask>(null);
   const [taskIndex, setTaskIndex] = useState(0);
   const [tasksNumber, setTasksNumber] = useState(0);
   const { showToast } = useUI();
   const [isLoading, setIsLoading] = useState(false);
+  const [widgetTasks, setWidgetTasks] = useState<AsyncSorterTask[]>([]);
 
-  const getAsyncSortTask = useCallback(
-    async (index: number) => {
-      setIsLoading(true);
-      try {
-        const task = await getAsyncSortTaskByIndex(index);
-        return task;
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Ups, task can not be shown';
-        showToast(message, 'error');
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [showToast]
-  );
+  function getAsyncSortTaskByIndex(
+    index: number,
+    tasks: AsyncSorterTask[]
+  ): AsyncSorterTask {
+    return tasks[index];
+  }
+  function getAsyncSortTaskById(
+    id: number,
+    tasks: AsyncSorterTask[]
+  ): AsyncSorterTask | undefined {
+    return tasks.find((item) => item.id === id);
+  }
 
   useEffect(() => {
     let cancelled = false;
     const loadTask = async () => {
+      setIsLoading(true);
       try {
-        const taskData = await getAsyncSortTask(taskIndex);
-        setAnswer(taskData?.answer);
-        const tasksArrayNumber = await getAsyncSortTasksNumber();
+        const widget = await getAsyncSorterWidget(widgetId);
+        const tasksData = widget.config.tasks;
+        setWidgetTasks(tasksData);
+        const loadedTask = getAsyncSortTaskByIndex(taskIndex, tasksData);
+        setAnswer(loadedTask.answer);
         if (!cancelled) {
-          setTask(taskData ?? null);
-          setCurrentTask(taskData ?? null);
-          setTasksNumber(tasksArrayNumber);
+          setTask(loadedTask);
+          setCurrentTask(loadedTask);
+          setTasksNumber(tasksData.length);
         }
-      } catch {
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : 'Ups, task can not be shown';
+        showToast(message, 'error');
         if (!cancelled) setTask(null);
+      } finally {
+        setIsLoading(false);
       }
     };
     void loadTask();
@@ -55,7 +60,7 @@ export const useAsyncSorterApi = (
     return () => {
       cancelled = true;
     };
-  }, [getAsyncSortTask, taskIndex, setCurrentTask, setAnswer]);
+  }, [taskIndex, setCurrentTask, setAnswer, widgetId, showToast]);
   return {
     task,
     taskIndex,
@@ -63,5 +68,7 @@ export const useAsyncSorterApi = (
     tasksNumber,
     isLoading,
     setAnswer,
+    getAsyncSortTaskById,
+    widgetTasks,
   };
 };
