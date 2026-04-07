@@ -1,10 +1,11 @@
-import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate, useParams } from 'react-router';
 import { useLessons } from '@features/Library/useLessons';
 import { LessonCard } from '@features/Library/components/LessonCard';
 import { AppLink } from '@components/AppLink/AppLink';
 import type { LessonView } from '@models/lessonModel';
+import { Loader } from '@components/Loader/Loader';
 
 function CourseLessons() {
   const { courseId } = useParams<{ courseId: string }>();
@@ -31,11 +32,7 @@ function CourseLessons() {
         <AppLink linkLabel="Back to Library" linkHref="/library" />
       </Box>
 
-      {isLoading && (
-        <Box display="flex" justifyContent="center" p={6}>
-          <CircularProgress />
-        </Box>
-      )}
+      {isLoading && <Loader />}
 
       {error && <Typography color="error">{error}</Typography>}
 

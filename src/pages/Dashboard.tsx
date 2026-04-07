@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Grid,
-  Typography,
-  Pagination,
-} from '@mui/material';
+import { Box, Button, Grid, Pagination, Typography } from '@mui/material';
 import { Link } from 'react-router';
 import { useActivityHistory } from '@features/Dashboard/useActivityHistory';
 import { useAuth } from '@hooks/useAuth';
@@ -13,6 +6,7 @@ import { useDashboard } from '@features/Dashboard/useDashboard';
 import ProgressCard from '@components/ProgressCard/ProgressCard';
 import StatsGrid from '@features/Dashboard/components/StatsGrid';
 import RecentActivity from '@features/Dashboard/components/RecentActivity';
+import { Loader } from '@components/Loader/Loader.tsx';
 
 function Dashboard() {
   const { user } = useAuth();
@@ -73,9 +67,7 @@ function Dashboard() {
         <Grid size={{ xs: 12, md: 6 }}>
           <Grid container direction="column" spacing={6}>
             {dashboardLoading ? (
-              <Box display="flex" justifyContent="center" p={4}>
-                <CircularProgress aria-label="Loading dashboard" />
-              </Box>
+              <Loader p={4} ariaLabel="Loading dashboard" />
             ) : dashboardError ? (
               <Typography color="error">{dashboardError}</Typography>
             ) : (
@@ -113,9 +105,7 @@ function Dashboard() {
             sx={{ minHeight: '52vh' }}
           >
             {activitiesLoading ? (
-              <Box display="flex" justifyContent="center" p={4}>
-                <CircularProgress aria-label="Loading activities" />
-              </Box>
+              <Loader p={4} ariaLabel="Loading activities" />
             ) : error ? (
               <Typography color="error">{error}</Typography>
             ) : (
