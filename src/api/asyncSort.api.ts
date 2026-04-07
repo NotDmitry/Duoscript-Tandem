@@ -21,16 +21,6 @@ export async function getAsyncSortTaskById(
   }
 }
 
-export async function getAsyncSortTasksNumber(
-  widgetId: string
-): Promise<number> {
-  try {
-    const widget = await getAsyncSorterWidget(widgetId);
-    return widget.config.tasks.length;
-  } catch {
-    throw Error("The tasks array doesn't exist");
-  }
-}
 const ifAnswersEqual = (
   userAnswer: AsyncSorterAnswer,
   serverAnswer: AsyncSorterAnswer
