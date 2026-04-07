@@ -21,18 +21,6 @@ export async function getAsyncSortTaskById(
   }
 }
 
-export async function getAsyncSortTaskByIndex(
-  index: number,
-
-  widgetId: string
-): Promise<AsyncSorterTask | undefined> {
-  try {
-    const widget = await getAsyncSorterWidget(widgetId);
-    return widget.config.tasks[index];
-  } catch {
-    throw Error("The task doesn't exist");
-  }
-}
 export async function getAsyncSortTasksNumber(
   widgetId: string
 ): Promise<number> {
