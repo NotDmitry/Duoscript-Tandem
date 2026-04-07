@@ -34,12 +34,12 @@ describe('useDashboard', () => {
 
     const { result } = renderHook(() => useDashboard('user_1'));
 
-    expect(result.current.loading).toBe(true);
+    expect(result.current.isLoading).toBe(true);
 
     resolver(mockUserDashboard);
 
     await waitFor(() => {
-      expect(result.current.loading).toBe(false);
+      expect(result.current.isLoading).toBe(false);
     });
   });
 
