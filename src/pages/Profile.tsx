@@ -1,5 +1,7 @@
+import { ProfileForm } from '@features/Auth/ProfileForm';
+
 function Profile() {
-  return <div>Profile page</div>;
+  return <ProfileForm />;
 }
 
 export default Profile;

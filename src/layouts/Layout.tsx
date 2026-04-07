@@ -1,15 +1,23 @@
 import { Outlet } from 'react-router';
-import { Footer } from '@/layouts/Footer/Footer.tsx';
+import { Footer } from '@layouts/Footer/Footer';
+import { Header } from './Header/Header';
+import { Box } from '@mui/material';
 
 function Layout() {
   return (
-    <>
-      <header>Insert Header here</header>
-      <main>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Header />
+      <Box component="main" sx={{ flexGrow: 1 }}>
         <Outlet />
-      </main>
+      </Box>
       <Footer />
-    </>
+    </Box>
   );
 }
 

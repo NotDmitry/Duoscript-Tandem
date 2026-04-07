@@ -1,5 +1,7 @@
+import { RegisterForm } from '@features/Auth/RegisterForm';
+
 function Register() {
-  return <div>Registration Page</div>;
+  return <RegisterForm />;
 }
 
 export default Register;
