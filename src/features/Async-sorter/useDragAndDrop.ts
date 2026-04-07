@@ -30,7 +30,7 @@ export const useDragAndDrop = (
 
   setTaskIndex: React.Dispatch<React.SetStateAction<number>>,
   answer: AsyncSorterAnswer | undefined,
-  submitAnswer: (
+  /* submitAnswer: (
     userAnswer: {
       callStack: string[];
       microtasks: string[];
@@ -38,7 +38,12 @@ export const useDragAndDrop = (
       outputOrder: string[];
     },
     id: number
-  ) => boolean
+  ) => boolean, */
+  getAsyncSortTaskById: (
+    id: number,
+    tasks: AsyncSorterTask[]
+  ) => AsyncSorterTask | undefined,
+  widgetTasks: AsyncSorterTask[]
 ) => {
   const [draggedItem, setDraggedItem] = useState<AsyncSorterBlock | null>(null);
   const [allDragged, setAllDragged] = useState(false);
@@ -73,7 +78,8 @@ export const useDragAndDrop = (
     answer,
     setDraggedItem,
     setAllDragged,
-    submitAnswer
+    getAsyncSortTaskById,
+    widgetTasks
   );
 
   const handleDragStart = (item: AsyncSorterBlock) => {

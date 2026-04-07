@@ -29,7 +29,7 @@ export const useAsyncSorterApi = (
   ): AsyncSorterTask | undefined {
     return tasks.find((item) => item.id === id);
   }
-
+  /*
   const ifAnswersEqual = (
     userAnswer: AsyncSorterAnswer,
     serverAnswer: AsyncSorterAnswer
@@ -48,7 +48,7 @@ export const useAsyncSorterApi = (
     if (!task) throw new Error('Failed to fetch task');
     return ifAnswersEqual(userAnswer, task.answer);
   }
-
+ */
   useEffect(() => {
     let cancelled = false;
     const loadTask = async () => {
@@ -86,6 +86,7 @@ export const useAsyncSorterApi = (
     tasksNumber,
     isLoading,
     setAnswer,
-    submitAnswer,
+    getAsyncSortTaskById,
+    widgetTasks,
   };
 };

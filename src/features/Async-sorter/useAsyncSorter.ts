@@ -17,15 +17,11 @@ export const useAsyncSorter = (
   answer: AsyncSorterAnswer | undefined,
   setDraggedItem: React.Dispatch<React.SetStateAction<AsyncSorterBlock | null>>,
   setAllDragged: React.Dispatch<React.SetStateAction<boolean>>,
-  submitAnswer: (
-    userAnswer: {
-      callStack: string[];
-      microtasks: string[];
-      macrotasks: string[];
-      outputOrder: string[];
-    },
-    id: number
-  ) => boolean
+  getAsyncSortTaskById: (
+    id: number,
+    tasks: AsyncSorterTask[]
+  ) => AsyncSorterTask | undefined,
+  widgetTasks: AsyncSorterTask[]
 ) => {
   const [callStackItems, setCallStackItems] = useState<AsyncSorterBlock[]>([]);
   const [microtasksItems, setMicrotasksItems] = useState<AsyncSorterBlock[]>(
@@ -152,6 +148,25 @@ export const useAsyncSorter = (
     setIsIncorrectSolved(false);
     if (tasksNumber > taskIndex + 1) setTaskIndex(taskIndex + 1);
   };
+  const ifAnswersEqual = (
+    userAnswer: AsyncSorterAnswer,
+    serverAnswer: AsyncSorterAnswer
+  ): boolean => {
+    return (
+      JSON.stringify(userAnswer.callStack) ===
+        JSON.stringify(serverAnswer.callStack) &&
+      JSON.stringify(userAnswer.microtasks) ===
+        JSON.stringify(serverAnswer.microtasks) &&
+      JSON.stringify(userAnswer.macrotasks) ===
+        JSON.stringify(serverAnswer.macrotasks)
+    );
+  };
+  function submitAnswer(userAnswer: AsyncSorterAnswer, id: number): boolean {
+    const task = getAsyncSortTaskById(id, widgetTasks);
+    if (!task) throw new Error('Failed to fetch task');
+    return ifAnswersEqual(userAnswer, task.answer);
+  }
+
   return {
     callStackItems,
     setCallStackItems,

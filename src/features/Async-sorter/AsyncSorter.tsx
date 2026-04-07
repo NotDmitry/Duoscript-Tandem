@@ -56,7 +56,8 @@ export default function AsyncSorter({ widgetId }: AsyncSorterProps) {
     setTaskIndex,
     tasksNumber,
     isLoading,
-    submitAnswer,
+    getAsyncSortTaskById,
+    widgetTasks,
   } = useAsyncSorterApi(setAnswer, setCurrentTask, widgetId);
 
   const {
@@ -91,7 +92,8 @@ export default function AsyncSorter({ widgetId }: AsyncSorterProps) {
     tasksNumber,
     setTaskIndex,
     answer,
-    submitAnswer
+    getAsyncSortTaskById,
+    widgetTasks
   );
 
   const {
