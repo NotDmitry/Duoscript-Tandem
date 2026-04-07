@@ -10,6 +10,9 @@ import type {
 import type { AsyncSorterTask } from '@models/widgetModel';
 
 export const useAsyncSorter = (
+  selectedItemSetter: React.Dispatch<
+    React.SetStateAction<AsyncSorterBlock | null>
+  >,
   task: null | AsyncSorterTask,
   taskIndex: number,
   tasksNumber: number,
@@ -139,6 +142,13 @@ export const useAsyncSorter = (
       setIsCompleted(true);
     }
   };
+  const clearZones = () => {
+    setCallStackItems([]);
+    setMicrotasksItems([]);
+    setMacrotasksItems([]);
+    selectedItemSetter(null);
+    setOutput([]);
+  };
   const onNextTaskClick = () => {
     checkIsCompleted(successfulTasks.size, failedTasks.size);
     setDraggedItem(null);
@@ -146,6 +156,7 @@ export const useAsyncSorter = (
     setIsSubmitClicked(false);
     setIsCorrectSolved(false);
     setIsIncorrectSolved(false);
+    clearZones();
     if (tasksNumber > taskIndex + 1) setTaskIndex(taskIndex + 1);
   };
   const ifAnswersEqual = (
@@ -191,5 +202,6 @@ export const useAsyncSorter = (
     setIsCompleted,
     sourceItems,
     dropZones,
+    clearZones,
   };
 };

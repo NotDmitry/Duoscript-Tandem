@@ -17,6 +17,7 @@ export const useAsyncSorterApi = (
   const { showToast } = useUI();
   const [isLoading, setIsLoading] = useState(false);
   const [widgetTasks, setWidgetTasks] = useState<AsyncSorterTask[]>([]);
+
   function getAsyncSortTaskByIndex(
     index: number,
     tasks: AsyncSorterTask[]
@@ -29,26 +30,7 @@ export const useAsyncSorterApi = (
   ): AsyncSorterTask | undefined {
     return tasks.find((item) => item.id === id);
   }
-  /*
-  const ifAnswersEqual = (
-    userAnswer: AsyncSorterAnswer,
-    serverAnswer: AsyncSorterAnswer
-  ): boolean => {
-    return (
-      JSON.stringify(userAnswer.callStack) ===
-        JSON.stringify(serverAnswer.callStack) &&
-      JSON.stringify(userAnswer.microtasks) ===
-        JSON.stringify(serverAnswer.microtasks) &&
-      JSON.stringify(userAnswer.macrotasks) ===
-        JSON.stringify(serverAnswer.macrotasks)
-    );
-  };
-  function submitAnswer(userAnswer: AsyncSorterAnswer, id: number): boolean {
-    const task = getAsyncSortTaskById(id, widgetTasks);
-    if (!task) throw new Error('Failed to fetch task');
-    return ifAnswersEqual(userAnswer, task.answer);
-  }
- */
+
   useEffect(() => {
     let cancelled = false;
     const loadTask = async () => {

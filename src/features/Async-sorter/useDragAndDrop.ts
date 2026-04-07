@@ -30,15 +30,6 @@ export const useDragAndDrop = (
 
   setTaskIndex: React.Dispatch<React.SetStateAction<number>>,
   answer: AsyncSorterAnswer | undefined,
-  /* submitAnswer: (
-    userAnswer: {
-      callStack: string[];
-      microtasks: string[];
-      macrotasks: string[];
-      outputOrder: string[];
-    },
-    id: number
-  ) => boolean, */
   getAsyncSortTaskById: (
     id: number,
     tasks: AsyncSorterTask[]
@@ -55,7 +46,6 @@ export const useDragAndDrop = (
     macrotasksItems,
     setMacrotasksItems,
     output,
-    setOutput,
     updateOutput,
     isCorrectSolved,
     isIncorrectSolved,
@@ -70,7 +60,9 @@ export const useDragAndDrop = (
     setIsCompleted,
     sourceItems,
     dropZones,
+    clearZones,
   } = useAsyncSorter(
+    selectedItemSetter,
     task,
     taskIndex,
     tasksNumber,
@@ -123,17 +115,6 @@ export const useDragAndDrop = (
 
     updateOutput(nextCall, nextMicro, nextMacro);
   };
-  const clearZones = () => {
-    setCallStackItems([]);
-    setMicrotasksItems([]);
-    setMacrotasksItems([]);
-    selectedItemSetter(null);
-    setOutput([]);
-  };
-  const onNextTaskClickExtended = () => {
-    onNextTaskClick();
-    clearZones();
-  };
 
   return {
     handleDragStart,
@@ -151,7 +132,7 @@ export const useDragAndDrop = (
     handleDragEnd,
     isCorrectSolved,
     isIncorrectSolved,
-    onNextTaskClick: onNextTaskClickExtended,
+    onNextTaskClick,
     onSubmitClick,
     successfulTasks,
     failedTasks,
