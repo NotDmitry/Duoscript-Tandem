@@ -7,7 +7,6 @@ export const mockCourses: CourseView[] = [
     description: 'Core JS concepts, async patterns, and the event loop.',
     tag: 'js',
     lessonCount: 8,
-    progressPercent: 62,
   },
   {
     courseId: 'course_ts',
@@ -15,7 +14,6 @@ export const mockCourses: CourseView[] = [
     description: 'Type system, generics, utility types and more.',
     tag: 'ts',
     lessonCount: 6,
-    progressPercent: 33,
   },
   {
     courseId: 'course_css',
@@ -23,7 +21,6 @@ export const mockCourses: CourseView[] = [
     description: 'Layouts, positioning, animations and responsive design.',
     tag: 'css',
     lessonCount: 5,
-    progressPercent: 0,
   },
   {
     courseId: 'course_html',
@@ -31,7 +28,6 @@ export const mockCourses: CourseView[] = [
     description: 'Semantic markup, forms, and accessibility basics.',
     tag: 'html',
     lessonCount: 4,
-    progressPercent: 100,
   },
   {
     courseId: 'course_github',
@@ -39,7 +35,6 @@ export const mockCourses: CourseView[] = [
     description: 'Git workflows, branching strategies and collaboration.',
     tag: 'github',
     lessonCount: 5,
-    progressPercent: 20,
   },
   {
     courseId: 'course_algorithms',
@@ -47,6 +42,5 @@ export const mockCourses: CourseView[] = [
     description: 'Sorting, searching, complexity and problem solving.',
     tag: 'algorithms',
     lessonCount: 10,
-    progressPercent: 10,
   },
 ];
