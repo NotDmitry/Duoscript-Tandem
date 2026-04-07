@@ -1,4 +1,4 @@
-import { submitAnswer } from '@api/asyncSort.api';
+//import { submitAnswer } from '@api/asyncSort.api';
 import { useState } from 'react';
 
 import type {
@@ -16,7 +16,16 @@ export const useAsyncSorter = (
   setTaskIndex: React.Dispatch<React.SetStateAction<number>>,
   answer: AsyncSorterAnswer | undefined,
   setDraggedItem: React.Dispatch<React.SetStateAction<AsyncSorterBlock | null>>,
-  setAllDragged: React.Dispatch<React.SetStateAction<boolean>>
+  setAllDragged: React.Dispatch<React.SetStateAction<boolean>>,
+  submitAnswer: (
+    userAnswer: {
+      callStack: string[];
+      microtasks: string[];
+      macrotasks: string[];
+      outputOrder: string[];
+    },
+    id: number
+  ) => boolean
 ) => {
   const [callStackItems, setCallStackItems] = useState<AsyncSorterBlock[]>([]);
   const [microtasksItems, setMicrotasksItems] = useState<AsyncSorterBlock[]>(
@@ -98,19 +107,19 @@ export const useAsyncSorter = (
       macroBlock: macroAnswers,
     };
   };
-  const isCorrectAnswer = async (id: number) => {
+  const isCorrectAnswer = (id: number) => {
     const userAnswer = {
       callStack: callStackItems.map((item) => item.label),
       microtasks: microtasksItems.map((item) => item.label),
       macrotasks: macrotasksItems.map((item) => item.label),
       outputOrder: output,
     };
-    return await submitAnswer(userAnswer, id, ''); // исправить
+    return submitAnswer(userAnswer, id);
   };
-  const onSubmitClick = async () => {
+  const onSubmitClick = () => {
     if (!task) return;
     try {
-      const result = await isCorrectAnswer(task.id);
+      const result = isCorrectAnswer(task.id);
       setIsCorrectSolved(result);
       if (result) {
         setAnswersColorSchema(determineAnswerColor());

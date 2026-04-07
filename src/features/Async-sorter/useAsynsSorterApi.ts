@@ -1,4 +1,4 @@
-import { /* useCallback, */ useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { AsyncSorterAnswer } from './types';
 import { getAsyncSorterWidget } from '@api/asyncSort.api';
 import { useUI } from '@hooks/useUI';
@@ -23,23 +23,31 @@ export const useAsyncSorterApi = (
   ): AsyncSorterTask {
     return tasks[index];
   }
+  function getAsyncSortTaskById(
+    id: number,
+    tasks: AsyncSorterTask[]
+  ): AsyncSorterTask | undefined {
+    return tasks.find((item) => item.id === id);
+  }
 
-  /* const getAsyncSortTask = useCallback(
-    async (index: number) => {
-      setIsLoading(true);
-      try {
-        const task = await getAsyncSortTaskByIndex(index, widgetId);
-        return task;
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Ups, task can not be shown';
-        showToast(message, 'error');
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [showToast, widgetId]
-  ); */
+  const ifAnswersEqual = (
+    userAnswer: AsyncSorterAnswer,
+    serverAnswer: AsyncSorterAnswer
+  ): boolean => {
+    return (
+      JSON.stringify(userAnswer.callStack) ===
+        JSON.stringify(serverAnswer.callStack) &&
+      JSON.stringify(userAnswer.microtasks) ===
+        JSON.stringify(serverAnswer.microtasks) &&
+      JSON.stringify(userAnswer.macrotasks) ===
+        JSON.stringify(serverAnswer.macrotasks)
+    );
+  };
+  function submitAnswer(userAnswer: AsyncSorterAnswer, id: number): boolean {
+    const task = getAsyncSortTaskById(id, widgetTasks);
+    if (!task) throw new Error('Failed to fetch task');
+    return ifAnswersEqual(userAnswer, task.answer);
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -78,6 +86,6 @@ export const useAsyncSorterApi = (
     tasksNumber,
     isLoading,
     setAnswer,
-    widgetTasks,
+    submitAnswer,
   };
 };

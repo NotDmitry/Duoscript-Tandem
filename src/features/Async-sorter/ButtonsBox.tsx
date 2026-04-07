@@ -18,7 +18,7 @@ interface ButtonBoxProps {
   tasksNumber: number;
   setTaskIndex: React.Dispatch<React.SetStateAction<number>>;
   allDragged: boolean;
-  onSubmitClick: () => Promise<void>;
+  onSubmitClick: () => void;
   onNextTaskClick: () => void;
 }
 export default function ButtonsBox({
@@ -67,7 +67,7 @@ export default function ButtonsBox({
           onClick={
             !isSubmitClicked
               ? () => {
-                  void onSubmitClick();
+                  onSubmitClick();
                 }
               : () => {
                   onNextTaskClick();

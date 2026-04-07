@@ -1,6 +1,5 @@
-import { type AsyncSorterAnswer } from '@features/Async-sorter/types';
 import { asyncSorterWidgetMocks } from '@mocks/widgetAsyncSorter.mock';
-import type { WidgetView, AsyncSorterTask } from '@models/widgetModel';
+import type { WidgetView } from '@models/widgetModel';
 import { delay } from '@utils/delay';
 
 export async function getAsyncSorterWidget(
@@ -9,7 +8,7 @@ export async function getAsyncSorterWidget(
   await delay(300);
   return asyncSorterWidgetMocks[widgetId];
 }
-export async function getAsyncSortTaskById(
+/* export async function getAsyncSortTaskById(
   id: number,
   widgetId: string
 ): Promise<AsyncSorterTask | undefined> {
@@ -46,4 +45,4 @@ export async function submitAnswer(
   } catch {
     throw Error("The tasks array doesn't exist");
   }
-}
+}*/
