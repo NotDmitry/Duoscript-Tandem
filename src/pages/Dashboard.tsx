@@ -67,7 +67,7 @@ function Dashboard() {
         <Grid size={{ xs: 12, md: 6 }}>
           <Grid container direction="column" spacing={6}>
             {dashboardLoading ? (
-              <Loader p={4} ariaLabel="Loading dashboard" />
+              <Loader padding={4} ariaLabel="Loading dashboard" />
             ) : dashboardError ? (
               <Typography color="error">{dashboardError}</Typography>
             ) : (
@@ -105,7 +105,7 @@ function Dashboard() {
             sx={{ minHeight: '52vh' }}
           >
             {activitiesLoading ? (
-              <Loader p={4} ariaLabel="Loading activities" />
+              <Loader padding={4} ariaLabel="Loading activities" />
             ) : error ? (
               <Typography color="error">{error}</Typography>
             ) : (
