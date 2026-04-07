@@ -1,10 +1,12 @@
 import { Box, Grid, Typography } from '@mui/material';
-import { useCourses } from '@features/Library/useCourses';
-import { CourseCard } from '@features/Library/components/CourseCard';
+import { useCoursesWithProgress } from '@features/Library/useCourses';
+import { CourseProgressCard } from '@features/Library/components/CourseProgressCard.tsx';
 import { Loader } from '@components/Loader/Loader';
+import { useAuth } from '@hooks/useAuth.ts';
 
 function Library() {
-  const { courses, isLoading, error } = useCourses();
+  const { user } = useAuth();
+  const { courses, isLoading, error } = useCoursesWithProgress(user?.uid ?? '');
 
   return (
     <Box
@@ -27,7 +29,7 @@ function Library() {
         <Grid container spacing={3}>
           {courses.map((course) => (
             <Grid key={course.courseId} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <CourseCard course={course} />
+              <CourseProgressCard course={course} />
             </Grid>
           ))}
         </Grid>

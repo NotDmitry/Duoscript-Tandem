@@ -19,13 +19,14 @@ export interface CourseView {
   iconUrl?: string;
   tag: CourseTag;
   lessonCount: number;
-  progressPercent?: number;
 }
 
-export function toCourseView(
-  doc: CourseDocument,
-  progressPercent?: number
-): CourseView {
+export interface CourseWithProgressView extends CourseView {
+  progressPercent: number;
+  completedLessonsCount: number;
+}
+
+export function toCourseView(doc: CourseDocument): CourseView {
   return {
     courseId: doc.courseId,
     title: doc.title,
@@ -33,6 +34,13 @@ export function toCourseView(
     iconUrl: doc.iconUrl,
     tag: doc.tag,
     lessonCount: doc.lessonIds.length,
-    progressPercent,
   };
+}
+
+export function toCourseWithProgressView(
+  course: CourseView,
+  progressPercent: number,
+  completedLessonsCount: number
+): CourseWithProgressView {
+  return { ...course, progressPercent, completedLessonsCount };
 }

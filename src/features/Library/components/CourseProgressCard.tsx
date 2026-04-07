@@ -6,7 +6,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router';
-import type { CourseView, CourseTag } from '@models/courseModel';
+import type { CourseWithProgressView, CourseTag } from '@models/courseModel';
 
 const TAG_COLORS: Record<CourseTag, string> = {
   js: '#f7df1e',
@@ -17,14 +17,13 @@ const TAG_COLORS: Record<CourseTag, string> = {
   algorithms: '#e94f4e',
 };
 
-interface CourseCardProps {
-  course: CourseView;
+interface CourseProgressCardProps {
+  course: CourseWithProgressView;
 }
 
-export function CourseCard({ course }: CourseCardProps) {
+export function CourseProgressCard({ course }: CourseProgressCardProps) {
   const navigate = useNavigate();
   const tagColor = TAG_COLORS[course.tag];
-  const progress = course.progressPercent ?? 0;
 
   const handleClick = () => {
     navigate(`/library/${course.courseId}`);
@@ -88,15 +87,15 @@ export function CourseCard({ course }: CourseCardProps) {
         <Box>
           <Box display="flex" justifyContent="space-between" mb={0.5}>
             <Typography variant="caption" color="text.secondary">
-              {course.lessonCount} lessons
+              {course.completedLessonsCount} / {course.lessonCount} lessons
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              {progress}%
+              {course.progressPercent}%
             </Typography>
           </Box>
           <LinearProgress
             variant="determinate"
-            value={progress}
+            value={course.progressPercent}
             sx={{
               height: 6,
               borderRadius: 3,
