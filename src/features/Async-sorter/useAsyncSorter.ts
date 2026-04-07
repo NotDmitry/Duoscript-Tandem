@@ -105,7 +105,7 @@ export const useAsyncSorter = (
       macrotasks: macrotasksItems.map((item) => item.label),
       outputOrder: output,
     };
-    return await submitAnswer(userAnswer, id);
+    return await submitAnswer(userAnswer, id, ''); // исправить
   };
   const onSubmitClick = async () => {
     if (!task) return;

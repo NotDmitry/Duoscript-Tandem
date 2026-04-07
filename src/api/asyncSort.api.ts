@@ -1,19 +1,20 @@
 import { type AsyncSorterAnswer } from '@features/Async-sorter/types';
-import { asyncSorterWidgetMock } from '@mocks/widgetAsyncSorter.mock';
+import { asyncSorterWidgetMocks } from '@mocks/widgetAsyncSorter.mock';
 import type { WidgetView, AsyncSorterTask } from '@models/widgetModel';
 import { delay } from '@utils/delay';
 
-export async function getAsyncSorterWidget(): Promise<
-  WidgetView<'asyncSorter'>
-> {
+export async function getAsyncSorterWidget(
+  widgetId: string
+): Promise<WidgetView<'asyncSorter'>> {
   await delay(300);
-  return asyncSorterWidgetMock;
+  return asyncSorterWidgetMocks[widgetId];
 }
 export async function getAsyncSortTaskById(
-  id: number
+  id: number,
+  widgetId: string
 ): Promise<AsyncSorterTask | undefined> {
   try {
-    const widget = await getAsyncSorterWidget();
+    const widget = await getAsyncSorterWidget(widgetId);
     return widget.config.tasks.find((item) => item.id === id);
   } catch {
     throw new Error("The task doesn't exist");
@@ -21,18 +22,22 @@ export async function getAsyncSortTaskById(
 }
 
 export async function getAsyncSortTaskByIndex(
-  index: number
+  index: number,
+
+  widgetId: string
 ): Promise<AsyncSorterTask | undefined> {
   try {
-    const widget = await getAsyncSorterWidget();
+    const widget = await getAsyncSorterWidget(widgetId);
     return widget.config.tasks[index];
   } catch {
     throw Error("The task doesn't exist");
   }
 }
-export async function getAsyncSortTasksNumber(): Promise<number> {
+export async function getAsyncSortTasksNumber(
+  widgetId: string
+): Promise<number> {
   try {
-    const widget = await getAsyncSorterWidget();
+    const widget = await getAsyncSorterWidget(widgetId);
     return widget.config.tasks.length;
   } catch {
     throw Error("The tasks array doesn't exist");
@@ -53,10 +58,11 @@ const ifAnswersEqual = (
 };
 export async function submitAnswer(
   userAnswer: AsyncSorterAnswer,
-  id: number
+  id: number,
+  widgetId: string
 ): Promise<boolean> {
   try {
-    const task = await getAsyncSortTaskById(id);
+    const task = await getAsyncSortTaskById(id, widgetId);
     if (!task) throw new Error('Failed to fetch task');
     return ifAnswersEqual(userAnswer, task.answer);
   } catch {

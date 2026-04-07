@@ -17,6 +17,6 @@ export function WidgetRenderer({ lesson }: WidgetRendererProps) {
     case 'bugHunter':
       return <WidgetBugHunter widgetId={lesson.widgetId} />;
     case 'asyncSorter':
-      return <AsyncSorter />;
+      return <AsyncSorter widgetId={lesson.widgetId} />;
   }
 }
