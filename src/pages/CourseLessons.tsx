@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useLocation } from 'react-router';
 import { useLessons } from '@features/Library/useLessons';
 import { LessonCard } from '@features/Library/components/LessonCard';
 import { AppLink } from '@components/AppLink/AppLink';
@@ -11,7 +11,11 @@ import { useAuth } from '@hooks/useAuth';
 function CourseLessons() {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
+
+  const courseTitle =
+    (location.state as { courseTitle?: string } | null)?.courseTitle ?? '';
 
   const { lessons, isLoading, error } = useLessons(
     courseId ?? '',
@@ -20,7 +24,7 @@ function CourseLessons() {
 
   const handleLessonClick = (lesson: LessonView): void => {
     navigate(`/library/${courseId ?? ''}/lessons/${lesson.lessonId}`, {
-      state: { lesson },
+      state: { lesson, courseTitle },
     });
   };
 

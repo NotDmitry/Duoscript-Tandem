@@ -6,17 +6,22 @@ import AsyncSorter from '@features/Async-sorter/AsyncSorter';
 
 interface WidgetRendererProps {
   lesson: LessonView;
+  onComplete: () => void;
 }
 
-export function WidgetRenderer({ lesson }: WidgetRendererProps) {
+export function WidgetRenderer({ lesson, onComplete }: WidgetRendererProps) {
   switch (lesson.widgetType) {
     case 'quiz':
-      return <WidgetQuiz widgetId={lesson.widgetId} />;
+      return <WidgetQuiz widgetId={lesson.widgetId} onComplete={onComplete} />;
     case 'meaningMatcher':
-      return <MeaningMatcher widgetId={lesson.widgetId} />;
+      return (
+        <MeaningMatcher widgetId={lesson.widgetId} onComplete={onComplete} />
+      );
     case 'bugHunter':
-      return <WidgetBugHunter widgetId={lesson.widgetId} />;
+      return (
+        <WidgetBugHunter widgetId={lesson.widgetId} onComplete={onComplete} />
+      );
     case 'asyncSorter':
-      return <AsyncSorter widgetId={lesson.widgetId} />;
+      return <AsyncSorter widgetId={lesson.widgetId} onComplete={onComplete} />;
   }
 }
