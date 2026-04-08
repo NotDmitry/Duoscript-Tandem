@@ -25,9 +25,13 @@ import Queues from './Queues';
 import type { AsyncSorterTask } from '@models/widgetModel';
 interface AsyncSorterProps {
   widgetId: string;
+  onComplete?: () => void;
 }
 
-export default function AsyncSorter({ widgetId }: AsyncSorterProps) {
+export default function AsyncSorter({
+  widgetId,
+  onComplete,
+}: AsyncSorterProps) {
   const [selectedItem, setSelectedItem] = useState<AsyncSorterBlock | null>(
     null
   );
@@ -93,7 +97,8 @@ export default function AsyncSorter({ widgetId }: AsyncSorterProps) {
     setTaskIndex,
     answer,
     getAsyncSortTaskById,
-    widgetTasks
+    widgetTasks,
+    onComplete
   );
 
   const {

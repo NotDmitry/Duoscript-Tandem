@@ -13,9 +13,10 @@ import { useWidgetBugHunter } from '@features/WidgetBugHunter/useWidgetBugHunter
 
 interface WidgetBugHunterProps {
   widgetId: string;
+  onComplete?: () => void;
 }
 
-function WidgetBugHunter({ widgetId }: WidgetBugHunterProps) {
+function WidgetBugHunter({ widgetId, onComplete }: WidgetBugHunterProps) {
   const {
     isLoading,
     quizName,
@@ -29,7 +30,7 @@ function WidgetBugHunter({ widgetId }: WidgetBugHunterProps) {
     handleSelect,
     handleNext,
     handleSkip,
-  } = useWidgetBugHunter(widgetId);
+  } = useWidgetBugHunter(widgetId, onComplete);
 
   if (isLoading) {
     return (

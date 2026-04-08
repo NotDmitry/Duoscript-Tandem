@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import type { BugHunterConfig, BugHunterTask } from '@models/widgetModel';
 import { getBugHunterWidget } from '@api/widgetBugHunter.api.ts';
 
-export function useWidgetBugHunter(widgetId: string) {
+export function useWidgetBugHunter(widgetId: string, onComplete?: () => void) {
   const savedQuizType = useRef(widgetId);
   const rightAnswers = useRef<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -98,7 +98,9 @@ export function useWidgetBugHunter(widgetId: string) {
   function manageAnswer(): void {
     const isLastTask = currentTaskIndex >= tasks.length - 1;
     setFinish(isLastTask);
-    if (!isLastTask) {
+    if (isLastTask) {
+      onComplete?.();
+    } else {
       setCurrentTaskIndex((prev) => prev + 1);
     }
   }

@@ -56,7 +56,7 @@ export function useMeaningMatcher({
     if (next) {
       setDifficulty(next);
     } else {
-      onComplete?.(updatedResults);
+      onComplete?.();
     }
   };
 

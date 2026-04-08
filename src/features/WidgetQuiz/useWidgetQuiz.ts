@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { QuizConfig, QuizQuestion, UserAnswer } from '@models/widgetModel';
 import { getQuizWidget } from '@api/widgetQuiz.api';
 
-export function useWidgetQuiz(widgetId: string) {
+export function useWidgetQuiz(widgetId: string, onComplete?: () => void) {
   const savedWidgetId = useRef(widgetId);
   const [isLoading, setIsLoading] = useState(true);
   const [quizName, setQuizName] = useState<string>('');
@@ -63,6 +63,7 @@ export function useWidgetQuiz(widgetId: string) {
     } else {
       setIsFinish(true);
       console.log(updatedAnswers);
+      onComplete?.();
     }
   }
 

@@ -24,7 +24,8 @@ export const useAsyncSorter = (
     id: number,
     tasks: AsyncSorterTask[]
   ) => AsyncSorterTask | undefined,
-  widgetTasks: AsyncSorterTask[]
+  widgetTasks: AsyncSorterTask[],
+  onComplete?: () => void
 ) => {
   const [callStackItems, setCallStackItems] = useState<AsyncSorterBlock[]>([]);
   const [microtasksItems, setMicrotasksItems] = useState<AsyncSorterBlock[]>(
@@ -140,6 +141,7 @@ export const useAsyncSorter = (
   const checkIsCompleted = (successLength: number, failLength: number) => {
     if (successLength + failLength === tasksNumber) {
       setIsCompleted(true);
+      onComplete?.();
     }
   };
   const clearZones = () => {
