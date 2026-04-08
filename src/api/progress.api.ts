@@ -16,6 +16,8 @@ import { throwFirebaseError } from '@utils/firebaseError';
 import type { CourseProgressDocument } from '@models/courseProgressModel';
 import { activityConverter } from '@models/activityModel';
 import type { CourseDocument } from '@models/courseModel';
+import type { UserStreak } from '@models/userModel';
+import { userConverter } from '@models/userModel';
 
 export interface CompleteLessonPayload {
   uid: string;
@@ -99,9 +101,31 @@ async function fbSaveCourseProgress(
   }
 }
 
+function computeStreak(oldStreak: UserStreak): UserStreak {
+  const today = new Date().toISOString().slice(0, 10);
+
+  if (oldStreak.lastActiveDate === today) {
+    return oldStreak;
+  }
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().slice(0, 10);
+  const newCurrent =
+    oldStreak.lastActiveDate === yesterdayStr ? oldStreak.currentStreak + 1 : 1;
+  const newLongest = Math.max(newCurrent, oldStreak.longestStreak);
+
+  return {
+    currentStreak: newCurrent,
+    longestStreak: newLongest,
+    lastActiveDate: today,
+  };
+}
+
 async function fbUpdateUserProgress(uid: string): Promise<void> {
   try {
-    const [progressSnap, coursesSnap] = await Promise.all([
+    const [userSnap, progressSnap, coursesSnap] = await Promise.all([
+      getDoc(doc(db, 'users', uid).withConverter(userConverter)),
       getDocs(collection(db, 'users', uid, 'courseProgress')),
       getDocs(collection(db, 'courses')),
     ]);
@@ -119,10 +143,21 @@ async function fbUpdateUserProgress(uid: string): Promise<void> {
     const overallPercent =
       totalLessons > 0 ? Math.round((totalCompleted / totalLessons) * 100) : 0;
 
+    const userData = userSnap.exists() ? userSnap.data() : null;
+    const oldStreak: UserStreak = userData?.streak ?? {
+      currentStreak: 0,
+      longestStreak: 0,
+      lastActiveDate: '',
+    };
+    const streak = computeStreak(oldStreak);
+
     await updateDoc(doc(db, 'users', uid), {
       'overallProgress.progressPercent': overallPercent,
       'overallProgress.updatedAt': serverTimestamp(),
       'dailyStats.activitiesCompleted': increment(1),
+      'streak.currentStreak': streak.currentStreak,
+      'streak.longestStreak': streak.longestStreak,
+      'streak.lastActiveDate': streak.lastActiveDate,
       updatedAt: serverTimestamp(),
     });
   } catch (error) {
