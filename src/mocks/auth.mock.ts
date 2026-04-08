@@ -5,7 +5,22 @@ interface MockAuthUser {
   password: string;
 }
 
-const mockAuthUsers: MockAuthUser[] = [
+const MOCK_USERS_KEY = 'mock_auth_users';
+
+function loadUsers(): MockAuthUser[] {
+  try {
+    const stored = localStorage.getItem(MOCK_USERS_KEY);
+    return stored ? (JSON.parse(stored) as MockAuthUser[]) : defaultUsers;
+  } catch {
+    return defaultUsers;
+  }
+}
+
+function saveUsers(users: MockAuthUser[]): void {
+  localStorage.setItem(MOCK_USERS_KEY, JSON.stringify(users));
+}
+
+const defaultUsers: MockAuthUser[] = [
   {
     uid: 'user_1',
     displayName: 'anelka',
@@ -19,6 +34,8 @@ const mockAuthUsers: MockAuthUser[] = [
     password: 'Dev1234!',
   },
 ];
+
+const mockAuthUsers: MockAuthUser[] = loadUsers();
 
 function findByEmail(email: string): MockAuthUser | undefined {
   return mockAuthUsers.find((user) => user.email === email);
@@ -65,6 +82,7 @@ export function mockRegisterUser(
     password,
   };
   mockAuthUsers.push(newUser);
+  saveUsers(mockAuthUsers);
   return {
     uid: newUser.uid,
     displayName: newUser.displayName,
@@ -81,5 +99,6 @@ export function mockUpdateUser(
   if (updates.displayName) user.displayName = updates.displayName;
   if (updates.email) user.email = updates.email;
   if (updates.password) user.password = updates.password;
+  saveUsers(mockAuthUsers);
   return { uid: user.uid, displayName: user.displayName, email: user.email };
 }
