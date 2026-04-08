@@ -3,10 +3,19 @@ import { useCoursesWithProgress } from '@features/Library/useCourses';
 import { CourseProgressCard } from '@features/Library/components/CourseProgressCard.tsx';
 import { Loader } from '@components/Loader/Loader';
 import { useAuth } from '@hooks/useAuth.ts';
+import { useNavigate } from 'react-router';
+import type { CourseWithProgressView } from '@models/courseModel';
 
 function Library() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { courses, isLoading, error } = useCoursesWithProgress(user?.uid ?? '');
+
+  const handleCourseClick = (course: CourseWithProgressView): void => {
+    navigate(`/library/${course.courseId}`, {
+      state: { courseTitle: course.title },
+    });
+  };
 
   return (
     <Box
@@ -29,7 +38,12 @@ function Library() {
         <Grid container spacing={3}>
           {courses.map((course) => (
             <Grid key={course.courseId} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <CourseProgressCard course={course} />
+              <CourseProgressCard
+                course={course}
+                onClick={() => {
+                  handleCourseClick(course);
+                }}
+              />
             </Grid>
           ))}
         </Grid>
