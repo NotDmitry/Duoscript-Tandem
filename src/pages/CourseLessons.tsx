@@ -56,7 +56,9 @@ function CourseLessons() {
                   key={lesson.lessonId}
                   lesson={lesson}
                   index={index}
-                  onClick={handleLessonClick}
+                  onClick={() => {
+                    handleLessonClick(lesson);
+                  }}
                 />
               ))}
             </Stack>

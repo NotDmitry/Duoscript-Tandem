@@ -6,15 +6,13 @@ import type { LessonView } from '@models/lessonModel';
 interface LessonCardProps {
   lesson: LessonView;
   index: number;
-  onClick: (lesson: LessonView) => void;
+  onClick: () => void;
 }
 
 export function LessonCard({ lesson, index, onClick }: LessonCardProps) {
   return (
     <Paper
-      onClick={() => {
-        onClick(lesson);
-      }}
+      onClick={onClick}
       elevation={0}
       sx={{
         display: 'flex',
