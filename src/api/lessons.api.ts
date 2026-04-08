@@ -17,6 +17,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { throwFirebaseError } from '@utils/firebaseError';
+import type { CourseProgressDocument } from '@models/courseProgressModel';
 
 // Switch
 
@@ -24,8 +25,12 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 // Mock Implementation
 
-async function mockGetLessonsByCourse(courseId: string): Promise<LessonView[]> {
+async function mockGetLessonsByCourse(
+  courseId: string,
+  uid: string
+): Promise<LessonView[]> {
   await delay(300);
+  void uid;
   return mockLessons[courseId] ?? [];
 }
 
@@ -43,15 +48,30 @@ async function mockGetLesson(
 
 // Firebase Implementation
 
-async function fbGetLessonsByCourse(courseId: string): Promise<LessonView[]> {
+async function fbGetLessonsByCourse(
+  courseId: string,
+  uid: string
+): Promise<LessonView[]> {
   try {
-    const snap = await getDocs(
-      query(
-        collection(db, 'courses', courseId, 'lessons'),
-        orderBy('createdAt', 'asc')
-      )
+    const [lessonsSnap, progressSnap] = await Promise.all([
+      getDocs(
+        query(
+          collection(db, 'courses', courseId, 'lessons'),
+          orderBy('createdAt', 'asc')
+        )
+      ),
+      getDoc(doc(db, 'users', uid, 'courseProgress', courseId)),
+    ]);
+
+    const completedIds = new Set<string>(
+      progressSnap.exists()
+        ? (progressSnap.data() as CourseProgressDocument).completedLessonsIds
+        : []
     );
-    return snap.docs.map((d) => toLessonView(d.data() as LessonDocument));
+
+    return lessonsSnap.docs.map((d) =>
+      toLessonView(d.data() as LessonDocument, completedIds.has(d.id))
+    );
   } catch (error) {
     throwFirebaseError(error);
   }

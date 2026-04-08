@@ -6,11 +6,17 @@ import { LessonCard } from '@features/Library/components/LessonCard';
 import { AppLink } from '@components/AppLink/AppLink';
 import type { LessonView } from '@models/lessonModel';
 import { Loader } from '@components/Loader/Loader';
+import { useAuth } from '@hooks/useAuth';
 
 function CourseLessons() {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
-  const { lessons, isLoading, error } = useLessons(courseId ?? '');
+  const { user } = useAuth();
+
+  const { lessons, isLoading, error } = useLessons(
+    courseId ?? '',
+    user?.uid ?? ''
+  );
 
   const handleLessonClick = (lesson: LessonView): void => {
     navigate(`/library/${courseId ?? ''}/lessons/${lesson.lessonId}`, {

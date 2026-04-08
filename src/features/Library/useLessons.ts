@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getLessonsByCourse } from '@api/lessons.api';
 import type { LessonView } from '@models/lessonModel';
 
-export function useLessons(courseId: string) {
+export function useLessons(courseId: string, uid: string) {
   const [lessons, setLessons] = useState<LessonView[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -12,7 +12,7 @@ export function useLessons(courseId: string) {
       setIsLoading(true);
       setError(null);
       try {
-        const data = await getLessonsByCourse(courseId);
+        const data = await getLessonsByCourse(courseId, uid);
         setLessons(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load lessons');
@@ -21,7 +21,7 @@ export function useLessons(courseId: string) {
       }
     }
     void fetchLessons();
-  }, [courseId]);
+  }, [courseId, uid]);
 
   return { lessons, isLoading, error };
 }
