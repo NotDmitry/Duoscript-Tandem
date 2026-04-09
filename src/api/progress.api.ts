@@ -25,6 +25,7 @@ export interface CompleteLessonPayload {
   courseTitle: string;
   score: number;
   maxScore: number;
+  minutesSpent: number;
 }
 
 // Firebase Implementation
@@ -122,7 +123,10 @@ function computeStreak(oldStreak: UserStreak): UserStreak {
   };
 }
 
-async function fbUpdateUserProgress(uid: string): Promise<void> {
+async function fbUpdateUserProgress(
+  uid: string,
+  minutesSpent: number
+): Promise<void> {
   try {
     const [userSnap, progressSnap, coursesSnap] = await Promise.all([
       getDoc(doc(db, 'users', uid).withConverter(userConverter)),
@@ -155,6 +159,7 @@ async function fbUpdateUserProgress(uid: string): Promise<void> {
       'overallProgress.progressPercent': overallPercent,
       'overallProgress.updatedAt': serverTimestamp(),
       'dailyStats.activitiesCompleted': increment(1),
+      'dailyStats.minutesSpent': increment(minutesSpent),
       'streak.currentStreak': streak.currentStreak,
       'streak.longestStreak': streak.longestStreak,
       'streak.lastActiveDate': streak.lastActiveDate,
@@ -172,7 +177,7 @@ export async function fbCompleteLesson(
   if (!isNew) return;
   await Promise.all([
     fbSaveActivityLog(payload),
-    fbUpdateUserProgress(payload.uid),
+    fbUpdateUserProgress(payload.uid, payload.minutesSpent),
   ]);
 }
 

@@ -7,7 +7,7 @@ import { WidgetRenderer } from '@features/Library/components/WidgetRenderer';
 import { AppLink } from '@components/AppLink/AppLink';
 import { Loader } from '@components/Loader/Loader';
 import { useAuth } from '@hooks/useAuth';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 function Lesson() {
   const { courseId, lessonId } = useParams<{
@@ -21,11 +21,20 @@ function Lesson() {
     lessonId ?? ''
   );
 
+  const startTimeRef = useRef<number | null>(null);
+  useEffect(() => {
+    startTimeRef.current = Date.now();
+  }, []);
+
   const { onComplete } = useCompleteLesson(user?.uid ?? '', courseTitle);
 
   const handleComplete = useCallback(
     (score: number, maxScore: number) => {
-      if (lesson) void onComplete(lesson, score, maxScore);
+      if (!lesson) return;
+      const minutesSpent = startTimeRef.current
+        ? Math.round((Date.now() - startTimeRef.current) / 60000)
+        : 0;
+      void onComplete(lesson, score, maxScore, minutesSpent);
     },
     [lesson, onComplete]
   );
