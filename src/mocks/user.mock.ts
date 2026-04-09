@@ -2,9 +2,12 @@ import type { UserDashboardView } from '@models/userModel';
 import { mockCourseProgressList } from '@mocks/courseProgress.mock';
 import { mockCourses } from '@mocks/courses.mock';
 
-const totalLessons = mockCourses.reduce((sum, c) => sum + c.lessonCount, 0);
+const totalLessons = mockCourses.reduce(
+  (sum, course) => sum + course.lessonCount,
+  0
+);
 const totalCompleted = mockCourseProgressList.reduce(
-  (sum, p) => sum + p.completedLessonsIds.length,
+  (sum, progressEntry) => sum + progressEntry.completedLessonsIds.length,
   0
 );
 

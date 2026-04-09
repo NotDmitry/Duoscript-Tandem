@@ -66,7 +66,7 @@ async function mockGetCoursesWithProgress(
 
 async function mockGetCourse(courseId: string): Promise<CourseView | null> {
   await delay(300);
-  return mockCourses.find((c) => c.courseId === courseId) ?? null;
+  return mockCourses.find((course) => course.courseId === courseId) ?? null;
 }
 
 // Firebase Implementation
@@ -86,7 +86,9 @@ async function fbGetCourses(): Promise<CourseView[]> {
     const snap = await getDocs(
       query(collection(db, 'courses'), orderBy('createdAt', 'asc'))
     );
-    return snap.docs.map((d) => toCourseView(d.data() as CourseDocument));
+    return snap.docs.map((document) =>
+      toCourseView(document.data() as CourseDocument)
+    );
   } catch (error) {
     throwFirebaseError(error);
   }
@@ -102,8 +104,8 @@ async function fbGetCourseProgressList(
         orderBy('updatedAt', 'desc')
       )
     );
-    return snap.docs.map((d) =>
-      toCourseProgressView(d.data() as CourseProgressDocument)
+    return snap.docs.map((document) =>
+      toCourseProgressView(document.data() as CourseProgressDocument)
     );
   } catch (error) {
     throwFirebaseError(error);

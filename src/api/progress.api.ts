@@ -47,16 +47,17 @@ function mockCompleteLesson(payload: CompleteLessonPayload): Promise<void> {
   const { lesson, courseTitle, score, maxScore, minutesSpent } = payload;
 
   const lessonEntry = (mockLessons[lesson.courseId] ?? []).find(
-    (l) => l.lessonId === lesson.lessonId
+    (lesson) => lesson.lessonId === lesson.lessonId
   );
   if (lessonEntry) lessonEntry.isCompleted = true;
 
   const existingProgress = mockCourseProgressList.find(
-    (p) => p.courseId === lesson.courseId
+    (progressEntry) => progressEntry.courseId === lesson.courseId
   );
 
   const courseTotal =
-    mockCourses.find((c) => c.courseId === lesson.courseId)?.lessonCount ?? 0;
+    mockCourses.find((course) => course.courseId === lesson.courseId)
+      ?.lessonCount ?? 0;
   if (existingProgress) {
     if (!existingProgress.completedLessonsIds.includes(lesson.lessonId)) {
       existingProgress.completedLessonsIds.push(lesson.lessonId);
@@ -88,11 +89,14 @@ function mockCompleteLesson(payload: CompleteLessonPayload): Promise<void> {
   });
 
   const totalCompleted = mockCourseProgressList.reduce(
-    (sum, p) => sum + p.completedLessonsIds.length,
+    (sum, progressEntry) => sum + progressEntry.completedLessonsIds.length,
     0
   );
 
-  const totalLessons = mockCourses.reduce((sum, c) => sum + c.lessonCount, 0);
+  const totalLessons = mockCourses.reduce(
+    (sum, course) => sum + course.lessonCount,
+    0
+  );
   mockUserDashboard.progressPercent =
     totalLessons > 0 ? Math.round((totalCompleted / totalLessons) * 100) : 0;
   mockUserDashboard.activitiesCompleted += 1;
@@ -214,12 +218,14 @@ async function fbUpdateUserProgress(
     ]);
 
     const totalLessons = coursesSnap.docs.reduce(
-      (sum, d) => sum + (d.data() as CourseDocument).lessonIds.length,
+      (sum, document) =>
+        sum + (document.data() as CourseDocument).lessonIds.length,
       0
     );
     const totalCompleted = progressSnap.docs.reduce(
-      (sum, d) =>
-        sum + (d.data() as CourseProgressDocument).completedLessonsIds.length,
+      (sum, document) =>
+        sum +
+        (document.data() as CourseProgressDocument).completedLessonsIds.length,
       0
     );
 

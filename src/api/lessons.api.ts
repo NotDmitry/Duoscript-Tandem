@@ -33,11 +33,13 @@ async function mockGetLessonsByCourse(
   await delay(300);
   void uid;
   const lessons = mockLessons[courseId] ?? [];
-  const progress = mockCourseProgressList.find((p) => p.courseId === courseId);
+  const progress = mockCourseProgressList.find(
+    (progressEntry) => progressEntry.courseId === courseId
+  );
   const completedIds = new Set(progress?.completedLessonsIds ?? []);
-  return lessons.map((l) => ({
-    ...l,
-    isCompleted: completedIds.has(l.lessonId),
+  return lessons.map((lesson) => ({
+    ...lesson,
+    isCompleted: completedIds.has(lesson.lessonId),
   }));
 }
 
@@ -76,8 +78,8 @@ async function fbGetLessonsByCourse(
         : []
     );
 
-    return lessonsSnap.docs.map((d) => {
-      const lessonDoc = d.data() as LessonDocument;
+    return lessonsSnap.docs.map((document) => {
+      const lessonDoc = document.data() as LessonDocument;
       return toLessonView(lessonDoc, completedIds.has(lessonDoc.lessonId));
     });
   } catch (error) {

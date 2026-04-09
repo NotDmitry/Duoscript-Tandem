@@ -7,8 +7,8 @@ function buildCourseProgress(): CourseProgressView[] {
     .map((course) => {
       const lessons = mockLessons[course.courseId] ?? [];
       const completedLessonsIds = lessons
-        .filter((l) => l.isCompleted)
-        .map((l) => l.lessonId);
+        .filter((lesson) => lesson.isCompleted)
+        .map((lesson) => lesson.lessonId);
       if (completedLessonsIds.length === 0) return null;
       return {
         courseId: course.courseId,
@@ -19,7 +19,10 @@ function buildCourseProgress(): CourseProgressView[] {
         updatedAt: new Date().toISOString(),
       };
     })
-    .filter((p): p is CourseProgressView => p !== null);
+    .filter(
+      (progressEntry): progressEntry is CourseProgressView =>
+        progressEntry !== null
+    );
 }
 
 export const mockCourseProgressList: CourseProgressView[] =
