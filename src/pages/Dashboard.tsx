@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Pagination, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router';
 import { useActivityHistory } from '@features/Dashboard/useActivityHistory';
 import { useAuth } from '@hooks/useAuth';
@@ -28,11 +28,12 @@ function Dashboard() {
     error,
   } = useActivityHistory(uid, itemsPerPage);
 
-  const handlePageChange = (
-    _: React.ChangeEvent<unknown>,
-    value: number
-  ): void => {
-    setPage(value);
+  const handlePrevPage = (): void => {
+    setPage((prev) => prev - 1);
+  };
+
+  const handleNextPage = (): void => {
+    setPage((prev) => prev + 1);
   };
 
   return (
@@ -113,13 +114,27 @@ function Dashboard() {
                 <RecentActivity activities={activities} />
                 <Box display="flex" justifyContent="center">
                   {totalPages > 1 && (
-                    <Pagination
-                      count={totalPages}
-                      page={page}
-                      onChange={handlePageChange}
-                      shape="rounded"
-                      disabled={activitiesLoading}
-                    />
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        disabled={page <= 1 || activitiesLoading}
+                        onClick={handlePrevPage}
+                      >
+                        Prev
+                      </Button>
+                      <Typography variant="body2" color="text.secondary">
+                        {page} / {totalPages}
+                      </Typography>
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        disabled={page >= totalPages || activitiesLoading}
+                        onClick={handleNextPage}
+                      >
+                        Next
+                      </Button>
+                    </Box>
                   )}
                 </Box>
               </>
