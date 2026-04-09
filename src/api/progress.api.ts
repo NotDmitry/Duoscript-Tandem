@@ -41,6 +41,8 @@ export interface CompleteLessonPayload {
 
 // Mock Implementation
 
+let mockLastActiveDate = '';
+
 function mockCompleteLesson(payload: CompleteLessonPayload): Promise<void> {
   const { lesson, courseTitle, score, maxScore, minutesSpent } = payload;
 
@@ -98,8 +100,9 @@ function mockCompleteLesson(payload: CompleteLessonPayload): Promise<void> {
   mockUserDashboard.currentStreak = computeStreak({
     currentStreak: mockUserDashboard.currentStreak,
     longestStreak: mockUserDashboard.currentStreak,
-    lastActiveDate: '',
+    lastActiveDate: mockLastActiveDate,
   }).currentStreak;
+  mockLastActiveDate = new Date().toISOString().slice(0, 10);
 
   return Promise.resolve();
 }

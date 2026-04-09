@@ -1,11 +1,20 @@
 import type { UserDashboardView } from '@models/userModel';
+import { mockCourseProgressList } from '@mocks/courseProgress.mock';
+import { mockCourses } from '@mocks/courses.mock';
+
+const totalLessons = mockCourses.reduce((sum, c) => sum + c.lessonCount, 0);
+const totalCompleted = mockCourseProgressList.reduce(
+  (sum, p) => sum + p.completedLessonsIds.length,
+  0
+);
 
 export const mockUserDashboard: UserDashboardView = {
   uid: 'user_1',
   displayName: 'anelka',
-  progressPercent: 65,
-  progressUpdatedAt: '2026-03-06T00:00:00.000Z',
+  progressPercent:
+    totalLessons > 0 ? Math.round((totalCompleted / totalLessons) * 100) : 0,
+  progressUpdatedAt: new Date().toISOString(),
   minutesSpent: 45,
-  activitiesCompleted: 2,
+  activitiesCompleted: 6,
   currentStreak: 3,
 };
