@@ -25,7 +25,7 @@ import Queues from './Queues';
 import type { AsyncSorterTask } from '@models/widgetModel';
 interface AsyncSorterProps {
   widgetId: string;
-  onComplete?: () => void;
+  onComplete?: (score: number, maxScore: number) => void;
 }
 
 export default function AsyncSorter({

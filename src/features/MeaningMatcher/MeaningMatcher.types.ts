@@ -10,5 +10,5 @@ export interface CompletedResult {
 export interface MeaningMatcherProps {
   widgetId: string;
   initialDifficulty?: MeaningMatcherDifficulty;
-  onComplete?: () => void;
+  onComplete?: (score: number, maxScore: number) => void;
 }

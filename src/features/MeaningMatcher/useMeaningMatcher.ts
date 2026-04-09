@@ -56,7 +56,9 @@ export function useMeaningMatcher({
     if (next) {
       setDifficulty(next);
     } else {
-      onComplete?.();
+      const totalScore = updatedResults.reduce((sum, r) => sum + r.score, 0);
+      const totalMax = updatedResults.reduce((sum, r) => sum + r.total, 0);
+      onComplete?.(totalScore, totalMax);
     }
   };
 

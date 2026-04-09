@@ -13,7 +13,7 @@ import { useWidgetQuiz } from './useWidgetQuiz';
 
 interface WidgetQuizProps {
   widgetId: string;
-  onComplete?: () => void;
+  onComplete?: (score: number, maxScore: number) => void;
 }
 
 function WidgetQuiz({ widgetId, onComplete }: WidgetQuizProps) {

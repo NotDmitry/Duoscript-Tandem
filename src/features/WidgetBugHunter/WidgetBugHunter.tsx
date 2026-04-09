@@ -13,7 +13,7 @@ import { useWidgetBugHunter } from '@features/WidgetBugHunter/useWidgetBugHunter
 
 interface WidgetBugHunterProps {
   widgetId: string;
-  onComplete?: () => void;
+  onComplete?: (score: number, maxScore: number) => void;
 }
 
 function WidgetBugHunter({ widgetId, onComplete }: WidgetBugHunterProps) {
