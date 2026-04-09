@@ -23,9 +23,12 @@ function Lesson() {
 
   const { onComplete } = useCompleteLesson(user?.uid ?? '', courseTitle);
 
-  const handleComplete = useCallback(() => {
-    if (lesson) void onComplete(lesson);
-  }, [lesson, onComplete]);
+  const handleComplete = useCallback(
+    (score: number, maxScore: number) => {
+      if (lesson) void onComplete(lesson, score, maxScore);
+    },
+    [lesson, onComplete]
+  );
 
   return (
     <Box

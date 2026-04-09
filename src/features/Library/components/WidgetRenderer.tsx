@@ -6,7 +6,7 @@ import AsyncSorter from '@features/Async-sorter/AsyncSorter';
 
 interface WidgetRendererProps {
   lesson: LessonView;
-  onComplete: () => void;
+  onComplete: (score: number, maxScore: number) => void;
 }
 
 export function WidgetRenderer({ lesson, onComplete }: WidgetRendererProps) {
