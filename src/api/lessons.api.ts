@@ -69,9 +69,10 @@ async function fbGetLessonsByCourse(
         : []
     );
 
-    return lessonsSnap.docs.map((d) =>
-      toLessonView(d.data() as LessonDocument, completedIds.has(d.id))
-    );
+    return lessonsSnap.docs.map((d) => {
+      const lessonDoc = d.data() as LessonDocument;
+      return toLessonView(lessonDoc, completedIds.has(lessonDoc.lessonId));
+    });
   } catch (error) {
     throwFirebaseError(error);
   }
