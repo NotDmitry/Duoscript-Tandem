@@ -19,6 +19,10 @@ import type { CourseDocument } from '@models/courseModel';
 import type { UserStreak } from '@models/userModel';
 import { userConverter } from '@models/userModel';
 
+// Switch
+
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
+
 export interface CompleteLessonPayload {
   uid: string;
   lesson: LessonView;
@@ -26,6 +30,13 @@ export interface CompleteLessonPayload {
   score: number;
   maxScore: number;
   minutesSpent: number;
+}
+
+// Mock Implementation
+
+function mockCompleteLesson(payload: CompleteLessonPayload): Promise<void> {
+  void payload;
+  return Promise.resolve();
 }
 
 // Firebase Implementation
@@ -181,4 +192,4 @@ export async function fbCompleteLesson(
   ]);
 }
 
-export const completeLesson = fbCompleteLesson;
+export const completeLesson = USE_MOCK ? mockCompleteLesson : fbCompleteLesson;
