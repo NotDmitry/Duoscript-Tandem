@@ -39,9 +39,9 @@ function toBugHunterView(
     ...(data as Omit<WidgetView<'bugHunter'>, 'config'>),
     config: {
       ...config,
-      questions: config.questions.map((q) => ({
-        ...q,
-        answers: q.answers.map(({ options }) => options),
+      questions: config.questions.map((question) => ({
+        ...question,
+        answers: question.answers.map(({ options }) => options),
       })),
     },
   };

@@ -93,7 +93,7 @@ async function fbGetActivityHistory(
     const snap = await getDocs(pageQuery);
 
     return {
-      activities: snap.docs.map((d) => toActivityView(d.data())),
+      activities: snap.docs.map((document) => toActivityView(document.data())),
       totalPages,
       cursor: snap.docs.at(-1),
     };

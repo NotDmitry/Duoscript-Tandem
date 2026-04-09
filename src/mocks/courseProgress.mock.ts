@@ -1,45 +1,29 @@
 import type { CourseProgressView } from '@models/courseProgressModel';
+import { mockLessons } from '@mocks/lessons.mock';
+import { mockCourses } from '@mocks/courses.mock';
 
-export const mockCourseProgressList: CourseProgressView[] = [
-  {
-    courseId: 'course_js',
-    completedLessonsIds: [
-      'lesson_js_1',
-      'lesson_js_2',
-      'lesson_js_3',
-      'lesson_js_4',
-      'lesson_js_5',
-    ],
-    progressPercent: 62,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    courseId: 'course_ts',
-    completedLessonsIds: ['lesson_ts_1', 'lesson_ts_2'],
-    progressPercent: 33,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    courseId: 'course_html',
-    completedLessonsIds: [
-      'lesson_html_1',
-      'lesson_html_2',
-      'lesson_html_3',
-      'lesson_html_4',
-    ],
-    progressPercent: 100,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    courseId: 'course_github',
-    completedLessonsIds: ['lesson_github_1'],
-    progressPercent: 20,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    courseId: 'course_algorithms',
-    completedLessonsIds: ['lesson_algorithms_1'],
-    progressPercent: 10,
-    updatedAt: new Date().toISOString(),
-  },
-];
+function buildCourseProgress(): CourseProgressView[] {
+  return mockCourses
+    .map((course) => {
+      const lessons = mockLessons[course.courseId] ?? [];
+      const completedLessonsIds = lessons
+        .filter((lesson) => lesson.isCompleted)
+        .map((lesson) => lesson.lessonId);
+      if (completedLessonsIds.length === 0) return null;
+      return {
+        courseId: course.courseId,
+        completedLessonsIds,
+        progressPercent: Math.round(
+          (completedLessonsIds.length / lessons.length) * 100
+        ),
+        updatedAt: new Date().toISOString(),
+      };
+    })
+    .filter(
+      (progressEntry): progressEntry is CourseProgressView =>
+        progressEntry !== null
+    );
+}
+
+export const mockCourseProgressList: CourseProgressView[] =
+  buildCourseProgress();

@@ -3,6 +3,7 @@ import { toLessonView } from '@models/lessonModel';
 
 // Mock Imports
 import { mockLessons } from '@mocks/lessons.mock';
+import { mockCourseProgressList } from '@mocks/courseProgress.mock';
 import { delay } from '@utils/delay';
 
 // Firebase Imports
@@ -31,7 +32,15 @@ async function mockGetLessonsByCourse(
 ): Promise<LessonView[]> {
   await delay(300);
   void uid;
-  return mockLessons[courseId] ?? [];
+  const lessons = mockLessons[courseId] ?? [];
+  const progress = mockCourseProgressList.find(
+    (progressEntry) => progressEntry.courseId === courseId
+  );
+  const completedIds = new Set(progress?.completedLessonsIds ?? []);
+  return lessons.map((lesson) => ({
+    ...lesson,
+    isCompleted: completedIds.has(lesson.lessonId),
+  }));
 }
 
 async function mockGetLesson(
@@ -69,8 +78,8 @@ async function fbGetLessonsByCourse(
         : []
     );
 
-    return lessonsSnap.docs.map((d) => {
-      const lessonDoc = d.data() as LessonDocument;
+    return lessonsSnap.docs.map((document) => {
+      const lessonDoc = document.data() as LessonDocument;
       return toLessonView(lessonDoc, completedIds.has(lessonDoc.lessonId));
     });
   } catch (error) {

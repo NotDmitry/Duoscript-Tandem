@@ -38,9 +38,9 @@ function toQuizView(data: Record<string, unknown>): WidgetView<'quiz'> {
     ...(data as Omit<WidgetView<'quiz'>, 'config'>),
     config: {
       ...config,
-      questions: config.questions.map((q) => ({
-        ...q,
-        answers: q.answers.map(
+      questions: config.questions.map((question) => ({
+        ...question,
+        answers: question.answers.map(
           ({ index, text }) => [index, text] as [number, string]
         ),
       })),
