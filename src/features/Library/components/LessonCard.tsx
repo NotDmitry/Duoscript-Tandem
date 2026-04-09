@@ -1,20 +1,26 @@
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Chip, Paper, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import type { LessonView } from '@models/lessonModel';
+import type { WidgetType } from '@models/widgetModel';
+
+const WIDGET_LABELS: Record<WidgetType, string> = {
+  quiz: 'Quiz',
+  meaningMatcher: 'Matcher',
+  bugHunter: 'Bug Hunter',
+  asyncSorter: 'Async Sorter',
+};
 
 interface LessonCardProps {
   lesson: LessonView;
   index: number;
-  onClick: (lesson: LessonView) => void;
+  onClick: () => void;
 }
 
 export function LessonCard({ lesson, index, onClick }: LessonCardProps) {
   return (
     <Paper
-      onClick={() => {
-        onClick(lesson);
-      }}
+      onClick={onClick}
       elevation={0}
       sx={{
         display: 'flex',
@@ -50,6 +56,11 @@ export function LessonCard({ lesson, index, onClick }: LessonCardProps) {
             {lesson.description}
           </Typography>
         )}
+        <Chip
+          label={WIDGET_LABELS[lesson.widgetType]}
+          size="small"
+          sx={{ mt: 0.5, height: 20, fontSize: '0.65rem' }}
+        />
       </Box>
 
       {lesson.isCompleted ? (

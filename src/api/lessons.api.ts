@@ -3,6 +3,7 @@ import { toLessonView } from '@models/lessonModel';
 
 // Mock Imports
 import { mockLessons } from '@mocks/lessons.mock';
+import { mockCourseProgressList } from '@mocks/courseProgress.mock';
 import { delay } from '@utils/delay';
 
 // Firebase Imports
@@ -17,6 +18,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { throwFirebaseError } from '@utils/firebaseError';
+import type { CourseProgressDocument } from '@models/courseProgressModel';
 
 // Switch
 
@@ -24,9 +26,21 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 // Mock Implementation
 
-async function mockGetLessonsByCourse(courseId: string): Promise<LessonView[]> {
+async function mockGetLessonsByCourse(
+  courseId: string,
+  uid: string
+): Promise<LessonView[]> {
   await delay(300);
-  return mockLessons[courseId] ?? [];
+  void uid;
+  const lessons = mockLessons[courseId] ?? [];
+  const progress = mockCourseProgressList.find(
+    (progressEntry) => progressEntry.courseId === courseId
+  );
+  const completedIds = new Set(progress?.completedLessonsIds ?? []);
+  return lessons.map((lesson) => ({
+    ...lesson,
+    isCompleted: completedIds.has(lesson.lessonId),
+  }));
 }
 
 async function mockGetLesson(
@@ -43,15 +57,31 @@ async function mockGetLesson(
 
 // Firebase Implementation
 
-async function fbGetLessonsByCourse(courseId: string): Promise<LessonView[]> {
+async function fbGetLessonsByCourse(
+  courseId: string,
+  uid: string
+): Promise<LessonView[]> {
   try {
-    const snap = await getDocs(
-      query(
-        collection(db, 'courses', courseId, 'lessons'),
-        orderBy('createdAt', 'asc')
-      )
+    const [lessonsSnap, progressSnap] = await Promise.all([
+      getDocs(
+        query(
+          collection(db, 'courses', courseId, 'lessons'),
+          orderBy('createdAt', 'asc')
+        )
+      ),
+      getDoc(doc(db, 'users', uid, 'courseProgress', courseId)),
+    ]);
+
+    const completedIds = new Set<string>(
+      progressSnap.exists()
+        ? (progressSnap.data() as CourseProgressDocument).completedLessonsIds
+        : []
     );
-    return snap.docs.map((d) => toLessonView(d.data() as LessonDocument));
+
+    return lessonsSnap.docs.map((document) => {
+      const lessonDoc = document.data() as LessonDocument;
+      return toLessonView(lessonDoc, completedIds.has(lessonDoc.lessonId));
+    });
   } catch (error) {
     throwFirebaseError(error);
   }

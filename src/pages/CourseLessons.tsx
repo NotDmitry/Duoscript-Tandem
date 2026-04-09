@@ -1,20 +1,30 @@
 import { Box, Stack, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useLocation } from 'react-router';
 import { useLessons } from '@features/Library/useLessons';
 import { LessonCard } from '@features/Library/components/LessonCard';
 import { AppLink } from '@components/AppLink/AppLink';
 import type { LessonView } from '@models/lessonModel';
 import { Loader } from '@components/Loader/Loader';
+import { useAuth } from '@hooks/useAuth';
 
 function CourseLessons() {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
-  const { lessons, isLoading, error } = useLessons(courseId ?? '');
+  const location = useLocation();
+  const { user } = useAuth();
+
+  const courseTitle =
+    (location.state as { courseTitle?: string } | null)?.courseTitle ?? '';
+
+  const { lessons, isLoading, error } = useLessons(
+    courseId ?? '',
+    user?.uid ?? ''
+  );
 
   const handleLessonClick = (lesson: LessonView): void => {
     navigate(`/library/${courseId ?? ''}/lessons/${lesson.lessonId}`, {
-      state: { lesson },
+      state: { lesson, courseTitle },
     });
   };
 
@@ -50,7 +60,9 @@ function CourseLessons() {
                   key={lesson.lessonId}
                   lesson={lesson}
                   index={index}
-                  onClick={handleLessonClick}
+                  onClick={() => {
+                    handleLessonClick(lesson);
+                  }}
                 />
               ))}
             </Stack>

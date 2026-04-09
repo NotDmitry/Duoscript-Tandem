@@ -34,7 +34,8 @@ export const useDragAndDrop = (
     id: number,
     tasks: AsyncSorterTask[]
   ) => AsyncSorterTask | undefined,
-  widgetTasks: AsyncSorterTask[]
+  widgetTasks: AsyncSorterTask[],
+  onComplete?: (score: number, maxScore: number) => void
 ) => {
   const [draggedItem, setDraggedItem] = useState<AsyncSorterBlock | null>(null);
   const [allDragged, setAllDragged] = useState(false);
@@ -71,7 +72,8 @@ export const useDragAndDrop = (
     setDraggedItem,
     setAllDragged,
     getAsyncSortTaskById,
-    widgetTasks
+    widgetTasks,
+    onComplete
   );
 
   const handleDragStart = (item: AsyncSorterBlock) => {

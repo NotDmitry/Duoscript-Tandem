@@ -2,7 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import type { BugHunterConfig, BugHunterTask } from '@models/widgetModel';
 import { getBugHunterWidget } from '@api/widgetBugHunter.api.ts';
 
-export function useWidgetBugHunter(widgetId: string) {
+export function useWidgetBugHunter(
+  widgetId: string,
+  onComplete?: (score: number, maxScore: number) => void
+) {
   const savedQuizType = useRef(widgetId);
   const rightAnswers = useRef<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -65,10 +68,9 @@ export function useWidgetBugHunter(widgetId: string) {
         String(currentTask.answers[index].indexOf(selected))
       )
       .join('');
-    if (userAnswer !== rightAnswers.current[currentTaskIndex]) {
-      createFailedCode();
-    }
-    manageAnswer();
+    const didFail = userAnswer !== rightAnswers.current[currentTaskIndex];
+    if (didFail) createFailedCode();
+    manageAnswer(didFail);
   }
 
   function handleSkip() {
@@ -80,7 +82,7 @@ export function useWidgetBugHunter(widgetId: string) {
           : taskSelections
       )
     );
-    manageAnswer();
+    manageAnswer(true);
   }
 
   function createFailedCode() {
@@ -95,10 +97,13 @@ export function useWidgetBugHunter(widgetId: string) {
     setFailedTasks((prev) => [...prev, failedCode]);
   }
 
-  function manageAnswer(): void {
+  function manageAnswer(didFail: boolean): void {
     const isLastTask = currentTaskIndex >= tasks.length - 1;
     setFinish(isLastTask);
-    if (!isLastTask) {
+    if (isLastTask) {
+      const finalFailCount = failedTasks.length + (didFail ? 1 : 0);
+      onComplete?.(tasks.length - finalFailCount, tasks.length);
+    } else {
       setCurrentTaskIndex((prev) => prev + 1);
     }
   }

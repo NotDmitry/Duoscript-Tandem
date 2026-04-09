@@ -15,7 +15,7 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 // Mock Implementation
 
-export async function mockGetMeaningMatcherWidget(
+async function mockGetMeaningMatcherWidget(
   widgetId: string
 ): Promise<WidgetView<'meaningMatcher'>> {
   await delay(300);

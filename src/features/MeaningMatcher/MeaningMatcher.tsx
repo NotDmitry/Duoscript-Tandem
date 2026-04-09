@@ -52,7 +52,7 @@ export function MeaningMatcher({
           goToNext(false);
         }}
         onSkip={() => {
-          goToNext(true);
+          goToNext(true, 0, levelData.pairs.length);
         }}
       />
     </Box>
