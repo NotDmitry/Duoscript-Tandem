@@ -1,4 +1,4 @@
-import type { WidgetView } from '@models/widgetModel';
+import type { WidgetView, QuizQuestion } from '@models/widgetModel';
 
 // Mock Imports
 import { quizWidgetMocks } from '@mocks/widgetQuiz.mock';
@@ -24,6 +24,30 @@ async function mockGetQuizWidget(
 
 // Firebase Implementation
 
+type StoredQuizQuestion = Omit<QuizQuestion, 'answers'> & {
+  answers: { index: number; text: string }[];
+};
+
+function toQuizView(data: Record<string, unknown>): WidgetView<'quiz'> {
+  const config = data.config as {
+    quizName: string;
+    questions: StoredQuizQuestion[];
+    rightAnswers: (number | null)[];
+  };
+  return {
+    ...(data as Omit<WidgetView<'quiz'>, 'config'>),
+    config: {
+      ...config,
+      questions: config.questions.map((q) => ({
+        ...q,
+        answers: q.answers.map(
+          ({ index, text }) => [index, text] as [number, string]
+        ),
+      })),
+    },
+  };
+}
+
 async function fbGetQuizWidget(widgetId: string): Promise<WidgetView<'quiz'>> {
   let snap: DocumentSnapshot;
   try {
@@ -32,7 +56,7 @@ async function fbGetQuizWidget(widgetId: string): Promise<WidgetView<'quiz'>> {
     throwFirebaseError(error);
   }
   if (!snap.exists()) throw new Error(`Quiz widget not found: ${widgetId}`);
-  return snap.data() as WidgetView<'quiz'>;
+  return toQuizView(snap.data() as Record<string, unknown>);
 }
 
 // Export Switch

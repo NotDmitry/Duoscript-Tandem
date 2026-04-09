@@ -2,9 +2,12 @@ import { Box, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useParams } from 'react-router';
 import { useLesson } from '@features/Library/useLesson';
+import { useCompleteLesson } from '@features/Library/useCompleteLesson';
 import { WidgetRenderer } from '@features/Library/components/WidgetRenderer';
 import { AppLink } from '@components/AppLink/AppLink';
 import { Loader } from '@components/Loader/Loader';
+import { useAuth } from '@hooks/useAuth';
+import { useCallback, useEffect, useRef } from 'react';
 
 function Lesson() {
   const { courseId, lessonId } = useParams<{
@@ -12,9 +15,28 @@ function Lesson() {
     lessonId: string;
   }>();
 
-  const { lesson, isLoading, error } = useLesson(
+  const { user } = useAuth();
+  const { lesson, courseTitle, isLoading, error } = useLesson(
     courseId ?? '',
     lessonId ?? ''
+  );
+
+  const startTimeRef = useRef<number | null>(null);
+  useEffect(() => {
+    startTimeRef.current = Date.now();
+  }, []);
+
+  const { onComplete } = useCompleteLesson(user?.uid ?? '', courseTitle);
+
+  const handleComplete = useCallback(
+    (score: number, maxScore: number) => {
+      if (!lesson) return;
+      const minutesSpent = startTimeRef.current
+        ? Math.round((Date.now() - startTimeRef.current) / 60000)
+        : 0;
+      void onComplete(lesson, score, maxScore, minutesSpent);
+    },
+    [lesson, onComplete]
   );
 
   return (
@@ -48,7 +70,7 @@ function Lesson() {
               {lesson.description}
             </Typography>
           )}
-          <WidgetRenderer lesson={lesson} />
+          <WidgetRenderer lesson={lesson} onComplete={handleComplete} />
         </Box>
       )}
     </Box>

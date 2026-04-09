@@ -5,7 +5,6 @@ import {
   LinearProgress,
   Typography,
 } from '@mui/material';
-import { useNavigate } from 'react-router';
 import type { CourseWithProgressView, CourseTag } from '@models/courseModel';
 
 const TAG_COLORS: Record<CourseTag, string> = {
@@ -19,19 +18,18 @@ const TAG_COLORS: Record<CourseTag, string> = {
 
 interface CourseProgressCardProps {
   course: CourseWithProgressView;
+  onClick: () => void;
 }
 
-export function CourseProgressCard({ course }: CourseProgressCardProps) {
-  const navigate = useNavigate();
+export function CourseProgressCard({
+  course,
+  onClick,
+}: CourseProgressCardProps) {
   const tagColor = TAG_COLORS[course.tag];
-
-  const handleClick = () => {
-    navigate(`/library/${course.courseId}`);
-  };
 
   return (
     <Card
-      onClick={handleClick}
+      onClick={onClick}
       variant="outlined"
       sx={{
         borderRadius: 4,

@@ -13,9 +13,10 @@ import { useWidgetQuiz } from './useWidgetQuiz';
 
 interface WidgetQuizProps {
   widgetId: string;
+  onComplete?: (score: number, maxScore: number) => void;
 }
 
-function WidgetQuiz({ widgetId }: WidgetQuizProps) {
+function WidgetQuiz({ widgetId, onComplete }: WidgetQuizProps) {
   const {
     isLoading,
     isFinish,
@@ -28,7 +29,7 @@ function WidgetQuiz({ widgetId }: WidgetQuizProps) {
     handleAnswerSelect,
     handleNext,
     handleSkip,
-  } = useWidgetQuiz(widgetId);
+  } = useWidgetQuiz(widgetId, onComplete);
   if (isLoading) {
     return (
       <Container

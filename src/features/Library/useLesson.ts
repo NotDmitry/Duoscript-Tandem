@@ -3,10 +3,16 @@ import { useLocation } from 'react-router';
 import { getLesson } from '@api/lessons.api';
 import type { LessonView } from '@models/lessonModel';
 
+interface LocationState {
+  lesson?: LessonView;
+  courseTitle?: string;
+}
+
 export function useLesson(courseId: string, lessonId: string) {
   const location = useLocation();
-  const locationLesson =
-    (location.state as { lesson?: LessonView } | null)?.lesson ?? null;
+  const state = (location.state as LocationState | null) ?? null;
+  const locationLesson = state?.lesson ?? null;
+  const courseTitle = state?.courseTitle ?? '';
 
   const [lesson, setLesson] = useState<LessonView | null>(locationLesson);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,5 +36,5 @@ export function useLesson(courseId: string, lessonId: string) {
     void fetchLesson();
   }, [courseId, lessonId, locationLesson]);
 
-  return { lesson, isLoading, error };
+  return { lesson, courseTitle, isLoading, error };
 }
