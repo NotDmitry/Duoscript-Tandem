@@ -23,8 +23,8 @@ export interface CompleteLessonPayload {
   uid: string;
   lesson: LessonView;
   courseTitle: string;
-  score?: number;
-  maxScore?: number;
+  score: number;
+  maxScore: number;
 }
 
 // Firebase Implementation
@@ -42,8 +42,8 @@ async function fbSaveActivityLog(
       lessonId: payload.lesson.lessonId,
       lessonTitle: payload.lesson.title,
       widgetType: payload.lesson.widgetType,
-      score: payload.score ?? 0,
-      maxScore: payload.maxScore ?? 0,
+      score: payload.score,
+      maxScore: payload.maxScore,
       status: 'completed',
       createdAt: serverTimestamp(),
     });

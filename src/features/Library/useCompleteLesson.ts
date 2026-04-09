@@ -9,13 +9,13 @@ export function useCompleteLesson(uid: string, courseTitle: string) {
   const completedRef = useRef(false);
 
   const onComplete = useCallback(
-    async (lesson: LessonView) => {
+    async (lesson: LessonView, score: number, maxScore: number) => {
       if (completedRef.current || !uid) return;
       completedRef.current = true;
 
       setIsLoading(true);
       try {
-        await completeLesson({ uid, lesson, courseTitle });
+        await completeLesson({ uid, lesson, courseTitle, score, maxScore });
         showToast('Lesson completed!', 'success');
       } catch (err) {
         completedRef.current = false;
