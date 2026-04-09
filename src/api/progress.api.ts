@@ -1,5 +1,12 @@
 import type { LessonView } from '@models/lessonModel';
 
+// Mock Imports
+import { mockLessons } from '@mocks/lessons.mock';
+import { mockCourseProgressList } from '@mocks/courseProgress.mock';
+import { mockActivityLog } from '@mocks/activity.mock';
+import { mockUserDashboard } from '@mocks/user.mock';
+import { mockCourses } from '@mocks/courses.mock';
+
 // Firebase Imports
 import {
   collection,
@@ -35,7 +42,65 @@ export interface CompleteLessonPayload {
 // Mock Implementation
 
 function mockCompleteLesson(payload: CompleteLessonPayload): Promise<void> {
-  void payload;
+  const { lesson, courseTitle, score, maxScore, minutesSpent } = payload;
+
+  const lessonEntry = (mockLessons[lesson.courseId] ?? []).find(
+    (l) => l.lessonId === lesson.lessonId
+  );
+  if (lessonEntry) lessonEntry.isCompleted = true;
+
+  const existingProgress = mockCourseProgressList.find(
+    (p) => p.courseId === lesson.courseId
+  );
+
+  const courseTotal =
+    mockCourses.find((c) => c.courseId === lesson.courseId)?.lessonCount ?? 0;
+  if (existingProgress) {
+    if (!existingProgress.completedLessonsIds.includes(lesson.lessonId)) {
+      existingProgress.completedLessonsIds.push(lesson.lessonId);
+      existingProgress.progressPercent = Math.round(
+        (existingProgress.completedLessonsIds.length / courseTotal) * 100
+      );
+      existingProgress.updatedAt = new Date().toISOString();
+    } else {
+      return Promise.resolve();
+    }
+  } else {
+    mockCourseProgressList.push({
+      courseId: lesson.courseId,
+      completedLessonsIds: [lesson.lessonId],
+      progressPercent: Math.round((1 / courseTotal) * 100),
+      updatedAt: new Date().toISOString(),
+    });
+  }
+
+  mockActivityLog.unshift({
+    id: `activity_mock_${String(Date.now())}`,
+    courseTitle,
+    lessonTitle: lesson.title,
+    widgetType: lesson.widgetType,
+    score,
+    maxScore,
+    status: 'completed',
+    createdAt: new Date().toISOString(),
+  });
+
+  const totalCompleted = mockCourseProgressList.reduce(
+    (sum, p) => sum + p.completedLessonsIds.length,
+    0
+  );
+
+  const totalLessons = mockCourses.reduce((sum, c) => sum + c.lessonCount, 0);
+  mockUserDashboard.progressPercent =
+    totalLessons > 0 ? Math.round((totalCompleted / totalLessons) * 100) : 0;
+  mockUserDashboard.activitiesCompleted += 1;
+  mockUserDashboard.minutesSpent += minutesSpent;
+  mockUserDashboard.currentStreak = computeStreak({
+    currentStreak: mockUserDashboard.currentStreak,
+    longestStreak: mockUserDashboard.currentStreak,
+    lastActiveDate: '',
+  }).currentStreak;
+
   return Promise.resolve();
 }
 
