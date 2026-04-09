@@ -16,7 +16,14 @@ import { mockCourseProgressList } from '@mocks/courseProgress.mock';
 import { delay } from '@utils/delay';
 
 // Firebase Imports
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+} from 'firebase/firestore';
 import { db } from '@/firebase';
 import { throwFirebaseError } from '@utils/firebaseError';
 
@@ -57,7 +64,22 @@ async function mockGetCoursesWithProgress(
   });
 }
 
+async function mockGetCourse(courseId: string): Promise<CourseView | null> {
+  await delay(300);
+  return mockCourses.find((c) => c.courseId === courseId) ?? null;
+}
+
 // Firebase Implementation
+
+async function fbGetCourse(courseId: string): Promise<CourseView | null> {
+  try {
+    const snap = await getDoc(doc(db, 'courses', courseId));
+    if (!snap.exists()) return null;
+    return toCourseView(snap.data() as CourseDocument);
+  } catch (error) {
+    throwFirebaseError(error);
+  }
+}
 
 async function fbGetCourses(): Promise<CourseView[]> {
   try {
@@ -120,6 +142,7 @@ async function fbGetCoursesWithProgress(
 // Export Switch
 
 export const getCourses = USE_MOCK ? mockGetCourses : fbGetCourses;
+export const getCourse = USE_MOCK ? mockGetCourse : fbGetCourse;
 export const getCoursesWithProgress = USE_MOCK
   ? mockGetCoursesWithProgress
   : fbGetCoursesWithProgress;
