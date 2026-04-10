@@ -17,14 +17,42 @@
 <div style="background-color:#f6f8fa;border:1px solid #f0f0f0;border-radius:10px;padding:14px">
 <span style="display:inline-block;margin:0 0 8px 4px;font-size:18px;font-weight:700;color:steelblue">FEATURES TABLE</span><br>
 
-| #   | Feature           | Баллы | Ссылки                                                                                                                           |
-| --- | ----------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Landing Page      | 55    | [Link to component - Landing Page](https://github.com/NotDmitry/Duoscript-Tandem/blob/develop/src/pages/Home.tsx)                |
-| 2   | About Page        | 35    | [Link to component - About Page](https://github.com/NotDmitry/Duoscript-Tandem/blob/develop/src/pages/About.tsx)                 |
-| 3   | Error Page        | 45    | [Link to component - Error Page](https://github.com/NotDmitry/Duoscript-Tandem/blob/develop/src/pages/NotFound.tsx)              |
-| 4   | Widget Quiz       | 80    | [Link to component - Widget Quiz](https://github.com/NotDmitry/Duoscript-Tandem/tree/develop/src/features/WidgetQuiz)            |
-| 5   | Widget Bug Hunter | 60    | [Link to component - Widget Bug Hunter](https://github.com/NotDmitry/Duoscript-Tandem/tree/develop/src/features/WidgetBugHunter) |
-|     | Итого:            | 275   |                                                                                                                                  |
+| # | Feature                               | Баллы   | Ссылки                                                                                                                           |
+|---|---------------------------------------|---------|----------------------------------------------------------------------------------------------------------------------------------|
+| 1 | **Landing Page**                      | **55**  | [Link to component - Landing Page](https://github.com/NotDmitry/Duoscript-Tandem/blob/develop/src/pages/Home.tsx)                |
+|   | + Rich UI Screen                      | 20      |                                                                                                                                  |
+|   | + Advanced Animations                 | 10      |                                                                                                                                  |
+|   | + Responsive                          | 5       |                                                                                                                                  |
+|   | + Auto-deploy                         | 5       |                                                                                                                                  |
+|   | + API Layer                           | 10      |                                                                                                                                  |
+|   | + React                               | 5       |                                                                                                                                  |
+| 2 | **About Page**                        | **35**  | [Link to component - About Page](https://github.com/NotDmitry/Duoscript-Tandem/blob/develop/src/pages/About.tsx)                 |
+|   | + Rich UI Screen                      | 20      |                                                                                                                                  |
+|   | + Responsive                          | 5       |                                                                                                                                  |
+|   | + Auto-deploy                         | 5       |                                                                                                                                  |
+|   | + React                               | 5       |                                                                                                                                  |
+| 3 | **Error Page**                        | **45**  | [Link to component - Error Page](https://github.com/NotDmitry/Duoscript-Tandem/blob/develop/src/pages/NotFound.tsx)              |
+|   | + Rich UI Screen                      | 20      |                                                                                                                                  |
+|   | + Advanced Animations                 | 10      |                                                                                                                                  |
+|   | + Responsive                          | 5       |                                                                                                                                  |
+|   | + Auto-deploy                         | 5       |                                                                                                                                  |
+|   | + React                               | 5       |                                                                                                                                  |
+| 4 | **Widget Quiz**                       | **80**  | [Link to component - Widget Quiz](https://github.com/NotDmitry/Duoscript-Tandem/tree/develop/src/features/WidgetQuiz)            |
+|   | + Rich UI Screen                      | 20      |                                                                                                                                  |
+|   | + Complex Component                   | 25      |                                                                                                                                  |
+|   | + Responsive                          | 5       |                                                                                                                                  |
+|   | + Unit Tests (Basic)                  | 10      |                                                                                                                                  |
+|   | + Design Patterns(repository pattern) | 10      |                                                                                                                                  |
+|   | + API Layer                           | 10      |                                                                                                                                  |
+|   | + React                               | 5       |                                                                                                                                  |
+| 5 | **Widget Bug Hunter**                 | **60**  | [Link to component - Widget Bug Hunter](https://github.com/NotDmitry/Duoscript-Tandem/tree/develop/src/features/WidgetBugHunter) |
+|   | + Rich UI Screen                      | 20      |                                                                                                                                  |
+|   | + Complex Component                   | 25      |                                                                                                                                  |
+|   | + Responsive                          | 5       |                                                                                                                                  |
+|   | + Design Patterns(repository pattern  | 10      |                                                                                                                                  |
+|   | + API Layer                           | 10      |                                                                                                                                  |
+|   | + React                               | 5       |                                                                                                                                  |
+|   | **Итого:**                            | **275** |                                                                                                                                  |
 
 </div>
 
