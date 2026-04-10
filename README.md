@@ -44,10 +44,23 @@ Available at:
 
 - [Meeting Notes](https://github.com/NotDmitry/Duoscript-Tandem/tree/main/development-notes/Meeting%20notes)
 
+### Our NOTION
+
+-[Link](https://www.notion.so/Main-30d76f81e84f80d099a1d50db0e84941)
+<img width="1457" height="892" alt="Image" src="https://github.com/user-attachments/assets/73f61df5-0bfa-4c7c-86e3-251cdcb6e2e0" />
+
+<img width="1457" height="892" alt="Image" src="https://github.com/user-attachments/assets/df4c5c5c-445f-4b20-bfb7-4416d8924b79" />
+
+### Our Figma Template
+
+https://www.figma.com/design/QnfYzRs7vXwU0UOBde8ogf/TANDEM?node-id=11207-164308&p=f&t=yjUa809csipzbdwr-0
+
 ### Demo-video
 
 - [Demo-video](https://www.youtube.com/watch?v=UX0T9aYoHwM)
 
-### Week 5 Checkpoint
+### Launchpad
 
-[video](https://youtu.be/Ntsj5kxZHLo)
+1. Run `npm install` in the project root.
+2. In `.env` set `VITE_USE_MOCK=true`.
+3. Run `npm run dev`.
