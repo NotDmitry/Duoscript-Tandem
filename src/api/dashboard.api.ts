@@ -24,6 +24,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { throwFirebaseError } from '@utils/firebaseError';
+import { fbRefreshDailyStats } from '@api/progress.api.ts';
 
 // Switch
 
@@ -59,6 +60,7 @@ async function mockGetActivityHistory(
 // Firebase Implementation
 
 async function fbGetUserDashboard(uid: string): Promise<UserDashboardView> {
+  await fbRefreshDailyStats(uid);
   let snap: DocumentSnapshot<UserDocument>;
   try {
     snap = await getDoc(doc(db, 'users', uid).withConverter(userConverter));

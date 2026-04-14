@@ -47,7 +47,7 @@ function mockCompleteLesson(payload: CompleteLessonPayload): Promise<void> {
   const { lesson, courseTitle, score, maxScore, minutesSpent } = payload;
 
   const lessonEntry = (mockLessons[lesson.courseId] ?? []).find(
-    (lesson) => lesson.lessonId === lesson.lessonId
+    (lessonView) => lessonView.lessonId === lesson.lessonId
   );
   if (lessonEntry) lessonEntry.isCompleted = true;
 
@@ -233,6 +233,8 @@ async function fbUpdateUserProgress(
       totalLessons > 0 ? Math.round((totalCompleted / totalLessons) * 100) : 0;
 
     const userData = userSnap.exists() ? userSnap.data() : null;
+    const today = new Date().toISOString().slice(0, 10);
+
     const oldStreak: UserStreak = userData?.streak ?? {
       currentStreak: 0,
       longestStreak: 0,
@@ -240,11 +242,16 @@ async function fbUpdateUserProgress(
     };
     const streak = computeStreak(oldStreak);
 
+    const isNewDay = userData?.dailyStats.date !== today;
+
     await updateDoc(doc(db, 'users', uid), {
       'overallProgress.progressPercent': overallPercent,
       'overallProgress.updatedAt': serverTimestamp(),
-      'dailyStats.activitiesCompleted': increment(1),
-      'dailyStats.minutesSpent': increment(minutesSpent),
+      'dailyStats.date': today,
+      'dailyStats.activitiesCompleted': isNewDay ? 1 : increment(1),
+      'dailyStats.minutesSpent': isNewDay
+        ? minutesSpent
+        : increment(minutesSpent),
       'streak.currentStreak': streak.currentStreak,
       'streak.longestStreak': streak.longestStreak,
       'streak.lastActiveDate': streak.lastActiveDate,
@@ -264,6 +271,43 @@ export async function fbCompleteLesson(
     fbSaveActivityLog(payload),
     fbUpdateUserProgress(payload.uid, payload.minutesSpent),
   ]);
+}
+
+export async function fbRefreshDailyStats(uid: string): Promise<void> {
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const userSnap = await getDoc(
+      doc(db, 'users', uid).withConverter(userConverter)
+    );
+    if (!userSnap.exists()) return;
+
+    const userData = userSnap.data();
+    const updates: Record<string, unknown> = {};
+
+    if (userData.dailyStats.date !== today) {
+      updates['dailyStats.date'] = today;
+      updates['dailyStats.minutesSpent'] = 0;
+      updates['dailyStats.activitiesCompleted'] = 0;
+    }
+
+    const { lastActiveDate, currentStreak } = userData.streak;
+
+    if (lastActiveDate !== today) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayDate = yesterday.toISOString().slice(0, 10);
+
+      if (lastActiveDate !== yesterdayDate && currentStreak > 0) {
+        updates['streak.currentStreak'] = 0;
+      }
+    }
+
+    if (Object.keys(updates).length > 0) {
+      await updateDoc(doc(db, 'users', uid), updates);
+    }
+  } catch (error) {
+    throwFirebaseError(error);
+  }
 }
 
 export const completeLesson = USE_MOCK ? mockCompleteLesson : fbCompleteLesson;
