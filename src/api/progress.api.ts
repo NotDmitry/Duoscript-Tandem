@@ -47,7 +47,7 @@ function mockCompleteLesson(payload: CompleteLessonPayload): Promise<void> {
   const { lesson, courseTitle, score, maxScore, minutesSpent } = payload;
 
   const lessonEntry = (mockLessons[lesson.courseId] ?? []).find(
-    (lesson) => lesson.lessonId === lesson.lessonId
+    (lessonView) => lessonView.lessonId === lesson.lessonId
   );
   if (lessonEntry) lessonEntry.isCompleted = true;
 
