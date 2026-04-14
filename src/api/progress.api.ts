@@ -1,4 +1,5 @@
 import type { LessonView } from '@models/lessonModel';
+import { getLocalDateString } from '@utils/date';
 
 // Mock Imports
 import { mockLessons } from '@mocks/lessons.mock';
@@ -186,7 +187,7 @@ async function fbSaveCourseProgress(
 }
 
 function computeStreak(oldStreak: UserStreak): UserStreak {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = getLocalDateString();
 
   if (oldStreak.lastActiveDate === today) {
     return oldStreak;
@@ -194,7 +195,7 @@ function computeStreak(oldStreak: UserStreak): UserStreak {
 
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toISOString().slice(0, 10);
+  const yesterdayStr = getLocalDateString(yesterday);
   const newCurrent =
     oldStreak.lastActiveDate === yesterdayStr ? oldStreak.currentStreak + 1 : 1;
   const newLongest = Math.max(newCurrent, oldStreak.longestStreak);
@@ -233,7 +234,7 @@ async function fbUpdateUserProgress(
       totalLessons > 0 ? Math.round((totalCompleted / totalLessons) * 100) : 0;
 
     const userData = userSnap.exists() ? userSnap.data() : null;
-    const today = new Date().toISOString().slice(0, 10);
+    const today = getLocalDateString();
 
     const oldStreak: UserStreak = userData?.streak ?? {
       currentStreak: 0,
@@ -275,7 +276,7 @@ export async function fbCompleteLesson(
 
 export async function fbRefreshDailyStats(uid: string): Promise<void> {
   try {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = getLocalDateString();
     const userSnap = await getDoc(
       doc(db, 'users', uid).withConverter(userConverter)
     );
@@ -295,7 +296,7 @@ export async function fbRefreshDailyStats(uid: string): Promise<void> {
     if (lastActiveDate !== today) {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayDate = yesterday.toISOString().slice(0, 10);
+      const yesterdayDate = getLocalDateString(yesterday);
 
       if (lastActiveDate !== yesterdayDate && currentStreak > 0) {
         updates['streak.currentStreak'] = 0;
